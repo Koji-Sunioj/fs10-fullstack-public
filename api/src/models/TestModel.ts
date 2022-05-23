@@ -6,10 +6,7 @@ export type TestDocument = Document & {
 }
 
 const TestSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    index: true,
-  },
+  name: String,
 })
 
 export default mongoose.model<TestDocument>('Test', TestSchema)

@@ -74,6 +74,8 @@ export const replaceByID = async (
     const newData = new Test({
       name,
     })
+
+    console.log(newData)
     const newUser = await TestService.create(newData)
     res.json({ status: 200, data: newUser })
   } catch (error) {
