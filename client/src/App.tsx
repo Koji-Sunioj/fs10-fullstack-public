@@ -1,24 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Container, Form, Button, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { append, selectForm } from "./redux/reducers/formData";
 
 function App() {
+  const dipatch = useDispatch();
+
+  const currentInfo = useSelector(selectForm);
+  console.log(currentInfo);
+
+  function test(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const newData: string = event.currentTarget.data.value;
+    dipatch(append(newData));
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Container>
+        <h1>Testing</h1>
+        <Form
+          onSubmit={(event) => {
+            test(event);
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          <Form.Group className="mb-3">
+            <Form.Control placeholder="Enter stuff" name="data" />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Form>
+
+        <Row>{currentInfo.value}</Row>
+      </Container>
     </div>
   );
 }
