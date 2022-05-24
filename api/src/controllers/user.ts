@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 
-import Users from '../models/Users'
-import UserService from '../services/users'
+import User from '../models/User'
+import UserService from '../services/user'
 import { BadRequestError } from '../helpers/apiError'
 
-// POST /movies
 export const createUser = async (
   req: Request,
   res: Response,
@@ -12,8 +11,7 @@ export const createUser = async (
 ) => {
   try {
     const newUser = req.body
-    newUser.joinDate = new Date()
-    const newData = new Users(newUser)
+    const newData = new User(newUser)
     await UserService.create(newData)
     res.json({ status: 200 })
   } catch (error) {
@@ -25,7 +23,6 @@ export const createUser = async (
   }
 }
 
-// GET /movies
 export const findAll = async (
   req: Request,
   res: Response,

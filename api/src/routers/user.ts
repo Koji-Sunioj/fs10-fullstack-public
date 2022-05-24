@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { createUser, findAll } from '../controllers/userController'
+import { createUser, findAll } from '../controllers/user'
 
 const router = express.Router()
 

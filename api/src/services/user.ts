@@ -1,12 +1,12 @@
-import Users, { UserDocument } from '../models/Users'
-//import { NotFoundError } from '../helpers/apiError'
+import User from '../models/User'
+import { UserDocument } from 'types'
 
 const create = async (object: UserDocument): Promise<UserDocument> => {
   return object.save()
 }
 
 const findAll = async (): Promise<UserDocument[]> => {
-  return Users.find()
+  return User.find()
 }
 
 export default {
