@@ -5,12 +5,25 @@ export const reqString = {
   required: true,
 }
 
-export type UserDocument = Document & {
+export type UserData = {
   firstName: string
   lastName: string
   email: string
   joinDate: Date
 }
+
+export type PropertyType = {
+  location: string
+  title: string
+  description: string
+  buildDate: Date
+  nightlyRate: number
+  rooms: number
+  owners: string[]
+  category: 'cottage' | 'apartment' | 'house' | 'hut'
+}
+
+export type UserDocument = Document & UserData
 
 export type ReservationDocument = Document & {
   createDate: Date
@@ -20,15 +33,7 @@ export type ReservationDocument = Document & {
   userId: string
 }
 
-export type PropertyDocument = Document & {
-  location: string
-  title: string
-  description: string
-  buildDate: Date
-  nightlyRate: number
-  rooms: number
-  owners: string[]
-}
+export type PropertyDocument = Document & PropertyType
 
 export type OwnerDocument = Document & {
   firstName: string

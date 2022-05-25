@@ -1,0 +1,8 @@
+user:
+
+1. can create account
+* maybe check in database if email exists first
+2. can delete account
+3. can edit fields
+* sends whole object from a form and replaces fields, even if the same
+4. can view their info

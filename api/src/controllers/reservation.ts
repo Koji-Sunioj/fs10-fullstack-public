@@ -11,6 +11,7 @@ export const createReservation = async (
 ) => {
   try {
     const newUser = req.body
+
     const newData = new Reservation(newUser)
     await ReservationService.create(newData)
     res.json({ status: 200 })

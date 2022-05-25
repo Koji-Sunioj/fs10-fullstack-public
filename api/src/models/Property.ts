@@ -8,6 +8,7 @@ const PropertySchema = new mongoose.Schema({
   buildDate: Date,
   nightlyRate: { type: Number, required: true },
   rooms: { type: Number, required: true },
+  category: String,
   owners: [
     {
       type: mongoose.Schema.Types.ObjectId,
