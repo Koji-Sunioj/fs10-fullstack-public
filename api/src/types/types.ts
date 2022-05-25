@@ -12,6 +12,22 @@ export type UserData = {
   joinDate: Date
 }
 
+export type ReservationType = {
+  createDate: Date
+  startDate: Date
+  nights: number
+  propertyId: string
+  userId: string
+}
+
+export type OwnerType = {
+  firstName: string
+  lastName: string
+  biography: string
+  languages: string[]
+  properties: string[]
+}
+
 export type PropertyType = {
   location: string
   title: string
@@ -25,20 +41,8 @@ export type PropertyType = {
 
 export type UserDocument = Document & UserData
 
-export type ReservationDocument = Document & {
-  createDate: Date
-  startDate: Date
-  endDate: Date
-  propertyId: string
-  userId: string
-}
+export type ReservationDocument = Document & ReservationType
 
 export type PropertyDocument = Document & PropertyType
 
-export type OwnerDocument = Document & {
-  firstName: string
-  lastName: string
-  biography: string
-  languages: string[]
-  properties: string[]
-}
+export type OwnerDocument = Document & OwnerType

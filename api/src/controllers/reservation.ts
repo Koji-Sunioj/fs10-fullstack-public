@@ -11,7 +11,6 @@ export const createReservation = async (
 ) => {
   try {
     const newUser = req.body
-
     const newData = new Reservation(newUser)
     await ReservationService.create(newData)
     res.json({ status: 200 })
@@ -30,8 +29,66 @@ export const findReservations = async (
   next: NextFunction
 ) => {
   try {
-    const allUsers = await ReservationService.findAll()
-    res.json({ status: 200, data: allUsers })
+    const reservations = await ReservationService.findAll()
+    res.json({ status: 200, data: reservations })
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+export const findReservation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { reservationId } = req.params
+    const reservation = await ReservationService.findById(reservationId)
+    res.json({ status: 200, data: reservation })
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+export const deleteReservation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { reservationId } = req.params
+    const deleted = await ReservationService.deleteById(reservationId)
+    res.json({ status: 200, message: 'reservation deleted' })
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+export const updateReservation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { reservationId } = req.params
+    const newData = {
+      startDate: req.body.startDate,
+      nights: req.body.nights,
+    }
+    const deleted = await ReservationService.updateById(reservationId, newData)
+    res.json({ status: 200, message: 'reservation updated' })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

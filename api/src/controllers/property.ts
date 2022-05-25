@@ -39,8 +39,8 @@ export const findProperties = async (
   next: NextFunction
 ) => {
   try {
-    const allUsers = await PropertyService.findProperties()
-    res.json({ status: 200, data: allUsers })
+    const properties = await PropertyService.findProperties()
+    res.json({ status: 200, data: properties })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
