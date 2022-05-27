@@ -29,8 +29,15 @@ export const findReservations = async (
   next: NextFunction
 ) => {
   try {
-    const reservations = await ReservationService.findAll()
-    res.json({ status: 200, data: reservations })
+    if (req.query.userId) {
+      const userReservations = await ReservationService.findbyUserID(
+        String(req.query.userId)
+      )
+      res.json({ status: 200, data: userReservations })
+    } else {
+      const reservations = await ReservationService.findAll()
+      res.json({ status: 200, data: reservations })
+    }
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

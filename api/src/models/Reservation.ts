@@ -7,11 +7,11 @@ const ReservationSchema = new mongoose.Schema({
   nights: { type: Number, required: true },
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Properties',
+    ref: 'Property',
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+    ref: 'User',
   },
 })
 

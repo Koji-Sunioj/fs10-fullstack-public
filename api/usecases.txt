@@ -1,8 +1,88 @@
+both own 08
+
+
+hey guys. presentation 14, called MongoDB has some more information about the assignment which I didn't see in 13. it says that the database should use: 
+
+mongoose operators: $set, $in, $and / $or
+index via $match, $project,$sort,$group,&lookup
+
+have anyone else read it too? would you interpret this as, we are required to use these methods when interacting with the database?
+
+
 user:
 
-1. can create account
-* maybe check in database if email exists first
-2. can delete account
-3. can edit fields
-* sends whole object from a form and replaces fields, even if the same
-4. can view their info
+    1. can create account
+    * maybe check in database if email exists first
+    2. can delete account
+    3. can edit fields
+    * sends whole object from a form and replaces fields, even if the same
+    4. can view their info
+
+mongoose operators: 
+
+$set:update, 
+$in:check values in 
+$and / $or: can use multiple query functions here
+
+index via 
+
+$match: literally matches a field with the specified parameter, 
+
+$project: filters by specified fields if they exist 
+$sort: sort a collection ,
+$group: for grouping by aggregate (count, sum etc),
+&lookup: is like a sql subquery comparing if one field in a table exists in another field in a table
+
+
+1. home:
+
+    client goes on the homepage. what do they see?
+
+    1. navbar
+        a. homepage
+        b. search input, date picker. default state is "anywhere, anytime". when you click on the input it toggles inputs inside the search bar 
+           for location, check in check out. when you put location, no date, it would say "Finland, anytime", or "Finland, 2022-02-03 to 2022-02-12" for example in the 
+        c. filter page
+        d. link to user page, if signed in or sign in link
+
+    2. table
+    the table shows a representation of the filter or lack thereof. they can sort via the table headers. default state is sort by price.
+    if the user has a date parameter, only available properties for that date will appear. if there none, all of them appear. 
+
+    ** there are two ways to filter what shows on the homepage
+    *. via the search input which is just on location and / or checkin and checkout.
+    *. or the filter route page
+    **the user can sort the selection based on the property attributes, being nightly rate, rooms and property type (even if those properties are not free at the current moment).
+
+
+
+2. property: 
+
+    regardless if it's available or not, a client can click on a property (or manually type it in). 
+    1. if the date parameters, the dates are placed in the calendar inputs with the reserve button enabled. 
+    2. if the client enters a property with a date paremeter that isn't available for that property, it will be disabled with a prompt saying its not 
+       available. can modify the dates with the calendar picker.
+    3. if the client enters a property without a date parameter, the calendar inputs will be empty. when clicking on it, it will show any reservations existing on days
+     
+
+3. fiter page:
+
+    1. which properties are between a price, max or min
+    2. have a specific amount of rooms (one)
+    3. are in certain property types (many)
+
+4. sign in page 
+simple sign on, has link to create new user
+when sign in successful, sent back to home page. the state of the filter remains the same throughout authentication.
+
+5. create new user page:
+simple create new user, it's disabled if accessed manually and user is signed in
+
+6. user page
+shows list of upcoming, or past reservations. can remove upcoming ones. 
+
+7. update user page
+
+
+* find reservations related to a user
+

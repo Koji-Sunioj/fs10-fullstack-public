@@ -38,6 +38,7 @@ export const findProperties = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.query)
   try {
     const properties = await PropertyService.findProperties()
     res.json({ status: 200, data: properties })

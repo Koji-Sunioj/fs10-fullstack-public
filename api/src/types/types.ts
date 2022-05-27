@@ -18,6 +18,7 @@ export type ReservationType = {
   nights: number
   propertyId: string
   userId: string
+  total?: number
 }
 
 export type OwnerType = {
