@@ -3,32 +3,71 @@ import { ReservationDocument } from 'types'
 import { ReservationType } from 'types'
 import mongoose from 'mongoose'
 
-const create = async (
-  object: ReservationDocument
-): Promise<ReservationDocument> => {
-  return object.save()
+const reservationView = [
+  {
+    $lookup: {
+      localField: 'propertyId',
+      from: 'properties',
+      foreignField: '_id',
+      as: 'property',
+    },
+  },
+  { $unwind: '$property' },
+  {
+    $addFields: {
+      bill: { $multiply: ['$nights', '$property.nightlyRate'] },
+      checkOut: {
+        $dateAdd: { startDate: '$startDate', unit: 'day', amount: '$nights' },
+      },
+    },
+  },
+  {
+    $lookup: {
+      localField: 'property.owners',
+      from: 'owners',
+      foreignField: '_id',
+      as: 'property.hosts',
+    },
+  },
+  {
+    $project: {
+      __v: 0,
+      'property.__v': 0,
+      propertyId: 0,
+      userId: 0,
+      'property.owners': 0,
+      'property.hosts.properties': 0,
+      'property.hosts.__v': 0,
+    },
+  },
+]
+
+const create = async (reservationData: ReservationDocument) => {
+  return reservationData.save()
 }
 
-const findAll = async (): Promise<ReservationDocument[]> => {
-  return Reservation.find()
+const findAll = async () => {
+  return Reservation.find({}, { __v: 0 }).sort({ startDate: 1 })
 }
 
-const findById = async (
-  reservationId: string
-): Promise<ReservationDocument | null> => {
-  return Reservation.findById(reservationId)
+const findById = async (reservationId: string) => {
+  const userReservation = Reservation.aggregate([
+    {
+      $match: { _id: new mongoose.Types.ObjectId(reservationId) },
+    },
+    ...reservationView,
+  ])
+  return userReservation
 }
 
-const deleteById = async (
-  reservationId: string
-): Promise<ReservationDocument | null> => {
+const deleteById = async (reservationId: string) => {
   return Reservation.findByIdAndDelete(reservationId)
 }
 
 const updateById = async (
   reservationId: string,
   reservationData: Partial<ReservationType>
-): Promise<ReservationDocument | null> => {
+) => {
   const reservation = await Reservation.findById(reservationId)
   Object.assign(reservation, reservationData)
   return reservation!.save()
@@ -36,18 +75,11 @@ const updateById = async (
 
 const findbyUserID = async (userId: string) => {
   const now = new Date()
-  const userReservations = await Reservation.aggregate([
+  const userReservations = Reservation.aggregate([
     {
       $match: { userId: new mongoose.Types.ObjectId(userId) },
     },
-    {
-      $lookup: {
-        localField: 'propertyId',
-        from: 'properties',
-        foreignField: '_id',
-        as: 'properties',
-      },
-    },
+    ...reservationView,
     {
       $sort: { startDate: 1 },
     },
