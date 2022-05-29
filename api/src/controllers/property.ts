@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { PropertyType } from 'types'
+import { PropertyType, FilterType } from 'types'
 import Property from '../models/Property'
 import PropertyService from '../services/property'
 import { BadRequestError } from '../helpers/apiError'
@@ -38,9 +38,15 @@ export const findProperties = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.query)
   try {
-    const properties = await PropertyService.findProperties()
+    const filter = {
+      searchBy: String(req.query.searchBy)!,
+      direction: Number(req.query.direction),
+      sortBy: String(req.query.sortBy),
+      page: Number(req.query.page) * 6 - 6,
+    }
+
+    const properties = await PropertyService.findProperties(filter)
     res.json({ status: 200, data: properties })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

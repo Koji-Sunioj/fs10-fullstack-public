@@ -5,7 +5,14 @@ export const reqString = {
   required: true,
 }
 
-export type UserData = {
+export type FilterType = {
+  searchBy: string
+  direction: number
+  sortBy: string
+  page: number
+}
+
+export type UserType = {
   firstName: string
   lastName: string
   email: string
@@ -40,7 +47,7 @@ export type PropertyType = {
   category: 'cottage' | 'apartment' | 'house' | 'hut'
 }
 
-export type UserDocument = Document & UserData
+export type UserDocument = Document & UserType
 
 export type ReservationDocument = Document & ReservationType
 

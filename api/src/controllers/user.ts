@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { UserData } from 'types'
+import { UserType } from 'types'
 import User from '../models/User'
 import UserService from '../services/user'
 import { BadRequestError } from '../helpers/apiError'
@@ -46,7 +46,7 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const newUser: Omit<UserData, 'joinDate'> = {
+    const newUser: Omit<UserType, 'joinDate'> = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -94,7 +94,7 @@ export const updateUser = async (
 ) => {
   try {
     const { userId } = req.params
-    const newData: Omit<UserData, 'joinDate'> = {
+    const newData: Omit<UserType, 'joinDate'> = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 
-import mongoose from 'mongoose'
 import { OwnerType } from 'types'
 import Owner from '../models/Owner'
 import OwnerService from '../services/owner'
@@ -87,7 +86,6 @@ export const updateOwner = async (
   next: NextFunction
 ) => {
   try {
-    console.log('asdasd')
     const { ownerId } = req.params
     const newData: OwnerType = {
       firstName: req.body.firstName,

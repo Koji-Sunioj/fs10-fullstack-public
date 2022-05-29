@@ -1,12 +1,4 @@
-both own 08
 
-
-hey guys. presentation 14, called MongoDB has some more information about the assignment which I didn't see in 13. it says that the database should use: 
-
-mongoose operators: $set, $in, $and / $or
-index via $match, $project,$sort,$group,&lookup
-
-have anyone else read it too? would you interpret this as, we are required to use these methods when interacting with the database?
 
 
 user:

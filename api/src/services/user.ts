@@ -1,5 +1,5 @@
 import User from '../models/User'
-import { UserDocument, UserData } from 'types'
+import { UserDocument, UserType } from 'types'
 
 const create = async (newUser: UserDocument): Promise<UserDocument> => {
   return newUser.save()
@@ -19,7 +19,7 @@ const deleteById = async (userId: string): Promise<UserDocument | null> => {
 
 const updateById = async (
   userId: string,
-  userData: Omit<UserData, 'joinDate'>
+  userData: Omit<UserType, 'joinDate'>
 ): Promise<UserDocument | null> => {
   const user = await User.findById(userId)
   Object.assign(user, userData)
