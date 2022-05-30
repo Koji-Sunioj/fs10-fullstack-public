@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import formData from "./reducers/formData";
+import properties from "./reducers/properties";
 
 export const store = configureStore({
-  reducer: { formData: formData },
+  reducer: { properties: properties },
 });

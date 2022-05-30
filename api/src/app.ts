@@ -10,10 +10,11 @@ import apiContentType from './middlewares/apiContentType'
 
 dotenv.config({ path: '.env' })
 const app = express()
-
+const cors = require('cors')
 // Express configuration
-app.set('port', process.env.PORT || 5000)
 
+app.set('port', process.env.PORT || 5000)
+app.use(cors())
 // Global middleware
 app.use(apiContentType)
 app.use(express.json())
