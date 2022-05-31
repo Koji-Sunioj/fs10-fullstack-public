@@ -6,15 +6,24 @@ const create = async (propertyData: PropertyDocument) => {
   return propertyData.save()
 }
 
+const countProperties = async () => {
+  return Property.countDocuments()
+}
+
 const findProperties = async (filter: FilterType) => {
   const stringFilter = new RegExp(filter.searchBy, 'i')
-  return Property.find({
-    $or: [
-      { category: stringFilter },
-      { location: stringFilter },
-      { title: stringFilter },
-    ],
-  })
+  return Property.find(
+    {
+      $or: [
+        { category: stringFilter },
+        { location: stringFilter },
+        { title: stringFilter },
+      ],
+    },
+    {
+      __v: 0,
+    }
+  )
     .sort({
       [filter.sortBy]: filter.direction,
     })
@@ -97,4 +106,5 @@ export default {
   deleteById,
   findProperty,
   updateById,
+  countProperties,
 }

@@ -7,10 +7,10 @@ import userRouter from './routers/user'
 import reservationRouter from './routers/reservation'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
-
+import cors = require('cors')
 dotenv.config({ path: '.env' })
 const app = express()
-const cors = require('cors')
+//c//onst cors = require('cors')
 // Express configuration
 
 app.set('port', process.env.PORT || 5000)

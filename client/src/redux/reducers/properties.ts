@@ -1,24 +1,39 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { PropertyState, FilterType } from "../../types/types";
 
-export const getProperties: any = createAsyncThunk("something", async () => {
-  return await fetch(
-    "http://localhost:5000/api/v1/properties/?searchBy=cottage"
-  ).then((res) => res.json());
-});
+export const getProperties: any = createAsyncThunk(
+  "properties",
+  async (query: FilterType) => {
+    let url = "http://localhost:5000/api/v1/properties/?";
+    Object.entries(query).forEach((entry: [string, string | number]) => {
+      url += `${entry[0]}=${String(entry[1])}&`;
+    });
 
-const initialState: any = { data: [] };
+    return await fetch(url).then((res) => res.json());
+  }
+);
 
-export const properties: any = createSlice({
+const initialState: PropertyState = {
+  data: [],
+  loading: false,
+  error: false,
+  pages: null,
+};
+
+export const properties = createSlice({
   name: "propertyfilter",
   initialState,
   reducers: {},
-  extraReducers: {
-    /*[getProperties.pending]: (state, action) => {
-
-    },*/
-    [getProperties.fulfilled]: (state, action) => {
-      state.data = action.payload.data;
-    },
+  extraReducers(builder) {
+    builder
+      .addCase(getProperties.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getProperties.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data;
+        state.pages = action.payload.pages;
+      });
   },
 });
 
