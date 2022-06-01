@@ -50,6 +50,7 @@ export const createUser = async (
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      isAdmin: req.body.isAdmin,
     }
     const newData = new User(newUser)
     const user = await UserService.create(newData)
@@ -98,6 +99,7 @@ export const updateUser = async (
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      isAdmin: req.body.isAdmin,
     }
     const updated = await UserService.updateById(userId, newData)
     res.json({ status: 200, message: 'user successfully updated' })

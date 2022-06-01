@@ -9,6 +9,10 @@ const findById = async (userId: string): Promise<UserDocument | null> => {
   return User.findById(userId)
 }
 
+const findByEmail = async (email: string): Promise<UserDocument | null> => {
+  return User.findOne({ email })
+}
+
 const findAll = async (): Promise<UserDocument[]> => {
   return User.find()
 }
@@ -32,4 +36,5 @@ export default {
   deleteById,
   updateById,
   findAll,
+  findByEmail,
 }

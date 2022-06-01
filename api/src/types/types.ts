@@ -17,6 +17,7 @@ export type UserType = {
   lastName: string
   email: string
   joinDate: Date
+  isAdmin: boolean
 }
 
 export type ReservationType = {

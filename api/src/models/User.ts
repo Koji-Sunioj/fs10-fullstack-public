@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: { type: String, unique: true, required: true },
   joinDate: { type: Date, default: Date.now },
+  isAdmin: { type: Boolean, required: true },
 })
 
 export default mongoose.model<UserDocument>('User', UserSchema)
