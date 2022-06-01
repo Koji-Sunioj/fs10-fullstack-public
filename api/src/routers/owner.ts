@@ -1,5 +1,4 @@
 import express from 'express'
-
 import {
   createOwner,
   findOwners,
@@ -8,9 +7,11 @@ import {
   updateOwner,
 } from '../controllers/owner'
 
+import verifyAuth from '../middlewares/verifyAuth'
+
 const router = express.Router()
 
-router.get('/', findOwners)
+router.get('/', verifyAuth, findOwners)
 router.post('/', createOwner)
 router.get('/:ownerId', findOwner)
 router.patch('/:ownerId', updateOwner)

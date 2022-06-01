@@ -21,7 +21,7 @@ export type PropertyState = {
   data: PropertyType[];
   loading: boolean;
   error: boolean;
-  pages: number | null;
+  count: number | null;
 };
 
 export type AppState = {

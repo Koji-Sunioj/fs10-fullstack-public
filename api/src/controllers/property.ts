@@ -45,11 +45,9 @@ export const findProperties = async (
       sortBy: String(req.query.sortBy),
       page: Number(req.query.page) * 6 - 6,
     }
-
     const properties = await PropertyService.findProperties(filter)
-    let count = await PropertyService.countProperties()
-    count = Math.ceil(count / 6)
-    res.json({ status: 200, data: properties, pages: count })
+    const count = await PropertyService.countProperties()
+    res.json({ status: 200, data: properties, count: count })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

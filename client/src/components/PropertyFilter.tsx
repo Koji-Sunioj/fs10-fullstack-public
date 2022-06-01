@@ -1,14 +1,26 @@
 import { Form, Button, FormControl, InputGroup } from "react-bootstrap";
 
-const PropertyFilter = () => {
+import { updateSearch } from "../redux/reducers/filterby";
+import { useDispatch } from "react-redux";
+
+const PropertyFilter = ({ filter }: any) => {
+  const dispatch = useDispatch();
+  function test(event: any) {
+    event.preventDefault();
+    const searchString = event.currentTarget.search.value;
+    dispatch(updateSearch(searchString));
+  }
+
   return (
-    <Form className="d-flex">
+    <Form className="d-flex" onSubmit={test}>
       <InputGroup>
         <FormControl
           type="search"
           placeholder="property type, location, title..."
+          name="search"
+          defaultValue={filter}
         />
-        <Button>Go</Button>
+        <Button type="submit">Go</Button>
       </InputGroup>
     </Form>
   );

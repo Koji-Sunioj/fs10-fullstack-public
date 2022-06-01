@@ -7,10 +7,12 @@ import userRouter from './routers/user'
 import reservationRouter from './routers/reservation'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
+import jwt = require('jsonwebtoken')
 import cors = require('cors')
 import loginGoogle from './passport/google'
 dotenv.config({ path: '.env' })
 const app = express()
+
 //c//onst cors = require('cors')
 // Express configuration
 
@@ -28,9 +30,18 @@ app.post(
   '/google-login',
   passport.authenticate('google-id-token', { session: false }),
   (req, resp) => {
-    resp.json({ message: 'done', user: req.user })
+    console.log('asdasd')
+    const user: any = req.user
+    const token = jwt.sign(
+      { email: user.email, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '1h' }
+    )
+    console.log('token', token)
+    resp.json({ token: token })
   }
 )
+
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/owners', ownerRouter)
 app.use('/api/v1/properties', propertyRouter)

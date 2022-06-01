@@ -22,6 +22,9 @@ const findProperties = async (filter: FilterType) => {
     },
     {
       __v: 0,
+      owners: 0,
+      buildDate: 0,
+      description: 0,
     }
   )
     .sort({

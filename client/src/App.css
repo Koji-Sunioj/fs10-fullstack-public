@@ -25,10 +25,17 @@ h1 {
 
 .property {
   background-color: white;
+  border: 1px solid lightgrey;
   padding: 20px;
+  height: 100%;
 }
 
 a {
  text-decoration: none;
 
 }
+
+html {
+  overflow-y:scroll;
+}
+

@@ -5,9 +5,21 @@ const SignUp = () => {
   const clientId =
     "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";
 
-  function googleSuccess(response: any) {
-    console.log(response);
+  async function googleSuccess(response: any) {
+    const googleCred = response.credential;
+    const url = "http://localhost:5000/google-login";
+    const jwt = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${googleCred}`,
+        "Content-Type": "application/json",
+      },
+      method: "post",
+    }).then((resp) => resp.json());
+
+    localStorage.setItem("token", JSON.stringify(jwt));
   }
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  console.log(token);
 
   return (
     <Container>

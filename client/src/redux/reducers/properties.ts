@@ -17,7 +17,7 @@ const initialState: PropertyState = {
   data: [],
   loading: false,
   error: false,
-  pages: null,
+  count: null,
 };
 
 export const properties = createSlice({
@@ -27,12 +27,22 @@ export const properties = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getProperties.pending, (state, action) => {
+        state.data = [];
+        state.count = null;
         state.loading = true;
+        state.error = false;
       })
       .addCase(getProperties.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.data;
-        state.pages = action.payload.pages;
+        state.count = action.payload.count;
+        state.error = false;
+      })
+      .addCase(getProperties.rejected, (state, action) => {
+        state.loading = false;
+        state.data = [];
+        state.count = null;
+        state.error = true;
       });
   },
 });
