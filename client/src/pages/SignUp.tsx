@@ -1,7 +1,14 @@
 import { Container, Row, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 const SignUp = () => {
+  const clientId =
+    "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";
+
+  function googleSuccess(response: any) {
+    console.log(response);
+  }
+
   return (
     <Container>
       <Row>
@@ -39,6 +46,9 @@ const SignUp = () => {
             </Button>
             <Link to={"/"}>already have an account? sign in!</Link>
           </div>
+          <GoogleOAuthProvider clientId={clientId}>
+            <GoogleLogin onSuccess={googleSuccess} />
+          </GoogleOAuthProvider>
         </Form>
       </Row>
     </Container>

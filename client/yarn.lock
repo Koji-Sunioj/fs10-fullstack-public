@@ -1427,6 +1427,11 @@
   dependencies:
     "@babel/runtime" "^7.6.2"
 
+"@react-oauth/google@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.2.5.tgz#3c03d63644f136377c52e5bbd957961c6923c4ff"
+  integrity sha512-SB0qtM1wB/IBhdjMC9NrASaP4g4PzGjEh0Nf1GVUiHP70NXX5sgdO065Y1BGDyMKqX/gIJESFpUSgxQQ+KiiyQ==
+
 "@reduxjs/toolkit@^1.8.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.1.tgz#94ee1981b8cf9227cda40163a04704a9544c9a9f"

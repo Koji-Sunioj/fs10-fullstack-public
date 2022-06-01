@@ -27,4 +27,8 @@ export type PropertyState = {
 export type AppState = {
   filterBy: FilterType;
   properties: PropertyState;
+  property: {
+    loading: boolean;
+    data: {}[];
+  };
 };
