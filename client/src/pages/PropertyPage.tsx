@@ -4,14 +4,18 @@ import { useEffect, useState } from "react";
 import { getPropery } from "../redux/reducers/property";
 import { Container, Row, Col, Form, Button, Table } from "react-bootstrap";
 import calendarArray from "../utils/calendarArray";
+import checkBooked from "../utils/checkBooked";
 import moment from "moment";
-import { createImmutableStateInvariantMiddleware } from "@reduxjs/toolkit";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
   const [calendar, setCalendar] = useState(calendarArray(new Date()));
+  const [bookedDates, setBooked] = useState(
+    property.data !== null ? checkBooked(property.data.reservations) : null
+  );
+
   useEffect(() => {
     dispatch(getPropery(propertyId));
   }, [propertyId]);
@@ -21,34 +25,21 @@ const PropertyPage = () => {
   for (let i = 0; i < rows; i++) {
     newRows.push(i);
   }
-  function checkBooking(date: any, reservations: any) {
-    reservations.forEach((val: any) => {
-      console.log(val.startDate);
-      console.log(date);
-      console.log(val.checkOut);
-      const start = moment(val.startDate);
-      const end = moment(val.checkOut);
-      const target = moment(date);
-      console.log(start);
-      console.log(target);
-      console.log(end);
-      const isBooked = target.isBetween(start, end);
-      console.log(isBooked);
-    });
-  }
 
   function dateCompare(date: any) {
     const something = new Date(date);
-    if (something < moment(new Date()).startOf("day").toDate()) {
+    if (
+      something < moment(new Date()).startOf("day").toDate() ||
+      bookedDates.includes(moment(something).toISOString().split("T")[0])
+    ) {
       {
         return date.split("T")[0];
       }
     } else {
-      checkBooking(something, property.data.reservations);
       return <Button variant="link">{date.split("T")[0]}</Button>;
     }
   }
-  console.log(property.data);
+
   return (
     <Container>
       {property.loading && (
