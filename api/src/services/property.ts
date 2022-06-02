@@ -6,8 +6,15 @@ const create = async (propertyData: PropertyDocument) => {
   return propertyData.save()
 }
 
-const countProperties = async () => {
-  return Property.countDocuments()
+const countProperties = async (filter: FilterType) => {
+  const stringFilter = new RegExp(filter.searchBy, 'i')
+  return Property.countDocuments({
+    $or: [
+      { category: stringFilter },
+      { location: stringFilter },
+      { title: stringFilter },
+    ],
+  })
 }
 
 const findProperties = async (filter: FilterType) => {

@@ -18,7 +18,7 @@ export type PropertyType = {
 };
 
 export type PropertyState = {
-  data: PropertyType[];
+  data: PropertyType[] | null;
   loading: boolean;
   error: boolean;
   count: number | null;

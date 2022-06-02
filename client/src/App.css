@@ -6,9 +6,6 @@ body {
   padding: 10px;
 }
 
-h1 {
-  text-align: center;
-}
 
 .form {
   border-radius: 10px;
@@ -20,7 +17,8 @@ h1 {
 }
 
 .row{
-  padding-top: 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .property {

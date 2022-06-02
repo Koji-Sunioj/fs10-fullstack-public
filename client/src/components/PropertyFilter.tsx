@@ -1,6 +1,6 @@
 import { Form, Button, FormControl, InputGroup } from "react-bootstrap";
 
-import { updateSearch } from "../redux/reducers/filterby";
+import { updateSearch, updatePage } from "../redux/reducers/filterby";
 import { useDispatch } from "react-redux";
 
 const PropertyFilter = ({ filter }: any) => {
@@ -8,7 +8,9 @@ const PropertyFilter = ({ filter }: any) => {
   function test(event: any) {
     event.preventDefault();
     const searchString = event.currentTarget.search.value;
+
     dispatch(updateSearch(searchString));
+    console.log("asd");
   }
 
   return (

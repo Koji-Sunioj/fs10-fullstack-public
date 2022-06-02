@@ -4,6 +4,7 @@ import { PropertyState, FilterType } from "../../types/types";
 export const getProperties: any = createAsyncThunk(
   "properties",
   async (query: FilterType) => {
+    console.log("fetched");
     let url = "http://localhost:5000/api/v1/properties/?";
     Object.entries(query).forEach((entry: [string, string | number]) => {
       url += `${entry[0]}=${String(entry[1])}&`;
@@ -13,8 +14,8 @@ export const getProperties: any = createAsyncThunk(
   }
 );
 
-const initialState: PropertyState = {
-  data: [],
+export const initialState: PropertyState = {
+  data: null,
   loading: false,
   error: false,
   count: null,
@@ -27,10 +28,9 @@ export const properties = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getProperties.pending, (state, action) => {
-        state.data = [];
-        state.count = null;
         state.loading = true;
         state.error = false;
+        state.data = null;
       })
       .addCase(getProperties.fulfilled, (state, action) => {
         state.loading = false;
@@ -40,7 +40,7 @@ export const properties = createSlice({
       })
       .addCase(getProperties.rejected, (state, action) => {
         state.loading = false;
-        state.data = [];
+        state.data = null;
         state.count = null;
         state.error = true;
       });

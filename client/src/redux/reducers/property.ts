@@ -12,6 +12,7 @@ export const getPropery: any = createAsyncThunk(
 const initialState: any = {
   data: null,
   loading: false,
+  error: false,
 };
 
 export const properties = createSlice({
@@ -21,12 +22,14 @@ export const properties = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getPropery.pending, (state, action) => {
-        state.loading = true;
         state.data = null;
+        state.loading = true;
+        state.error = false;
       })
       .addCase(getPropery.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.data[0];
+        state.error = false;
       });
   },
 });
