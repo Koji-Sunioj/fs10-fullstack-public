@@ -5,16 +5,15 @@ import { useDispatch } from "react-redux";
 
 const PropertyFilter = ({ filter }: any) => {
   const dispatch = useDispatch();
-  function test(event: any) {
+
+  function updateView(event: any) {
     event.preventDefault();
     const searchString = event.currentTarget.search.value;
-
     dispatch(updateSearch(searchString));
-    console.log("asd");
   }
 
   return (
-    <Form className="d-flex" onSubmit={test}>
+    <Form className="d-flex" onSubmit={updateView}>
       <InputGroup>
         <FormControl
           type="search"

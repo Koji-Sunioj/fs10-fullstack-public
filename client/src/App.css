@@ -37,3 +37,8 @@ html {
   overflow-y:scroll;
 }
 
+button.btn.btn-link
+{
+  text-decoration: none;
+  padding:0px
+}
