@@ -46,8 +46,18 @@ const PropertyPage = () => {
     setFocusDate(date.add(1, "month"));
   }
 
-  console.log(checkIn);
-  console.log(moment(checkIn).add(nights, "days").toDate());
+  let requestedNights: any = [];
+  if (moment(checkIn, "YYYY-MM-DD", true).isValid()) {
+    const dateDiff = moment(checkIn)
+      .add(nights, "days")
+      .diff(moment(checkIn), "days");
+    for (let i = 0; i < dateDiff; i++) {
+      const something = moment(checkIn).clone();
+      requestedNights.push(
+        something.add(i, "days").format("YYYY-MM-DD").split("T")[0]
+      );
+    }
+  }
 
   return (
     <Container>
@@ -125,7 +135,7 @@ const PropertyPage = () => {
                     {calendar.slice(val * 7, val * 7 + 7).map((item) => {
                       if (
                         item.format("M") !== focusDay.format("M") ||
-                        item < moment()
+                        item < moment().startOf("day")
                       ) {
                         return (
                           <td
@@ -152,7 +162,7 @@ const PropertyPage = () => {
                                   padding: "0px",
                                 }}
                                 onClick={() => {
-                                  setCheckIn(item.format("YYYY-MM-DD"));
+                                  setCheckIn(String(item.format("YYYY-MM-DD")));
                                 }}
                               >
                                 {item.format("DD")}
@@ -173,7 +183,7 @@ const PropertyPage = () => {
               <FormControl
                 defaultValue={checkIn}
                 onChange={(event) => {
-                  setCheckIn(event.target.value);
+                  setCheckIn(String(event.target.value));
                 }}
               />
               <InputGroup.Text>Nights</InputGroup.Text>
@@ -189,7 +199,8 @@ const PropertyPage = () => {
                 disabled={
                   !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
                   nights < 1 ||
-                  nights > 7
+                  nights > 7 ||
+                  requestedNights.some((r: any) => bookedDates.includes(r))
                 }
               >
                 Go
