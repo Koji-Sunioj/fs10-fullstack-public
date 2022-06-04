@@ -1,31 +1,14 @@
 import moment from "moment";
 
-function calendarArray(date: any) {
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-  const firstWeek = moment()
-    .day("Monday")
-    .year(firstDay.getFullYear())
-    .isoWeek(moment(firstDay).isoWeek());
-
-  console.log(firstWeek.toDate());
-
-  const lastWeek = moment()
-    .day("Sunday")
-    .year(lastDay.getFullYear())
-    .isoWeek(moment(lastDay).isoWeek());
-
-  const dateDiff = lastWeek.diff(firstWeek, "days");
-  console.log(dateDiff);
-  const calendar: any = [];
+function calendarArray(theMoment: any) {
+  const first = theMoment.clone().startOf("month").startOf("week");
+  const last = theMoment.clone().endOf("month").endOf("week");
+  const dateDiff = last.diff(first, "days");
+  const calendar = [];
 
   for (let i = 0; i <= dateDiff; i++) {
-    const something = firstWeek.clone();
-    calendar.push(
-      something.add(i, "days").startOf("day").format("YYYY-MM-DD") +
-        "T00:00:00.000Z"
-    );
+    const something = first.clone();
+    calendar.push(something.add(i, "days").startOf("day"));
   }
 
   return calendar;

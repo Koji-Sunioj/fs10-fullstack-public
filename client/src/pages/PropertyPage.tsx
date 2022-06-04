@@ -2,7 +2,15 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getPropery } from "../redux/reducers/property";
-import { Container, Row, Col, Form, Button, Table } from "react-bootstrap";
+import {
+  Button,
+  Table,
+  Row,
+  Container,
+  InputGroup,
+  FormControl,
+  Col,
+} from "react-bootstrap";
 import calendarArray from "../utils/calendarArray";
 import checkBooked from "../utils/checkBooked";
 import moment from "moment";
@@ -11,34 +19,35 @@ const PropertyPage = () => {
   let { propertyId } = useParams();
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
-  const [calendar, setCalendar] = useState(calendarArray(new Date()));
-  const [bookedDates, setBooked] = useState(
-    property.data !== null ? checkBooked(property.data.reservations) : null
-  );
-
-  useEffect(() => {
-    dispatch(getPropery(propertyId));
-  }, [propertyId]);
+  const [focusDay, setFocusDate] = useState(moment().startOf("month"));
+  const [checkIn, setCheckIn] = useState("");
+  const [nights, setNumNights] = useState(0);
+  const calendar = calendarArray(focusDay);
 
   const rows = calendar.length / 7;
   const newRows = [];
   for (let i = 0; i < rows; i++) {
     newRows.push(i);
   }
+  const bookedDates =
+    property.data === null ? [] : checkBooked(property.data.reservations);
 
-  function dateCompare(date: any) {
-    const something = new Date(date);
-    if (
-      something < moment(new Date()).startOf("day").toDate() ||
-      bookedDates.includes(moment(something).toISOString().split("T")[0])
-    ) {
-      {
-        return date.split("T")[0];
-      }
-    } else {
-      return <Button variant="link">{date.split("T")[0]}</Button>;
-    }
+  useEffect(() => {
+    dispatch(getPropery(propertyId));
+  }, [propertyId]);
+
+  function decrementFocus() {
+    const date = focusDay.clone();
+    setFocusDate(date.subtract(1, "month"));
   }
+
+  function incrementFocus() {
+    const date = focusDay.clone();
+    setFocusDate(date.add(1, "month"));
+  }
+
+  console.log(checkIn);
+  console.log(moment(checkIn).add(nights, "days").toDate());
 
   return (
     <Container>
@@ -80,44 +89,112 @@ const PropertyPage = () => {
             </Col>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
-            <Col>
-              <Button>Back</Button>
-            </Col>
-            <Col style={{ backgroundColor: "white" }} md={8}>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Thursday</th>
-                    <th>Thursday</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {newRows.map((val) => (
-                    <tr>
-                      {calendar
-                        .slice(val * 7, val * 7 + 7)
-                        .map((item: string) => {
-                          return <td>{dateCompare(item)}</td>;
-                        })}
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Col>
-            <Col>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
               <Button
-                onClick={() => {
-                  console.log(moment().toISOString());
-                }}
+                onClick={decrementFocus}
+                disabled={
+                  focusDay.clone().subtract(1, "month") <
+                  moment().startOf("month")
+                }
               >
-                Forward
+                Back
               </Button>
-            </Col>
+              <h3> {focusDay.format("MMMM YYYY")}</h3>
+              <Button onClick={incrementFocus}>Forward</Button>
+            </div>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Monday</th>
+                  <th>Tuesday</th>
+                  <th>Wednesday</th>
+                  <th>Thursday</th>
+                  <th>Friday</th>
+                  <th>Thursday</th>
+                  <th>Thursday</th>
+                </tr>
+              </thead>
+              <tbody>
+                {newRows.map((val) => (
+                  <tr key={val}>
+                    {calendar.slice(val * 7, val * 7 + 7).map((item) => {
+                      if (
+                        item.format("M") !== focusDay.format("M") ||
+                        item < moment()
+                      ) {
+                        return (
+                          <td
+                            style={{ backgroundColor: "lightgrey" }}
+                            key={item}
+                          >
+                            {item.format("DD")}
+                          </td>
+                        );
+                      } else {
+                        if (bookedDates.includes(item.format("YYYY-MM-DD"))) {
+                          return (
+                            <td style={{ backgroundColor: "red" }} key={item}>
+                              {item.format("DD")}
+                            </td>
+                          );
+                        } else {
+                          return (
+                            <td key={item}>
+                              <Button
+                                variant="link"
+                                style={{
+                                  textDecoration: "none",
+                                  padding: "0px",
+                                }}
+                                onClick={() => {
+                                  setCheckIn(item.format("YYYY-MM-DD"));
+                                }}
+                              >
+                                {item.format("DD")}
+                              </Button>
+                            </td>
+                          );
+                        }
+                      }
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Row>
+          <Row>
+            <InputGroup style={{ padding: "0px" }}>
+              <InputGroup.Text>Check In</InputGroup.Text>
+              <FormControl
+                defaultValue={checkIn}
+                onChange={(event) => {
+                  setCheckIn(event.target.value);
+                }}
+              />
+              <InputGroup.Text>Nights</InputGroup.Text>
+              <FormControl
+                type="number"
+                max="7"
+                min="0"
+                onChange={(event) => {
+                  setNumNights(Number(event.target.value));
+                }}
+              />
+              <Button
+                disabled={
+                  !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
+                  nights < 1 ||
+                  nights > 7
+                }
+              >
+                Go
+              </Button>
+            </InputGroup>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
             <h3>Your host(s)</h3>

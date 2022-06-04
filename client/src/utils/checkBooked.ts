@@ -12,7 +12,6 @@ function checkBooked(reservations: any) {
       booked.push(something.add(i, "days").toISOString().split("T")[0]);
     }
   });
-  console.log(booked);
   return booked;
 }
 
