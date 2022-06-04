@@ -2,6 +2,8 @@ import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import properties from "./reducers/properties";
 import filterby from "./reducers/filterby";
 import property from "./reducers/property";
+import createres from "./reducers/createres";
+import createclient from "./reducers/client";
 import {
   updateSearch,
   updatePage,
@@ -27,7 +29,13 @@ listenerMiddleware.startListening({
 });
 
 export const store = configureStore({
-  reducer: { properties: properties, filterBy: filterby, property: property },
+  reducer: {
+    properties: properties,
+    filterBy: filterby,
+    property: property,
+    createRes: createres,
+    client: createclient,
+  },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,
   // it should go before the serializability check middleware

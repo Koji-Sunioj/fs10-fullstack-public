@@ -3,6 +3,7 @@ import { PropertyType, FilterType } from 'types'
 import Property from '../models/Property'
 import PropertyService from '../services/property'
 import { BadRequestError } from '../helpers/apiError'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export const createProperty = async (
   req: Request,
@@ -83,6 +84,9 @@ export const findProperty = async (
   res: Response,
   next: NextFunction
 ) => {
+  //const token = req.headers.authorization?.split(' ')[1]
+  //const decoded: any = jwt.decode(token!)
+  //console.log(new Date(decoded.iat * 1000))
   try {
     const { propertyId } = req.params
     const property = await PropertyService.findProperty(propertyId)

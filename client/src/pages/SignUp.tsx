@@ -18,13 +18,23 @@ const SignUp = () => {
 
     localStorage.setItem("token", JSON.stringify(jwt));
   }
-  const token = JSON.parse(localStorage.getItem("token") as string);
-  console.log(token);
+  //const token = JSON.parse(localStorage.getItem("token") as string);
+  //console.log(`Bearer ${token.token}`);
 
   return (
     <Container>
       <Row>
-        <Form className="form">
+        <GoogleOAuthProvider clientId={clientId}>
+          <GoogleLogin onSuccess={googleSuccess} />
+        </GoogleOAuthProvider>
+      </Row>
+    </Container>
+  );
+};
+
+export default SignUp;
+
+/*<Form className="form">
           <h1>Sign Up</h1>
           <Form.Group className="mb-3">
             <Form.Label>Email address</Form.Label>
@@ -58,13 +68,5 @@ const SignUp = () => {
             </Button>
             <Link to={"/"}>already have an account? sign in!</Link>
           </div>
-          <GoogleOAuthProvider clientId={clientId}>
-            <GoogleLogin onSuccess={googleSuccess} />
-          </GoogleOAuthProvider>
-        </Form>
-      </Row>
-    </Container>
-  );
-};
-
-export default SignUp;
+         
+        </Form> */

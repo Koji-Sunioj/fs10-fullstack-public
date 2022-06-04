@@ -1,5 +1,5 @@
 import express from 'express'
-
+import verifyAuth from '../middlewares/verifyAuth'
 import {
   createReservation,
   findReservations,
@@ -11,7 +11,7 @@ import {
 const router = express.Router()
 
 router.get('/', findReservations)
-router.post('/', createReservation)
+router.post('/', verifyAuth, createReservation)
 router.get('/:reservationId', findReservation)
 router.delete('/:reservationId', deleteReservation)
 router.patch('/:reservationId', updateReservation)

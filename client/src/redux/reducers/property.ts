@@ -30,6 +30,11 @@ export const properties = createSlice({
         state.loading = false;
         state.data = action.payload.data[0];
         state.error = false;
+      })
+      .addCase(getPropery.rejected, (state, action) => {
+        state.loading = false;
+        state.data = null;
+        state.error = true;
       });
   },
 });

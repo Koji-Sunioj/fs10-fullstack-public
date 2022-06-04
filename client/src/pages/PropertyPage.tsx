@@ -10,15 +10,21 @@ import {
   InputGroup,
   FormControl,
   Col,
+  Form,
+  Alert,
 } from "react-bootstrap";
 import calendarArray from "../utils/calendarArray";
 import checkBooked from "../utils/checkBooked";
 import moment from "moment";
+import { createReservation } from "../redux/reducers/createres";
+import { resetRes } from "../redux/reducers/createres";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
+  const client = useSelector((state: any) => state.client);
+  const createRes = useSelector((state: any) => state.createRes);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState("");
   const [nights, setNumNights] = useState(0);
@@ -34,6 +40,7 @@ const PropertyPage = () => {
 
   useEffect(() => {
     dispatch(getPropery(propertyId));
+    dispatch(resetRes());
   }, [propertyId]);
 
   function decrementFocus() {
@@ -44,6 +51,18 @@ const PropertyPage = () => {
   function incrementFocus() {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
+  }
+
+  async function update(event: any, id: any) {
+    event.preventDefault();
+    const token = JSON.parse(localStorage.getItem("token") as string);
+    const formData = {
+      startDate: checkIn,
+      nights: nights,
+      propertyId: id,
+    };
+    await dispatch(createReservation({ token: token.token, data: formData }));
+    await dispatch(getPropery(propertyId));
   }
 
   let requestedNights: any = [];
@@ -99,6 +118,19 @@ const PropertyPage = () => {
             </Col>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
+            <h3>Your host(s)</h3>
+            {property.data.owners.map((owner: any) => (
+              <Col md={3} key={owner._id}>
+                <p>
+                  {owner.firstName} {owner.lastName}
+                </p>
+                <p>
+                  <strong>speaks {owner.languages.join(", ")}</strong>
+                </p>
+              </Col>
+            ))}
+          </Row>
+          <Row style={{ backgroundColor: "white" }}>
             <div
               style={{
                 display: "flex",
@@ -117,7 +149,7 @@ const PropertyPage = () => {
               <h3> {focusDay.format("MMMM YYYY")}</h3>
               <Button onClick={incrementFocus}>Forward</Button>
             </div>
-            <Table striped bordered hover>
+            <Table striped bordered hover style={{ textAlign: "center" }}>
               <thead>
                 <tr>
                   <th>Monday</th>
@@ -178,47 +210,67 @@ const PropertyPage = () => {
             </Table>
           </Row>
           <Row>
-            <InputGroup style={{ padding: "0px" }}>
-              <InputGroup.Text>Check In</InputGroup.Text>
-              <FormControl
-                defaultValue={checkIn}
-                onChange={(event) => {
-                  setCheckIn(String(event.target.value));
-                }}
-              />
-              <InputGroup.Text>Nights</InputGroup.Text>
-              <FormControl
-                type="number"
-                max="7"
-                min="0"
-                onChange={(event) => {
-                  setNumNights(Number(event.target.value));
-                }}
-              />
-              <Button
-                disabled={
-                  !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
-                  nights < 1 ||
-                  nights > 7 ||
-                  requestedNights.some((r: any) => bookedDates.includes(r))
-                }
-              >
-                Go
-              </Button>
-            </InputGroup>
+            <Form
+              style={{ padding: "0px" }}
+              onSubmit={(e) => {
+                update(e, property.data._id);
+              }}
+            >
+              <InputGroup style={{ padding: "0px" }}>
+                <InputGroup.Text>Check In</InputGroup.Text>
+                <FormControl
+                  defaultValue={checkIn}
+                  onChange={(event) => {
+                    setCheckIn(String(event.target.value));
+                  }}
+                />
+                <InputGroup.Text>Nights</InputGroup.Text>
+                <FormControl
+                  type="number"
+                  max="7"
+                  min="0"
+                  onChange={(event) => {
+                    setNumNights(Number(event.target.value));
+                  }}
+                />
+                <Button
+                  disabled={
+                    !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
+                    nights < 1 ||
+                    nights > 7 ||
+                    requestedNights.some((r: any) => bookedDates.includes(r))
+                  }
+                  type="submit"
+                >
+                  Go
+                </Button>
+              </InputGroup>
+            </Form>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
-            <h3>Your host(s)</h3>
-            {property.data.owners.map((owner: any) => (
-              <Col md={3} key={owner._id}>
-                <p>
-                  {owner.firstName} {owner.lastName}
-                </p>
-                <p>
-                  <strong>speaks {owner.languages.join(", ")}</strong>
-                </p>
-              </Col>
-            ))}
+            {property.data.reservations.map((reservation: any) => {
+              if (client.valid && reservation.userId === client.data._id) {
+                return (
+                  <>
+                    <p>{reservation.startDate.split("T")[0]}</p>
+                    <p>{reservation.checkOut.split("T")[0]}</p>
+                    <p>{reservation.nights}</p>
+                  </>
+                );
+              }
+            })}
+          </Row>
+          <Row style={{ textAlign: "center" }}>
+            {createRes.success && (
+              <Alert variant="success">
+                <h3>{createRes.message}</h3>
+              </Alert>
+            )}
+            {createRes.error && (
+              <Alert variant="danger">
+                <h3>{createRes.message}</h3>
+              </Alert>
+            )}
           </Row>
         </>
       )}

@@ -12,8 +12,8 @@ export const createReservation = async (
   try {
     const newUser = req.body
     const newData = new Reservation(newUser)
-    await ReservationService.create(newData)
-    res.json({ status: 200 })
+    const created = await ReservationService.create(newData)
+    res.json({ status: 200, data: created })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

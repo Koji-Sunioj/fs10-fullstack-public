@@ -10,7 +10,7 @@ const findById = async (userId: string): Promise<UserDocument | null> => {
 }
 
 const findByEmail = async (email: string): Promise<UserDocument | null> => {
-  return User.findOne({ email })
+  return User.findOne({ email: email })
 }
 
 const findAll = async (): Promise<UserDocument[]> => {

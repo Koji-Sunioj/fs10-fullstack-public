@@ -7,6 +7,7 @@ import userRouter from './routers/user'
 import reservationRouter from './routers/reservation'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
+import verifyAuth from './middlewares/verifyAuth'
 import jwt = require('jsonwebtoken')
 import cors = require('cors')
 import loginGoogle from './passport/google'
@@ -30,18 +31,16 @@ app.post(
   '/google-login',
   passport.authenticate('google-id-token', { session: false }),
   (req, resp) => {
-    console.log('asdasd')
     const user: any = req.user
     const token = jwt.sign(
       { email: user.email, isAdmin: user.isAdmin },
       process.env.JWT_SECRET as string,
-      { expiresIn: '1h' }
+      { expiresIn: '3h' }
     )
-    console.log('token', token)
     resp.json({ token: token })
   }
 )
-
+app.get('/api/v1/verifytoken', verifyAuth)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/owners', ownerRouter)
 app.use('/api/v1/properties', propertyRouter)
