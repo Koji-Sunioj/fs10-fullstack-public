@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getPropery } from "../redux/reducers/property";
 import {
   Button,
-  Table,
   Row,
   Container,
   InputGroup,
@@ -13,34 +12,38 @@ import {
   Form,
   Alert,
 } from "react-bootstrap";
-import calendarArray from "../utils/calendarArray";
 import checkBooked from "../utils/checkBooked";
 import moment from "moment";
 import { createReservation } from "../redux/reducers/createres";
 import { resetRes } from "../redux/reducers/createres";
+import { deleteReservation, resetDel } from "../redux/reducers/deleteres";
+import CalendarView from "../components/CalendarView";
+import { reservationView } from "../redux/reducers/resesrvationview";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
+  const token = JSON.parse(localStorage.getItem("token") as string);
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
+  const deleteRes = useSelector((state: any) => state.deleteRes);
   const client = useSelector((state: any) => state.client);
   const createRes = useSelector((state: any) => state.createRes);
+  const viewRes = useSelector((state: any) => state.reservationView);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState("");
   const [nights, setNumNights] = useState(0);
-  const calendar = calendarArray(focusDay);
 
-  const rows = calendar.length / 7;
-  const newRows = [];
-  for (let i = 0; i < rows; i++) {
-    newRows.push(i);
-  }
-  const bookedDates =
-    property.data === null ? [] : checkBooked(property.data.reservations);
+  console.log(viewRes);
+
+  const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
+
+  console.log(bookedDates);
 
   useEffect(() => {
     dispatch(getPropery(propertyId));
     dispatch(resetRes());
+    dispatch(resetDel());
+    dispatch(reservationView(propertyId));
   }, [propertyId]);
 
   function decrementFocus() {
@@ -53,42 +56,44 @@ const PropertyPage = () => {
     setFocusDate(date.add(1, "month"));
   }
 
+  console.log(localStorage.getItem("token") as string);
+
   async function update(event: any, id: any) {
     event.preventDefault();
-    const token = JSON.parse(localStorage.getItem("token") as string);
     const formData = {
       startDate: checkIn,
       nights: nights,
       propertyId: id,
     };
+    setCheckIn("");
     await dispatch(createReservation({ token: token.token, data: formData }));
-    await dispatch(getPropery(propertyId));
+    dispatch(reservationView(propertyId));
+    dispatch(resetDel());
   }
 
-  let requestedNights: any = [];
+  let requestedNights: string[] = [];
   if (moment(checkIn, "YYYY-MM-DD", true).isValid()) {
     const dateDiff = moment(checkIn)
       .add(nights, "days")
       .diff(moment(checkIn), "days");
     for (let i = 0; i < dateDiff; i++) {
-      const something = moment(checkIn).clone();
+      const day = moment(checkIn).clone();
       requestedNights.push(
-        something.add(i, "days").format("YYYY-MM-DD").split("T")[0]
+        day.add(i, "days").format("YYYY-MM-DD").split("T")[0]
       );
     }
   }
 
+  async function test(reservationId: any) {
+    await dispatch(
+      deleteReservation({ token: token.token, reservationId: reservationId })
+    );
+    dispatch(resetRes());
+    dispatch(reservationView(propertyId));
+  }
+
   return (
     <Container>
-      {property.loading && (
-        <Row>
-          <Col style={{ textAlign: "center" }}>
-            <div className="property">
-              <h3>Loading</h3>
-            </div>
-          </Col>
-        </Row>
-      )}
       {property.data && property.data._id === propertyId && (
         <>
           <Row style={{ backgroundColor: "white" }}>
@@ -130,84 +135,15 @@ const PropertyPage = () => {
               </Col>
             ))}
           </Row>
+
           <Row style={{ backgroundColor: "white" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-              }}
-            >
-              <Button
-                onClick={decrementFocus}
-                disabled={
-                  focusDay.clone().subtract(1, "month") <
-                  moment().startOf("month")
-                }
-              >
-                Back
-              </Button>
-              <h3> {focusDay.format("MMMM YYYY")}</h3>
-              <Button onClick={incrementFocus}>Forward</Button>
-            </div>
-            <Table striped bordered hover style={{ textAlign: "center" }}>
-              <thead>
-                <tr>
-                  <th>Monday</th>
-                  <th>Tuesday</th>
-                  <th>Wednesday</th>
-                  <th>Thursday</th>
-                  <th>Friday</th>
-                  <th>Thursday</th>
-                  <th>Thursday</th>
-                </tr>
-              </thead>
-              <tbody>
-                {newRows.map((val) => (
-                  <tr key={val}>
-                    {calendar.slice(val * 7, val * 7 + 7).map((item) => {
-                      if (
-                        item.format("M") !== focusDay.format("M") ||
-                        item < moment().startOf("day")
-                      ) {
-                        return (
-                          <td
-                            style={{ backgroundColor: "lightgrey" }}
-                            key={item}
-                          >
-                            {item.format("DD")}
-                          </td>
-                        );
-                      } else {
-                        if (bookedDates.includes(item.format("YYYY-MM-DD"))) {
-                          return (
-                            <td style={{ backgroundColor: "red" }} key={item}>
-                              {item.format("DD")}
-                            </td>
-                          );
-                        } else {
-                          return (
-                            <td key={item}>
-                              <Button
-                                variant="link"
-                                style={{
-                                  textDecoration: "none",
-                                  padding: "0px",
-                                }}
-                                onClick={() => {
-                                  setCheckIn(String(item.format("YYYY-MM-DD")));
-                                }}
-                              >
-                                {item.format("DD")}
-                              </Button>
-                            </td>
-                          );
-                        }
-                      }
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <CalendarView
+              bookedDates={bookedDates}
+              decrementFocus={decrementFocus}
+              incrementFocus={incrementFocus}
+              setCheckIn={setCheckIn}
+              focusDay={focusDay}
+            />
           </Row>
           <Row>
             <Form
@@ -247,19 +183,42 @@ const PropertyPage = () => {
               </InputGroup>
             </Form>
           </Row>
-          <Row style={{ backgroundColor: "white" }}>
-            {property.data.reservations.map((reservation: any) => {
-              if (client.valid && reservation.userId === client.data._id) {
-                return (
-                  <>
-                    <p>{reservation.startDate.split("T")[0]}</p>
-                    <p>{reservation.checkOut.split("T")[0]}</p>
-                    <p>{reservation.nights}</p>
-                  </>
-                );
-              }
-            })}
-          </Row>
+          <>
+            {client.valid !== null &&
+              viewRes.data !== null &&
+              viewRes.data.map((reservation: any) => {
+                if (reservation.userId === client.data._id) {
+                  return (
+                    <Row
+                      style={{ backgroundColor: "white" }}
+                      key={reservation._id}
+                    >
+                      <Col>
+                        <h3>id: {reservation._id}</h3>
+                        <p>check in: {reservation.startDate.split("T")[0]}</p>
+                        <p>
+                          check out:{" "}
+                          {moment(reservation.startDate)
+                            .add(reservation.nights, "days")
+                            .format("YYYY-MM-DD")}
+                        </p>
+                        <p>nights: {reservation.nights}</p>
+                        <Button
+                          variant={"danger"}
+                          disabled={moment(reservation.startDate) < moment()}
+                          onClick={() => {
+                            test(reservation._id);
+                          }}
+                        >
+                          delete
+                        </Button>
+                      </Col>
+                    </Row>
+                  );
+                }
+              })}
+          </>
+
           <Row style={{ textAlign: "center" }}>
             {createRes.success && (
               <Alert variant="success">
@@ -269,6 +228,16 @@ const PropertyPage = () => {
             {createRes.error && (
               <Alert variant="danger">
                 <h3>{createRes.message}</h3>
+              </Alert>
+            )}
+            {deleteRes.success && (
+              <Alert variant="success">
+                <h3>{deleteRes.message}</h3>
+              </Alert>
+            )}
+            {deleteRes.error && (
+              <Alert variant="danger">
+                <h3>{deleteRes.message}</h3>
               </Alert>
             )}
           </Row>

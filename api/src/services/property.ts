@@ -57,6 +57,7 @@ const findProperty = async (propertyId: string) => {
         from: 'reservations',
         foreignField: 'propertyId',
         as: 'reservations',
+        pipeline: [{ $sort: { startDate: -1 } }],
       },
     },
     {

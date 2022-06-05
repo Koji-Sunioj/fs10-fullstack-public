@@ -5,6 +5,7 @@ import { verifyToken } from "../redux/reducers/client";
 import { useEffect } from "react";
 
 const NavBar = () => {
+  console.log("invoked");
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
   const dispatch = useDispatch();

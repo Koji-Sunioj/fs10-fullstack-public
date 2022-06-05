@@ -50,6 +50,12 @@ const findAll = async () => {
   return Reservation.find({}, { __v: 0 }).sort({ startDate: 1 })
 }
 
+const findBypropertyId = async (propertyId: string) => {
+  return Reservation.find({ propertyId: propertyId }, { __v: 0 }).sort({
+    startDate: -1,
+  })
+}
+
 const findById = async (reservationId: string) => {
   const userReservation = Reservation.aggregate([
     {
@@ -95,4 +101,5 @@ export default {
   deleteById,
   updateById,
   findbyUserID,
+  findBypropertyId,
 }

@@ -29,7 +29,12 @@ export const findReservations = async (
   next: NextFunction
 ) => {
   try {
-    if (req.query.userId) {
+    if (req.query.propertyId) {
+      const propertyReservations = await ReservationService.findBypropertyId(
+        String(req.query.propertyId)
+      )
+      res.json({ status: 200, data: propertyReservations })
+    } else if (req.query.userId) {
       const userReservations = await ReservationService.findbyUserID(
         String(req.query.userId)
       )

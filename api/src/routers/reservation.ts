@@ -13,7 +13,7 @@ const router = express.Router()
 router.get('/', findReservations)
 router.post('/', verifyAuth, createReservation)
 router.get('/:reservationId', findReservation)
-router.delete('/:reservationId', deleteReservation)
+router.delete('/:reservationId', verifyAuth, deleteReservation)
 router.patch('/:reservationId', updateReservation)
 
 export default router

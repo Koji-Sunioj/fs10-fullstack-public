@@ -4,7 +4,6 @@ export const verifyToken: any = createAsyncThunk(
   "token",
   async (token: any) => {
     const url = "http://localhost:5000/api/v1/verifytoken/";
-    console.log(token);
     return await await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
