@@ -20,14 +20,13 @@ const MyAccount = () => {
   const reservations = useSelector((state: any) => state.myReservations);
   const [isToggleForm, setToggleForm] = useState(false);
 
-  console.log(client);
-  console.log(reservations);
-
   useEffect(() => {
     if (client.valid) {
       dispatch(getMyReservations(client.data._id));
     }
-  }, []);
+  }, [client]);
+
+  console.log(client);
 
   return (
     <Container>
@@ -73,7 +72,7 @@ const MyAccount = () => {
               </InputGroup>
             </Form>
           </Row>
-          {reservations.data !== null && (
+          {reservations.data !== null && reservations.data.length > 0 && (
             <>
               <Row>
                 <Col style={{ textAlign: "center" }}>

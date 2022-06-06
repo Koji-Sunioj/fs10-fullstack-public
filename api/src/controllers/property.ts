@@ -40,6 +40,7 @@ export const findProperties = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.body)
     const filter = {
       searchBy: String(req.query.searchBy)!,
       direction: Number(req.query.direction),

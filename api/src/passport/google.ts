@@ -18,14 +18,14 @@ const loginGoogle = () => {
       try {
         let user: any = await UserService.findByEmail(googleResp.payload.email)
         if (!user) {
-          user = {
+          const newUser = {
             firstName: googleResp.payload.given_name,
             lastName: googleResp.payload.family_name,
             email: googleResp.payload.email,
             isAdmin: isAdmin(googleResp.payload.email),
           }
-          const newUser = new User(user)
-          await UserService.create(newUser)
+          user = new User(newUser)
+          await UserService.create(user)
         }
         done(null, user)
       } catch (error) {

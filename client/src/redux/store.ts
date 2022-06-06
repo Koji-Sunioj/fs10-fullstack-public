@@ -7,6 +7,7 @@ import createclient from "./reducers/client";
 import deleteres from "./reducers/deleteres";
 import viewpropres from "./reducers/resesrvationview";
 import viewmyreservations from "./reducers/myreservations";
+import verifygoogle from "./reducers/verifygoogle";
 import {
   updateSearch,
   updatePage,
@@ -41,6 +42,7 @@ export const store = configureStore({
     deleteRes: deleteres,
     reservationView: viewpropres,
     myReservations: viewmyreservations,
+    googleAuth: verifygoogle,
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,

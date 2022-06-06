@@ -3,8 +3,9 @@ import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 export const verifyToken: any = createAsyncThunk(
   "token",
   async (token: any) => {
-    const url = "http://localhost:5000/api/v1/verifytoken/";
-    return await await fetch(url, {
+    console.log(token);
+    const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
+    return await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -27,6 +28,10 @@ export const createclient = createSlice({
       state.valid = null;
       state.data = null;
     },
+    setFromGoogle: (state, action) => {
+      state.valid = action.payload.valid;
+      state.data = action.payload.user;
+    },
   },
   extraReducers(builder) {
     builder
@@ -47,5 +52,5 @@ export const createclient = createSlice({
   },
 });
 
-export const { resetClient } = createclient.actions;
+export const { resetClient, setFromGoogle } = createclient.actions;
 export default createclient.reducer;

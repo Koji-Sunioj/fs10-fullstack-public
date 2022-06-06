@@ -37,7 +37,7 @@ app.post(
       process.env.JWT_SECRET as string,
       { expiresIn: '3h' }
     )
-    resp.json({ token: token })
+    resp.json({ token: token, user: user })
   }
 )
 app.get('/api/v1/verifytoken', verifyAuth)

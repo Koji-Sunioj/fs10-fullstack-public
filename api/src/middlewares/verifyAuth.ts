@@ -22,7 +22,7 @@ export default async function (
       res.json({ status: 403, message: 'no user with your credentials' })
     }
 
-    if (req.method === 'GET') {
+    if (req.query.retrieve) {
       res.json({ status: 200, data: user })
     }
     req.body.userId = user!._id

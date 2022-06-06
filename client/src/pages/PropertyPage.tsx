@@ -63,8 +63,7 @@ const PropertyPage = () => {
       nights: nights,
       propertyId: id,
     };
-
-    await dispatch(createReservation({ token: token.token, data: formData }));
+    await dispatch(createReservation({ token: token, data: formData }));
     dispatch(reservationView(propertyId));
     dispatch(resetDel());
   }
@@ -84,7 +83,7 @@ const PropertyPage = () => {
 
   async function test(reservationId: any) {
     await dispatch(
-      deleteReservation({ token: token.token, reservationId: reservationId })
+      deleteReservation({ token: token, reservationId: reservationId })
     );
     dispatch(resetRes());
     dispatch(reservationView(propertyId));

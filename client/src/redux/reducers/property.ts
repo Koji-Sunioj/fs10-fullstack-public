@@ -4,7 +4,6 @@ export const getPropery: any = createAsyncThunk(
   "property",
   async (propertyId) => {
     let url = "http://localhost:5000/api/v1/properties/" + propertyId;
-
     return await fetch(url).then((res) => res.json());
   }
 );

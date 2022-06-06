@@ -2,18 +2,34 @@ import { Navbar, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { verifyToken } from "../redux/reducers/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { setFromGoogle } from "../redux/reducers/client";
+
+import { verifyGoogle } from "../redux/reducers/verifygoogle";
 
 const NavBar = () => {
-  console.log("invoked");
+  const googleAuth = useSelector((state: any) => state.googleAuth);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (token && token.token.length) {
-      dispatch(verifyToken(token.token));
+    if (googleAuth.jwt !== null) {
+      dispatch(setFromGoogle({ user: googleAuth.user, valid: true }));
+      localStorage.setItem("token", JSON.stringify(googleAuth.jwt));
+    } else if (token && token.length) {
+      dispatch(verifyToken(token));
     }
-  }, []);
+  }, [googleAuth]);
+
+  const clientId =
+    "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";
+
+  async function googleSuccess(response: any) {
+    const googleCred = response.credential;
+    dispatch(verifyGoogle(googleCred));
+  }
 
   return (
     <Navbar bg="light">
@@ -26,9 +42,9 @@ const NavBar = () => {
             my account
           </Link>
         ) : (
-          <Link to={"/signup"} className="navbar-brand">
-            sign in
-          </Link>
+          <GoogleOAuthProvider clientId={clientId}>
+            <GoogleLogin onSuccess={googleSuccess} />
+          </GoogleOAuthProvider>
         )}
       </Container>
     </Navbar>
