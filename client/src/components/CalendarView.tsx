@@ -8,6 +8,7 @@ const CalendarView = ({
   focusDay,
   setCheckIn,
   bookedDates,
+  disabled,
 }: any) => {
   const calendar = calendarArray(focusDay);
   const rows = calendar.length / 7;
@@ -33,7 +34,15 @@ const CalendarView = ({
           Back
         </Button>
         <h3> {focusDay.format("MMMM YYYY")}</h3>
-        <Button onClick={incrementFocus}>Forward</Button>
+        <Button
+          onClick={incrementFocus}
+          disabled={
+            focusDay.clone().add(1, "month").format("MMMM-YYYY") ===
+            moment().startOf("year").add(1, "year").format("MMMM-YYYY")
+          }
+        >
+          Forward
+        </Button>
       </div>
       <Table style={{ textAlign: "center" }}>
         <thead>
@@ -80,6 +89,7 @@ const CalendarView = ({
                             textDecoration: "none",
                             padding: "0px",
                           }}
+                          disabled={disabled}
                           onClick={() => {
                             setCheckIn(String(item.format("YYYY-MM-DD")));
                           }}

@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 
-export const reservationView: any = createAsyncThunk(
-  "reservationview",
-  async (propertyId: any) => {
-    const url =
-      "http://localhost:5000/api/v1/reservations/?propertyId=" + propertyId;
+export const getMyReservations: any = createAsyncThunk(
+  "myreservations",
+  async (userId: any) => {
+    const url = "http://localhost:5000/api/v1/reservations/?userId=" + userId;
     return await fetch(url).then((resp) => resp.json());
   }
 );
@@ -15,24 +14,24 @@ const initialState: any = {
   error: false,
 };
 
-export const viewpropres = createSlice({
-  name: "viewreservations",
+export const viewmyreservations = createSlice({
+  name: "viewmyreservations",
   initialState,
   reducers: {
-    resetResView: (state) => {
+    resetMyView: (state) => {
       state.loading = false;
-      state.error = null;
       state.data = null;
+      state.error = null;
     },
   },
   extraReducers(builder) {
     builder
-      .addCase(reservationView.pending, (state, action) => {
+      .addCase(getMyReservations.pending, (state, action) => {
         state.error = false;
         state.loading = true;
       })
-      .addCase(reservationView.fulfilled, (state, action) => {
-        if (action.payload.status === 403) {
+      .addCase(getMyReservations.fulfilled, (state, action) => {
+        if (action.payload.status !== 200) {
           state.loading = false;
           state.error = true;
         } else if (action.payload.status === 200) {
@@ -42,13 +41,13 @@ export const viewpropres = createSlice({
           state.error = false;
         }
       })
-      .addCase(reservationView.rejected, (state, action) => {
-        state.success = false;
+      .addCase(getMyReservations.rejected, (state, action) => {
         state.loading = false;
+        state.data = null;
         state.error = true;
       });
   },
 });
 
-export const { resetResView } = viewpropres.actions;
-export default viewpropres.reducer;
+export const { resetMyView } = viewmyreservations.actions;
+export default viewmyreservations.reducer;

@@ -32,7 +32,7 @@ export const createclient = createSlice({
     builder
       .addCase(verifyToken.fulfilled, (state, action) => {
         if (action.payload.status === 403) {
-          state.valid = false;
+          state.valid = null;
           state.data = null;
         } else if (action.payload.status === 200) {
           console.log(action.payload);

@@ -30,17 +30,16 @@ const PropertyPage = () => {
   const createRes = useSelector((state: any) => state.createRes);
   const viewRes = useSelector((state: any) => state.reservationView);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
-  const [checkIn, setCheckIn] = useState("");
-  const [nights, setNumNights] = useState(0);
-
-  console.log(viewRes);
+  const [checkIn, setCheckIn] = useState<string>("");
+  const [nights, setNumNights] = useState<string | number>("");
 
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
-  console.log(bookedDates);
-
   useEffect(() => {
-    dispatch(getPropery(propertyId));
+    if (property.data === null || property.data._id !== propertyId) {
+      dispatch(getPropery(propertyId));
+    }
+
     dispatch(resetRes());
     dispatch(resetDel());
     dispatch(reservationView(propertyId));
@@ -55,17 +54,16 @@ const PropertyPage = () => {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
   }
-
-  console.log(localStorage.getItem("token") as string);
-
   async function update(event: any, id: any) {
     event.preventDefault();
+    setCheckIn("");
+    setNumNights("");
     const formData = {
       startDate: checkIn,
       nights: nights,
       propertyId: id,
     };
-    setCheckIn("");
+
     await dispatch(createReservation({ token: token.token, data: formData }));
     dispatch(reservationView(propertyId));
     dispatch(resetDel());
@@ -92,10 +90,20 @@ const PropertyPage = () => {
     dispatch(reservationView(propertyId));
   }
 
+  const shouldRenderRows =
+    client.valid === true &&
+    viewRes.data !== null &&
+    viewRes.data.some((r: any) => r.userId === client.data._id);
+
   return (
     <Container>
       {property.data && property.data._id === propertyId && (
         <>
+          <Row>
+            <Col style={{ textAlign: "center" }}>
+              <h2>Property Overview</h2>
+            </Col>
+          </Row>
           <Row style={{ backgroundColor: "white" }}>
             <Col md={6}>
               <h1>{property.data.title}</h1>
@@ -135,7 +143,11 @@ const PropertyPage = () => {
               </Col>
             ))}
           </Row>
-
+          <Row>
+            <Col style={{ textAlign: "center" }}>
+              <h2>Book your holiday</h2>
+            </Col>
+          </Row>
           <Row style={{ backgroundColor: "white" }}>
             <CalendarView
               bookedDates={bookedDates}
@@ -143,6 +155,7 @@ const PropertyPage = () => {
               incrementFocus={incrementFocus}
               setCheckIn={setCheckIn}
               focusDay={focusDay}
+              disabled={client.valid === false || client.valid === null}
             />
           </Row>
           <Row>
@@ -152,41 +165,54 @@ const PropertyPage = () => {
                 update(e, property.data._id);
               }}
             >
-              <InputGroup style={{ padding: "0px" }}>
-                <InputGroup.Text>Check In</InputGroup.Text>
-                <FormControl
-                  defaultValue={checkIn}
-                  onChange={(event) => {
-                    setCheckIn(String(event.target.value));
-                  }}
-                />
-                <InputGroup.Text>Nights</InputGroup.Text>
-                <FormControl
-                  type="number"
-                  max="7"
-                  min="0"
-                  onChange={(event) => {
-                    setNumNights(Number(event.target.value));
-                  }}
-                />
-                <Button
-                  disabled={
-                    !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
-                    nights < 1 ||
-                    nights > 7 ||
-                    requestedNights.some((r: any) => bookedDates.includes(r))
-                  }
-                  type="submit"
-                >
-                  Go
-                </Button>
-              </InputGroup>
+              <fieldset
+                disabled={client.valid === false || client.valid === null}
+              >
+                <InputGroup style={{ padding: "0px" }}>
+                  <InputGroup.Text>Check In</InputGroup.Text>
+                  <FormControl
+                    value={checkIn}
+                    onChange={(event) => {
+                      setCheckIn(String(event.target.value));
+                    }}
+                  />
+                  <InputGroup.Text>Nights</InputGroup.Text>
+                  <FormControl
+                    type="number"
+                    max="7"
+                    min="0"
+                    value={nights}
+                    onChange={(event) => {
+                      const night = Number(event.target.value);
+                      night === 0
+                        ? setNumNights("")
+                        : setNumNights(Number(night));
+                    }}
+                  />
+                  <Button
+                    disabled={
+                      !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
+                      nights < 1 ||
+                      nights > 7 ||
+                      requestedNights.some((r: any) => bookedDates.includes(r))
+                    }
+                    type="submit"
+                  >
+                    Go
+                  </Button>
+                </InputGroup>
+              </fieldset>
             </Form>
           </Row>
-          <>
-            {client.valid !== null &&
-              viewRes.data !== null &&
-              viewRes.data.map((reservation: any) => {
+
+          {shouldRenderRows && (
+            <>
+              <Row>
+                <Col style={{ textAlign: "center" }}>
+                  <h2>Your reservations</h2>
+                </Col>
+              </Row>
+              {viewRes.data.map((reservation: any) => {
                 if (reservation.userId === client.data._id) {
                   return (
                     <Row
@@ -203,6 +229,11 @@ const PropertyPage = () => {
                             .format("YYYY-MM-DD")}
                         </p>
                         <p>nights: {reservation.nights}</p>
+                        <p>
+                          total: &euro;
+                          {reservation.nights.toFixed(2) *
+                            Number(property.data.nightlyRate)}
+                        </p>
                         <Button
                           variant={"danger"}
                           disabled={moment(reservation.startDate) < moment()}
@@ -217,7 +248,8 @@ const PropertyPage = () => {
                   );
                 }
               })}
-          </>
+            </>
+          )}
 
           <Row style={{ textAlign: "center" }}>
             {createRes.success && (
