@@ -5,6 +5,7 @@ import property from "./reducers/property";
 import createres from "./reducers/createres";
 import createclient from "./reducers/client";
 import deleteres from "./reducers/deleteres";
+import updateuser from "./reducers/updateuser";
 import viewpropres from "./reducers/resesrvationview";
 import viewmyreservations from "./reducers/myreservations";
 import verifygoogle from "./reducers/verifygoogle";
@@ -13,6 +14,7 @@ import {
   updatePage,
   updateDirection,
   updateSortCategory,
+  resetFilter,
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
@@ -24,7 +26,8 @@ listenerMiddleware.startListening({
     updateSearch,
     updatePage,
     updateDirection,
-    updateSortCategory
+    updateSortCategory,
+    resetFilter
   ),
   effect: (action, something: any) => {
     const afterFilter: any = something.getState().filterBy;
@@ -43,6 +46,7 @@ export const store = configureStore({
     reservationView: viewpropres,
     myReservations: viewmyreservations,
     googleAuth: verifygoogle,
+    updateUser: updateuser
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,

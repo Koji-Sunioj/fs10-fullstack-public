@@ -14,6 +14,7 @@ import { resetClient } from "../redux/reducers/client";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetFilter } from "../redux/reducers/filterby";
 import { useNavigate } from "react-router-dom";
+import { updateUser } from "../redux/reducers/updateuser";
 
 import moment from "moment";
 
@@ -22,9 +23,12 @@ import { Link } from "react-router-dom";
 const MyAccount = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const updatesomething = useSelector((state:any) => state.updateUser)
   const client = useSelector((state: any) => state.client);
   const reservations = useSelector((state: any) => state.myReservations);
   const [isToggleForm, setToggleForm] = useState(false);
+
+  console.log(updatesomething)
 
   useEffect(() => {
     if (client.valid) {
@@ -38,6 +42,16 @@ const MyAccount = () => {
     dispatch(resetAuth())
     dispatch(resetFilter())
     navigate("/")
+  }
+
+
+  function test(event:any,userId:any){
+    event.preventDefault()
+    console.log(userId)
+    const firstName = event.target.firstName.value
+    const lastName = event.target.lastName.value
+    const token = JSON.parse(localStorage.getItem("token") as string)
+    dispatch(updateUser({token:token, userId:userId,data:{firstName: firstName,lastName:lastName}}))
   }
 
   return (
@@ -61,7 +75,7 @@ const MyAccount = () => {
             <h2 style={{ textAlign: "center" }}>update your details</h2>
           </Row>
           <Row>
-            <Form style={{ padding: "0px" }}>
+            <Form style={{ padding: "0px" }} onSubmit={(e)=>{test(e,client.data._id)}}>
               <InputGroup style={{ padding: "0px" }}>
                 <InputGroup.Checkbox
                   checked={isToggleForm}
@@ -75,13 +89,15 @@ const MyAccount = () => {
                 <FormControl
                   disabled={!isToggleForm}
                   defaultValue={client.data.firstName}
+                  name="firstName"
                 />
                 <InputGroup.Text>last name: </InputGroup.Text>
                 <FormControl
                   disabled={!isToggleForm}
                   defaultValue={client.data.lastName}
+                  name="lastName"
                 />
-                <Button>Go</Button>
+                <Button disabled={!isToggleForm} type="submit">Go</Button>
               </InputGroup>
             </Form>
           </Row>

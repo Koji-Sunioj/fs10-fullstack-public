@@ -94,12 +94,11 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.body)
     const { userId } = req.params
-    const newData: Omit<UserType, 'joinDate'> = {
+    const newData: any = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      email: req.body.email,
-      isAdmin: req.body.isAdmin,
     }
     const updated = await UserService.updateById(userId, newData)
     res.json({ status: 200, message: 'user successfully updated' })
