@@ -24,10 +24,16 @@ export const filterby = createSlice({
     updateSortCategory: (state, action) => {
       state.sortBy = action.payload;
     },
+    resetFilter: (state)=>{
+      state.searchBy = "";
+      state.sortBy= "nightlyRate";
+      state.page= 1;
+      state.direction= -1;
+    }
   },
 });
 
 export const searchState = (state: any) => state.filterby.searchBy;
-export const { updateSearch, updatePage, updateDirection, updateSortCategory } =
+export const { updateSearch, updatePage, updateDirection, updateSortCategory, resetFilter } =
   filterby.actions;
 export default filterby.reducer;

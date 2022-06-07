@@ -10,11 +10,17 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getMyReservations } from "../redux/reducers/myreservations";
+import { resetClient } from "../redux/reducers/client";
+import { resetAuth } from "../redux/reducers/verifygoogle";
+import { resetFilter } from "../redux/reducers/filterby";
+import { useNavigate } from "react-router-dom";
+
 import moment from "moment";
 
 import { Link } from "react-router-dom";
 
 const MyAccount = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const client = useSelector((state: any) => state.client);
   const reservations = useSelector((state: any) => state.myReservations);
@@ -26,7 +32,13 @@ const MyAccount = () => {
     }
   }, [client]);
 
-  console.log(client);
+  function logout(){
+    localStorage.removeItem("token")
+    dispatch(resetClient())
+    dispatch(resetAuth())
+    dispatch(resetFilter())
+    navigate("/")
+  }
 
   return (
     <Container>
@@ -42,6 +54,7 @@ const MyAccount = () => {
               <p>email address: {client.data.email}</p>
               <p>joined: {client.data.joinDate.split("T")[0]}</p>
               <p>role: {client.data.isAdmin ? "administrator" : "user"}</p>
+              <Button variant={"danger"} onClick={logout}>Log Out</Button>
             </Col>
           </Row>
           <Row>
@@ -97,7 +110,11 @@ const MyAccount = () => {
           )}
         </>
       ) : (
-        <p>no</p>
+        <Row style={{  textAlign:"center" }}>
+          <Col>
+            <h2>looks like you're not signed in or don't have an account with us</h2>
+          </Col>
+      </Row>
       )}
     </Container>
   );
