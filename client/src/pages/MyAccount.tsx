@@ -6,6 +6,7 @@ import {
   Button,
   FormControl,
   InputGroup,
+  Alert,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetFilter } from "../redux/reducers/filterby";
 import { useNavigate } from "react-router-dom";
 import { updateUser } from "../redux/reducers/updateuser";
+import { verifyToken } from "../redux/reducers/client";
 
 import moment from "moment";
 
@@ -27,8 +29,8 @@ const MyAccount = () => {
   const client = useSelector((state: any) => state.client);
   const reservations = useSelector((state: any) => state.myReservations);
   const [isToggleForm, setToggleForm] = useState(false);
+  const token = JSON.parse(localStorage.getItem("token") as string)
 
-  console.log(updatesomething)
 
   useEffect(() => {
     if (client.valid) {
@@ -45,14 +47,16 @@ const MyAccount = () => {
   }
 
 
-  function test(event:any,userId:any){
+ async function test(event:any,userId:any){
     event.preventDefault()
     console.log(userId)
     const firstName = event.target.firstName.value
-    const lastName = event.target.lastName.value
-    const token = JSON.parse(localStorage.getItem("token") as string)
-    dispatch(updateUser({token:token, userId:userId,data:{firstName: firstName,lastName:lastName}}))
+    const lastName = event.target.lastName.value  
+    await dispatch(updateUser({token:token, userId:userId,data:{firstName: firstName,lastName:lastName}}))
+    dispatch(verifyToken(token))
   }
+
+  console.log(updatesomething)
 
   return (
     <Container>
@@ -101,6 +105,11 @@ const MyAccount = () => {
               </InputGroup>
             </Form>
           </Row>
+        {updatesomething.success && (<Row style={{textAlign:'center'}}>
+          <Alert variant="success">{updatesomething.message}</Alert>
+        </Row>)}
+
+
           {reservations.data !== null && reservations.data.length > 0 && (
             <>
               <Row>
