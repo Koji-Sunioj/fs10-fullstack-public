@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 export const verifyToken: any = createAsyncThunk(
   "token",
   async (token: any) => {
-    console.log(token);
     const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
     return await fetch(url, {
       headers: {
@@ -40,7 +39,6 @@ export const createclient = createSlice({
           state.valid = null;
           state.data = null;
         } else if (action.payload.status === 200) {
-          console.log(action.payload);
           state.valid = true;
           state.data = action.payload.data;
         }

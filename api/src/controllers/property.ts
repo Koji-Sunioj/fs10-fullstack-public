@@ -23,8 +23,12 @@ export const createProperty = async (
     }
 
     const newData = new Property(newProperty)
-    await PropertyService.create(newData)
-    res.json({ status: 200, message: 'property successfully created' })
+    const created = await PropertyService.create(newData)
+    res.json({
+      status: 200,
+      message: 'property successfully created',
+      data: created,
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

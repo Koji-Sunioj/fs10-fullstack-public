@@ -1,4 +1,6 @@
 import express from 'express'
+import verifyAuth from '../middlewares/verifyAuth'
+import verifyAdmin from '../middlewares/verifyAdmin'
 
 import {
   createProperty,
@@ -11,7 +13,7 @@ import {
 const router = express.Router()
 
 router.get('/', findProperties)
-router.post('/', createProperty)
+router.post('/', verifyAuth, verifyAdmin, createProperty)
 router.get('/:propertyId', findProperty)
 router.patch('/:propertyId', updateProperty)
 router.delete('/:propertyId', deleteProperty)

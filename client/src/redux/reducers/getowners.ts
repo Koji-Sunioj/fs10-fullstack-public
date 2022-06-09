@@ -8,6 +8,7 @@ export const getOwners: any = createAsyncThunk("owners", async () => {
 const initialState: any = {
   data: null,
   error: null,
+  loading: null,
 };
 
 export const viewowners = createSlice({
@@ -20,15 +21,18 @@ export const viewowners = createSlice({
         if (action.payload.status !== 200) {
           state.data = null;
           state.error = true;
+          state.loading = false;
         } else if (action.payload.status === 200) {
           const { data } = action.payload;
           state.data = data;
           state.error = false;
+          state.loading = false
         }
       })
       .addCase(getOwners.rejected, (state, action) => {
         state.data = null;
         state.error = true;
+        state.loading = false
       });
   },
 });

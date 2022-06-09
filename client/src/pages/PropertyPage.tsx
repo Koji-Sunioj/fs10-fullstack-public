@@ -81,7 +81,7 @@ const PropertyPage = () => {
     }
   }
 
-  async function test(reservationId: any) {
+  async function removeReservation(reservationId: any) {
     await dispatch(
       deleteReservation({ token: token, reservationId: reservationId })
     );
@@ -127,6 +127,12 @@ const PropertyPage = () => {
                   {new Date(property.data.buildDate).getUTCFullYear()}
                 </strong>
               </p>
+              {client.data.isAdmin && (
+                <>
+                  <Button variant="danger">Delete property</Button>
+                  <Button variant="primary">Edit property</Button>
+                </>
+              )}
             </Col>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
@@ -237,7 +243,7 @@ const PropertyPage = () => {
                           variant={"danger"}
                           disabled={moment(reservation.startDate) < moment()}
                           onClick={() => {
-                            test(reservation._id);
+                            removeReservation(reservation._id);
                           }}
                         >
                           delete
