@@ -74,7 +74,7 @@ const MyAccount = () => {
             </Col>
           </Row>
           <Row>
-            <h2 style={{ textAlign: "center" }}>update your details</h2>
+            <h2 style={{ textAlign: "center" }}>Update your details</h2>
           </Row>
           <Row>
             <Form style={{ padding: "0px" }} onSubmit={(e)=>{test(e,client.data._id)}}>

@@ -9,6 +9,8 @@ import {
   Alert,
 } from "react-bootstrap";
 
+import { Link } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -69,7 +71,7 @@ const AdminPage = () => {
             </Col>
           </Row>
           <Row>
-            <h2 style={{ textAlign: "center" }}>update your details</h2>
+            <h2 style={{ textAlign: "center" }}>Update your details</h2>
           </Row>
           <Row>
             <Form
@@ -112,9 +114,11 @@ const AdminPage = () => {
           <Row>
             <h2 style={{ textAlign: "center" }}>Actions</h2>
           </Row>
-          <Row style={{backgroundColor:"white"}}>
+          <Row style={{ backgroundColor: "white" }}>
             <Col>
-              <Button variant="primary">Create a property</Button>
+              <Link to={"/admin/create-property"}>
+                <Button variant="primary">Create a property</Button>
+              </Link>
               <Button variant="primary">Create a owner</Button>
             </Col>
           </Row>

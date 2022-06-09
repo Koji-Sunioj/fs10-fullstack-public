@@ -11,7 +11,7 @@ import verifyAuth from '../middlewares/verifyAuth'
 
 const router = express.Router()
 
-router.get('/', verifyAuth, findOwners)
+router.get('/', findOwners)
 router.post('/', createOwner)
 router.get('/:ownerId', findOwner)
 router.patch('/:ownerId', updateOwner)
