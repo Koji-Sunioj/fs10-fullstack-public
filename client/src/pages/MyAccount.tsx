@@ -23,7 +23,7 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 
 const MyAccount = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const updatesomething = useSelector((state:any) => state.updateUser)
   const client = useSelector((state: any) => state.client);
@@ -56,11 +56,9 @@ const MyAccount = () => {
     dispatch(verifyToken(token))
   }
 
-  console.log(updatesomething)
-
   return (
     <Container>
-      {client.valid ? (
+      {client.valid && !client.data.isAdmin? (
         <>
           <Row>
             <h2 style={{ textAlign: "center" }}>
@@ -118,7 +116,7 @@ const MyAccount = () => {
                 </Col>
               </Row>
               {reservations.data.map((reservation: any) => (
-                <Row style={{ backgroundColor: "white" }}>
+                <Row style={{ backgroundColor: "white" }} key={reservation.property._id}>
                   <Link to={`/property/${reservation.property._id}`}>
                     <h3>
                       {reservation.property.title} in{" "}

@@ -14,6 +14,8 @@ const NavBar = () => {
   const client = useSelector((state: any) => state.client);
   const dispatch = useDispatch();
 
+  console.log(client);
+
   useEffect(() => {
     if (googleAuth.jwt !== null) {
       dispatch(setFromGoogle({ user: googleAuth.user, valid: true }));
@@ -38,9 +40,15 @@ const NavBar = () => {
           Home
         </Link>
         {client.valid ? (
-          <Link to={"/myaccount"} className="navbar-brand">
-            my account
-          </Link>
+          client.data.isAdmin ? (
+            <Link to={"/admin"} className="navbar-brand">
+              admin
+            </Link>
+          ) : (
+            <Link to={"/myaccount"} className="navbar-brand">
+              my account
+            </Link>
+          )
         ) : (
           <GoogleOAuthProvider clientId={clientId}>
             <GoogleLogin onSuccess={googleSuccess} />
