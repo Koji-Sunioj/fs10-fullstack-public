@@ -4,7 +4,6 @@ import { PropertyState, FilterType } from "../../types/types";
 export const getProperties: any = createAsyncThunk(
   "properties",
   async (query: FilterType) => {
-    console.log("fetched");
     let url = "http://localhost:5000/api/v1/properties/?";
     Object.entries(query).forEach((entry: [string, string | number]) => {
       url += `${entry[0]}=${String(entry[1])}&`;

@@ -11,6 +11,8 @@ import viewmyreservations from "./reducers/myreservations";
 import verifygoogle from "./reducers/verifygoogle";
 import viewowners  from "./reducers/getowners";
 import createproperty from "./reducers/createproperty";
+import deleteproperty from "./reducers/deleteproperty";
+import updateproperty from "./reducers/updateproperty";
 import {
   updateSearch,
   updatePage,
@@ -29,7 +31,7 @@ listenerMiddleware.startListening({
     updatePage,
     updateDirection,
     updateSortCategory,
-    resetFilter
+    resetFilter,
   ),
   effect: (action, something: any) => {
     const afterFilter: any = something.getState().filterBy;
@@ -50,7 +52,9 @@ export const store = configureStore({
     googleAuth: verifygoogle,
     updateUser: updateuser,
     owners: viewowners,
-    createProp: createproperty
+    createProp: createproperty,
+    deleteProp: deleteproperty,
+    updateProp:updateproperty,
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,

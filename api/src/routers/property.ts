@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/', findProperties)
 router.post('/', verifyAuth, verifyAdmin, createProperty)
 router.get('/:propertyId', findProperty)
-router.patch('/:propertyId', updateProperty)
-router.delete('/:propertyId', deleteProperty)
+router.patch('/:propertyId', verifyAuth, verifyAdmin, updateProperty)
+router.delete('/:propertyId', verifyAuth, verifyAdmin, deleteProperty)
 
 export default router

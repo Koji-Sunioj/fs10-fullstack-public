@@ -31,8 +31,6 @@ const HomePage = () => {
     dispatch(getProperties(filterBy));
   }
 
-  console.log(filterBy)
-
   return (
     <Container>
       <Row>

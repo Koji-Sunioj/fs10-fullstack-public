@@ -26,9 +26,18 @@ export const properties = createSlice({
         state.error = false;
       })
       .addCase(getPropery.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload.data[0];
-        state.error = false;
+        if (action.payload.data.length === 0){
+          state.loading = false;
+          state.data = null;
+          state.error = true;
+        }
+        else
+        {
+          state.loading = false;
+          state.data = action.payload.data[0];
+          state.error = false;
+        }
+        
       })
       .addCase(getPropery.rejected, (state, action) => {
         state.loading = false;

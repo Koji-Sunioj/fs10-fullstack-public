@@ -1,26 +1,31 @@
 import { Col, Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { getOwners } from "../redux/reducers/getowners";
 import { useEffect, useState } from "react";
-import { createProperty } from "../redux/reducers/createproperty";
-import { Link } from "react-router-dom";
-import { resetCreateProp } from "../redux/reducers/createproperty";
+import { useParams } from "react-router-dom";
+import { getPropery } from "../redux/reducers/property";
+import { getOwners } from "../redux/reducers/getowners";
+import { updateProperty } from "../redux/reducers/updateproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
+import { Link } from "react-router-dom";
 
 import PropertyForm from "../components/PropertyForm";
 
-const CreateProperty = () => {
+const EditProperty = () => {
   const dispatch = useDispatch();
+  const { propertyId } = useParams();
   const client = useSelector((state: any) => state.client);
+  const updateProp = useSelector((state: any) => state.updateProp);
   const owners = useSelector((state: any) => state.owners);
+  const property = useSelector((state: any) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const addProperty = useSelector((state: any) => state.createProp);
+
+  console.log(updateProp)
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
-      dispatch(resetCreateProp());
-     
+      dispatch(getPropery(propertyId));
+      dispatch(resetUpdateProp())
     }
   }, [client]);
 
@@ -41,11 +46,7 @@ const CreateProperty = () => {
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
-    dispatch(createProperty({ token: token, data: property }))
-  }
-
-  function smth() {
-    console.log("asdasd");
+    dispatch(updateProperty({token:token,data:property,propertyId:propertyId}))
   }
 
   return (
@@ -54,21 +55,25 @@ const CreateProperty = () => {
         <>
           <Row>
             <Col style={{ textAlign: "center" }}>
-              <h1>Create property</h1>
+              <h1>Edit property</h1>
             </Col>
           </Row>
-          <PropertyForm sendProperty={sendProperty} owners={owners} />
+          <PropertyForm
+            sendProperty={sendProperty}
+            owners={owners}
+            property={property.data}
+          />
           <Row style={{ textAlign: "center" }}>
-            {addProperty.success && (
+            {updateProp.success && (
               <Alert variant="success">
-                <Link to={`/property/${addProperty.data._id}`}>
-                  <h3>{addProperty.message}. click here to see the listing.</h3>
+                <Link to={`/property/${propertyId}`}>
+                  <h3>{updateProp.message}. click here to see the listing.</h3>
                 </Link>
               </Alert>
             )}
-            {addProperty.error && (
+            {updateProp.error && (
               <Alert variant="danger">
-                <h3>{addProperty.message}.</h3>
+                <h3>{updateProp.message}.</h3>
               </Alert>
             )}
           </Row>
@@ -84,4 +89,4 @@ const CreateProperty = () => {
   );
 };
 
-export default CreateProperty;
+export default EditProperty;

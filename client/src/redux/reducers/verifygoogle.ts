@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 export const verifyGoogle: any = createAsyncThunk(
   "googleauth",
   async (googleCred: any) => {
-    console.log(googleCred);
     const url = "http://localhost:5000/google-login";
     return await fetch(url, {
       headers: {

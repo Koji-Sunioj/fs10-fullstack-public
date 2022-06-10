@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getPropery } from "../redux/reducers/property";
 import {
   Button,
@@ -19,15 +20,21 @@ import { resetRes } from "../redux/reducers/createres";
 import { deleteReservation, resetDel } from "../redux/reducers/deleteres";
 import CalendarView from "../components/CalendarView";
 import { reservationView } from "../redux/reducers/resesrvationview";
+import { deleteProperty } from "../redux/reducers/deleteproperty";
+import { Link } from "react-router-dom";
+import { resetUpdateProp } from "../redux/reducers/updateproperty";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
   const token = JSON.parse(localStorage.getItem("token") as string);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
   const deleteRes = useSelector((state: any) => state.deleteRes);
   const client = useSelector((state: any) => state.client);
   const createRes = useSelector((state: any) => state.createRes);
+  const removeProp = useSelector((state: any) => state.deleteProp);
+  const updateProp = useSelector((state: any) => state.updateProp);
   const viewRes = useSelector((state: any) => state.reservationView);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
@@ -36,14 +43,18 @@ const PropertyPage = () => {
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
   useEffect(() => {
-    if (property.data === null || property.data._id !== propertyId) {
+    if (
+      property.data === null ||
+      (property.data !== null && property.data._id !== propertyId) || updateProp.success
+    ) {
       dispatch(getPropery(propertyId));
     }
 
     dispatch(resetRes());
     dispatch(resetDel());
-    dispatch(reservationView(propertyId));
-  }, [propertyId]);
+    dispatch(reservationView(propertyId))
+    dispatch(resetUpdateProp());
+  }, [propertyId,updateProp]);
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -94,6 +105,15 @@ const PropertyPage = () => {
     viewRes.data !== null &&
     viewRes.data.some((r: any) => r.userId === client.data._id);
 
+  function adminDelete(propertyId: any) {
+    dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+  }
+
+  console.log(removeProp);
+
   return (
     <Container>
       {property.data && property.data._id === propertyId && (
@@ -127,10 +147,17 @@ const PropertyPage = () => {
                   {new Date(property.data.buildDate).getUTCFullYear()}
                 </strong>
               </p>
-              {client.data.isAdmin && (
+              {client.data !== null && client.data.isAdmin && (
                 <>
-                  <Button variant="danger">Delete property</Button>
-                  <Button variant="primary">Edit property</Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => adminDelete(property.data._id)}
+                  >
+                    Delete property
+                  </Button>
+                  <Link to={`/admin/edit-property/${propertyId}`}>
+                    <Button variant="primary">Edit property</Button>
+                  </Link>
                 </>
               )}
             </Col>
@@ -275,6 +302,17 @@ const PropertyPage = () => {
             {deleteRes.error && (
               <Alert variant="danger">
                 <h3>{deleteRes.message}</h3>
+              </Alert>
+            )}
+
+            {removeProp.success && (
+              <Alert variant="success">
+                <h3>{removeProp.message}</h3>
+              </Alert>
+            )}
+            {removeProp.error && (
+              <Alert variant="danger">
+                <h3>{removeProp.message}</h3>
               </Alert>
             )}
           </Row>
