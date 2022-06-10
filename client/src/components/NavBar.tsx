@@ -14,6 +14,7 @@ const NavBar = () => {
   const client = useSelector((state: any) => state.client);
   const dispatch = useDispatch();
 
+  console.log(token)
   console.log(client);
 
   useEffect(() => {

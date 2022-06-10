@@ -26,11 +26,7 @@ export const updateproperty = createSlice({
   name: "createproperty",
   initialState,
   reducers: {
-    resetUpdateProp: (state) => {
-      state.error = null;
-      state.success = null;
-      state.message = "";
-    },
+    resetUpdateProp: ()=> initialState
   },
   extraReducers(builder) {
     builder

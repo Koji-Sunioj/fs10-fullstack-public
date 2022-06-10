@@ -6,6 +6,8 @@ import { createProperty } from "../redux/reducers/createproperty";
 import { Link } from "react-router-dom";
 import { resetCreateProp } from "../redux/reducers/createproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
+import { crudRefresh } from "../redux/reducers/filterby";
+
 
 import PropertyForm from "../components/PropertyForm";
 
@@ -20,11 +22,10 @@ const CreateProperty = () => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
       dispatch(resetCreateProp());
-     
     }
   }, [client]);
 
-  function sendProperty(event: any) {
+  async function sendProperty(event: any) {
     event.preventDefault();
     const form = event.target;
     const property = {
@@ -41,7 +42,8 @@ const CreateProperty = () => {
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
-    dispatch(createProperty({ token: token, data: property }))
+    await dispatch(createProperty({ token: token, data: property }))
+    dispatch(crudRefresh())
   }
 
   function smth() {

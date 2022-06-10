@@ -23,6 +23,8 @@ import { reservationView } from "../redux/reducers/resesrvationview";
 import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
+import { crudRefresh } from "../redux/reducers/filterby";
+
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
@@ -49,10 +51,9 @@ const PropertyPage = () => {
     ) {
       dispatch(getPropery(propertyId));
     }
-
+    dispatch(reservationView(propertyId))
     dispatch(resetRes());
     dispatch(resetDel());
-    dispatch(reservationView(propertyId))
     dispatch(resetUpdateProp());
   }, [propertyId,updateProp]);
 
@@ -105,8 +106,9 @@ const PropertyPage = () => {
     viewRes.data !== null &&
     viewRes.data.some((r: any) => r.userId === client.data._id);
 
-  function adminDelete(propertyId: any) {
-    dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+  async function adminDelete(propertyId: any) {
+    await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+    dispatch(crudRefresh())
     setTimeout(() => {
       navigate("/");
     }, 1500);
@@ -190,7 +192,7 @@ const PropertyPage = () => {
               disabled={client.valid === false || client.valid === null}
             />
           </Row>
-          <Row>
+          <Row> <Col></Col>
             <Form
               style={{ padding: "0px" }}
               onSubmit={(e) => {
@@ -268,7 +270,7 @@ const PropertyPage = () => {
                         </p>
                         <Button
                           variant={"danger"}
-                          disabled={moment(reservation.startDate) < moment()}
+                          disabled={moment(reservation.startDate).startOf('day') < moment().startOf('day')}
                           onClick={() => {
                             removeReservation(reservation._id);
                           }}

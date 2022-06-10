@@ -16,8 +16,9 @@ export default async function (
         status: 403,
         message: 'insufficient priviledges for this request',
       })
+    } else if (user.isAdmin) {
+      next()
     }
-    next()
   } catch (error) {
     res.json({ status: 403, message: 'invalid session' })
   }

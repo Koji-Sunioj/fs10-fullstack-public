@@ -16,7 +16,7 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
     if (property) {
       setProperty();
     }
-  }, [property,setProperty]);
+  }, [property]);
 
 
   function setProperty() {

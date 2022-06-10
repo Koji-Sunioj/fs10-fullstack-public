@@ -7,7 +7,7 @@ import { getOwners } from "../redux/reducers/getowners";
 import { updateProperty } from "../redux/reducers/updateproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { Link } from "react-router-dom";
-
+import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
 
 const EditProperty = () => {
@@ -19,7 +19,7 @@ const EditProperty = () => {
   const property = useSelector((state: any) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
 
-  console.log(updateProp)
+  console.log(client)
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
@@ -29,7 +29,7 @@ const EditProperty = () => {
     }
   }, [client]);
 
-  function sendProperty(event: any) {
+  async function sendProperty(event: any) {
     event.preventDefault();
     const form = event.target;
     const property = {
@@ -46,7 +46,8 @@ const EditProperty = () => {
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
-    dispatch(updateProperty({token:token,data:property,propertyId:propertyId}))
+    await dispatch(updateProperty({token:token,data:property,propertyId:propertyId}))
+    dispatch(crudRefresh())
   }
 
   return (

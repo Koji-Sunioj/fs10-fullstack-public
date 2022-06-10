@@ -27,12 +27,7 @@ export const createres = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetRes: (state) => {
-      state.loading = false;
-      state.error = false;
-      state.success = false;
-      state.message = "";
-    },
+    resetRes: () =>  initialState,
   },
   extraReducers(builder) {
     builder

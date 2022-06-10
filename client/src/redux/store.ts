@@ -13,12 +13,14 @@ import viewowners  from "./reducers/getowners";
 import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
+
 import {
   updateSearch,
   updatePage,
   updateDirection,
   updateSortCategory,
   resetFilter,
+  crudRefresh,
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
@@ -32,6 +34,7 @@ listenerMiddleware.startListening({
     updateDirection,
     updateSortCategory,
     resetFilter,
+    crudRefresh,
   ),
   effect: (action, something: any) => {
     const afterFilter: any = something.getState().filterBy;

@@ -13,20 +13,28 @@ import { Link } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { resetClient } from "../redux/reducers/client";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetFilter } from "../redux/reducers/filterby";
 import { updateUser } from "../redux/reducers/updateuser";
 import { verifyToken } from "../redux/reducers/client";
+import { getMyReservations } from "../redux/reducers/myreservations";
 
 const AdminPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const updatesomething = useSelector((state: any) => state.updateUser);
+  const reservations = useSelector((state: any) => state.myReservations);
   const client = useSelector((state: any) => state.client);
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
+
+  useEffect(() => {
+    if (client.valid) {
+      dispatch(getMyReservations(client.data._id));
+    }
+  }, [client]);
 
   function logout() {
     localStorage.removeItem("token");
@@ -122,6 +130,29 @@ const AdminPage = () => {
               <Button variant="primary">Create a owner</Button>
             </Col>
           </Row>
+          {reservations.data !== null && reservations.data.length > 0 && (
+            <>
+              <Row>
+                <Col style={{ textAlign: "center" }}>
+                  <h2>Your reservations</h2>
+                </Col>
+              </Row>
+              {reservations.data.map((reservation: any) => (
+                <Row style={{ backgroundColor: "white" }} key={reservation.property._id}>
+                  <Link to={`/property/${reservation.property._id}`}>
+                    <h3>
+                      {reservation.property.title} in{" "}
+                      {reservation.property.location}
+                    </h3>
+                  </Link>
+                  <p>check in: {reservation.startDate.split("T")[0]}</p>
+                  <p>check out: {reservation.checkOut.split("T")[0]}</p>
+                  <p>nights: {reservation.nights}</p>
+                  <p>total: &euro;{reservation.bill.toFixed(2)}</p>
+                </Row>
+              ))}
+            </>
+          )}
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

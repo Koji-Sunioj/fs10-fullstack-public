@@ -23,10 +23,7 @@ export const createclient = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetClient: (state) => {
-      state.valid = null;
-      state.data = null;
-    },
+    resetClient: () => initialState,
     setFromGoogle: (state, action) => {
       state.valid = action.payload.valid;
       state.data = action.payload.user;
