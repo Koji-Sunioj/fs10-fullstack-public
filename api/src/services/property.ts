@@ -41,6 +41,10 @@ const findProperties = async (filter: FilterType) => {
     .limit(6)
 }
 
+const findAllProperties = async () => {
+  return Property.find({}, { location: 1, title: 1 })
+}
+
 const deleteById = async (propertyId: string) => {
   return Property.findByIdAndDelete(propertyId)
 }
@@ -114,6 +118,7 @@ const updateById = async (propertyId: string, propertyData: PropertyType) => {
 export default {
   create,
   findProperties,
+  findAllProperties,
   deleteById,
   findProperty,
   updateById,

@@ -1,6 +1,6 @@
-import { Col, Container, Row, Form, Button, Alert } from "react-bootstrap";
+import { Col, Container, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPropery } from "../redux/reducers/property";
 import { getOwners } from "../redux/reducers/getowners";

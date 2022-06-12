@@ -44,16 +44,20 @@ export const findProperties = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body)
-    const filter = {
-      searchBy: String(req.query.searchBy)!,
-      direction: Number(req.query.direction),
-      sortBy: String(req.query.sortBy),
-      page: Number(req.query.page) * 6 - 6,
+    if ('searchBy' in req.query) {
+      const filter = {
+        searchBy: String(req.query.searchBy)!,
+        direction: Number(req.query.direction),
+        sortBy: String(req.query.sortBy),
+        page: Number(req.query.page) * 6 - 6,
+      }
+      const properties = await PropertyService.findProperties(filter)
+      const count = await PropertyService.countProperties(filter)
+      res.json({ status: 200, data: properties, count: count })
+    } else {
+      const properties = await PropertyService.findAllProperties()
+      res.json({ status: 200, data: properties })
     }
-    const properties = await PropertyService.findProperties(filter)
-    const count = await PropertyService.countProperties(filter)
-    res.json({ status: 200, data: properties, count: count })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

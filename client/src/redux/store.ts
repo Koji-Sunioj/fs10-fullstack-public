@@ -13,6 +13,7 @@ import viewowners  from "./reducers/getowners";
 import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
+import allproperties from "./reducers/allproperties";
 
 import {
   updateSearch,
@@ -58,6 +59,7 @@ export const store = configureStore({
     createProp: createproperty,
     deleteProp: deleteproperty,
     updateProp:updateproperty,
+    getAllProperties: allproperties
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,

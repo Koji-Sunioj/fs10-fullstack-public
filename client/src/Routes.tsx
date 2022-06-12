@@ -6,6 +6,7 @@ import PropertyPage from "./pages/PropertyPage";
 import AdminPage from "./pages/AdminPage";
 import CreateProperty from "./pages/CreateProperty";
 import EditProperty from "./pages/EditProperty";
+import CreateOwner from "./pages/CreateOwner";
 
 const Routes = () => (
   <Router>
@@ -14,6 +15,7 @@ const Routes = () => (
     <Route path="/admin" element={<AdminPage />} />
     <Route path="/admin/create-property" element={<CreateProperty />} />
     <Route path="/admin/edit-property/:propertyId" element={<EditProperty />} />
+    <Route path="/admin/create-owner" element={<CreateOwner />} />
     <Route path="/property/:propertyId" element={<PropertyPage />} />
   </Router>
 );

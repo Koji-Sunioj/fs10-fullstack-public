@@ -1,5 +1,6 @@
 import Owner from '../models/Owner'
 import { OwnerDocument, OwnerType } from 'types'
+import mongoose from 'mongoose'
 
 const create = async (object: OwnerDocument): Promise<OwnerDocument> => {
   return object.save()
@@ -9,7 +10,7 @@ const findAll = async (): Promise<OwnerDocument[]> => {
   return Owner.find()
 }
 
-const findById = async (ownerId: string): Promise<OwnerDocument | null> => {
+const findById = async (ownerId: string): Promise<any> => {
   return Owner.findById(ownerId)
 }
 
@@ -33,3 +34,17 @@ export default {
   deleteById,
   updateById,
 }
+
+/*[
+    {
+      $match: { _id: new mongoose.Types.ObjectId(ownerId) },
+    },
+    {
+      $lookup: {
+        localField: 'properties',
+        from: 'properties',
+        foreignField: '_id',
+        as: 'properties',
+      },
+    }
+  ]*/

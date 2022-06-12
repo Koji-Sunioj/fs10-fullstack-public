@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { resetClient } from "../redux/reducers/client";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetFilter } from "../redux/reducers/filterby";
@@ -127,7 +127,9 @@ const AdminPage = () => {
               <Link to={"/admin/create-property"}>
                 <Button variant="primary">Create a property</Button>
               </Link>
-              <Button variant="primary">Create a owner</Button>
+              <Link to={"/admin/create-owner"}>
+                <Button variant="primary">Create a owner</Button>
+              </Link>
             </Col>
           </Row>
           {reservations.data !== null && reservations.data.length > 0 && (
@@ -138,7 +140,10 @@ const AdminPage = () => {
                 </Col>
               </Row>
               {reservations.data.map((reservation: any) => (
-                <Row style={{ backgroundColor: "white" }} key={reservation.property._id}>
+                <Row
+                  style={{ backgroundColor: "white" }}
+                  key={reservation.property._id}
+                >
                   <Link to={`/property/${reservation.property._id}`}>
                     <h3>
                       {reservation.property.title} in{" "}

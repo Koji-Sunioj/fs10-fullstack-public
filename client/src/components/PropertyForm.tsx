@@ -18,7 +18,6 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
     }
   }, [property]);
 
-
   function setProperty() {
     setTitle(property.title);
     setDescription(property.description);
@@ -30,12 +29,14 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
     setTheOwners(property.owners.map((owner: any) => owner._id));
   }
 
-  const submittable = title.length < 5 || description.length < 10  || rooms < 1 || price < 1 || location.length < 1 || !moment(buildDate, "YYYY-MM-DD", true).isValid()
- // console.log( description.length)
-  //|| |
-  //console.log(submittable)
-  console.log(moment(buildDate, "YYYY-MM-DD", true).isValid())
-//&& moment(buildDate, 'DD-MM-YYYY', true)
+  const submittable =
+    title.length < 5 ||
+    description.length < 10 ||
+    rooms < 1 ||
+    price < 1 ||
+    location.length < 1 ||
+    !moment(buildDate, "YYYY-MM-DD", true).isValid();
+
   return (
     <>
       <Row style={{ backgroundColor: "white" }}>
@@ -130,11 +131,13 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
             <Form.Select
               value={theOwners}
               onChange={(event) => {
-                setTheOwners(Array.from(event.target)
-                .filter((option: any) => {
-                  return option.selected === true;
-                })
-                .map((owner: any) => owner.value));
+                setTheOwners(
+                  Array.from(event.target)
+                    .filter((option: any) => {
+                      return option.selected === true;
+                    })
+                    .map((owner: any) => owner.value)
+                );
               }}
               name="owners"
               multiple

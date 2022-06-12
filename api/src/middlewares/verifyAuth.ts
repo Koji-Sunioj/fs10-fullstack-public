@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt = require('jsonwebtoken')
-import { ForbiddenError } from '../helpers/apiError'
 import UserService from '../services/user'
 
 export default async function (
@@ -21,6 +20,7 @@ export default async function (
       res.json({ status: 200, data: user })
     } else {
       req.body.userId = user!._id
+      console.log(user)
       next()
     }
   } catch (error) {
