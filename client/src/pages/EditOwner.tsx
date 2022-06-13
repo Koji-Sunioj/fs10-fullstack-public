@@ -1,21 +1,16 @@
-import { Col, Container, Row, Alert } from "react-bootstrap";
+import { Row, Container, Alert, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import OwnerForm from "../components/OwnerForm";
+import { getOwner } from "../redux/reducers/owner";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { getAllProperties } from "../redux/reducers/allproperties";
-import { createOwner } from "../redux/reducers/createowner";
 
-const CreateOwner = () => {
+const EditOwner = () => {
+  const { ownerId } = useParams();
   const dispatch = useDispatch();
   const client = useSelector((state: any) => state.client);
   const properties = useSelector((state: any) => state.getAllProperties);
-  const addOwner = useSelector((state: any) => state.addOwner);
-  const token = JSON.parse(localStorage.getItem("token") as string);
-
-  console.log(properties);
-  console.log(addOwner);
-  //const add = useSelector((state: any) => state.createProp);
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
@@ -37,8 +32,7 @@ const CreateOwner = () => {
       lastName: form.lastName.value[0].toUpperCase() + form.lastName.value.substring(1).toLowerCase(),
       biography: form.biography.value,
     };
-
-    dispatch(createOwner({ token: token, data: owner }));
+    console.log(owner)
   }
 
   return (
@@ -47,24 +41,10 @@ const CreateOwner = () => {
         <>
           <Row>
             <Col style={{ textAlign: "center" }}>
-              <h1>Create owner</h1>
+              <h1>Edit Owner</h1>
             </Col>
           </Row>
-          <OwnerForm sendOwner={sendOwner} properties={properties} />
-          <Row style={{ textAlign: "center" }}>
-            {addOwner.success && (
-              <Alert variant="success">
-                <Link to={`/owner/${addOwner.data._id}`}>
-                  <h3>{addOwner.message}. click here to see their information.</h3>
-                </Link>
-              </Alert>
-            )}
-            {addOwner.error && (
-              <Alert variant="danger">
-                <h3>{addOwner.message}.</h3>
-              </Alert>
-            )}
-          </Row>
+          <OwnerForm sendOwner={sendOwner} properties={properties}/>
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>
@@ -77,4 +57,4 @@ const CreateOwner = () => {
   );
 };
 
-export default CreateOwner;
+export default EditOwner;

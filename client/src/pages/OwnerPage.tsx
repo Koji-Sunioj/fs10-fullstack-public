@@ -27,7 +27,7 @@ const OwnerPage = () => {
     }, 1500);
   }
 
-  console.log(removeOwner)
+
   return (
     <Container>
       {owner.data !== null && (
@@ -45,7 +45,9 @@ const OwnerPage = () => {
               {client.valid && client.data.isAdmin && (
                 <Stack direction="horizontal" gap={3}>
                   <Button variant="danger" onClick={()=>{test(ownerId!)}}>Delete owner</Button>
-                  <Button variant="primary">Edit owner</Button>
+                  <Link to={`/admin/edit-owner/${ownerId}`}>
+                    <Button variant="primary">Edit owner</Button>
+                  </Link>
                 </Stack>
               )}
             </Col>
