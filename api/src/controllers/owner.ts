@@ -14,11 +14,10 @@ export const createOwner = async (
   try {
     const newOwner = req.body
     const newData = new Owner(newOwner)
-    console.log(newData._id)
     const created = await OwnerService.create(newData)
     if (created.properties.length > 0) {
       created.properties.forEach(async (property) => {
-        const updateable = await PropertyService.addOwner(property, newData._id)
+        await PropertyService.addOwner(property, newData._id)
       })
     }
     res.json({
@@ -106,7 +105,12 @@ export const updateOwner = async (
       languages: req.body.languages,
       properties: req.body.properties,
     }
-
+    await PropertyService.removeOwner(ownerId)
+    if (newData.properties.length > 0) {
+      newData.properties.forEach(async (property) => {
+        await PropertyService.addOwner(property, ownerId)
+      })
+    }
     const updated = await OwnerService.updateById(ownerId, newData)
     res.json({ status: 200, message: 'owner successfully updated' })
   } catch (error) {

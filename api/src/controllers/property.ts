@@ -3,7 +3,8 @@ import { PropertyType, FilterType } from 'types'
 import Property from '../models/Property'
 import PropertyService from '../services/property'
 import { BadRequestError } from '../helpers/apiError'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import ReservationService from '../services/reservation'
+import OwnerService from '../services/owner'
 
 export const createProperty = async (
   req: Request,
@@ -24,6 +25,12 @@ export const createProperty = async (
 
     const newData = new Property(newProperty)
     const created = await PropertyService.create(newData)
+    if (created.owners.length > 0) {
+      created.owners.forEach(async (owner) => {
+        await OwnerService.addProperty(newData._id, owner)
+      })
+    }
+
     res.json({
       status: 200,
       message: 'property successfully created',
@@ -75,6 +82,8 @@ export const deleteProperty = async (
   try {
     const { propertyId } = req.params
     const toDelete = await PropertyService.deleteById(propertyId)
+    await ReservationService.deleteByPropertyId(propertyId)
+    await OwnerService.removeProperty(propertyId)
     res.json({
       status: 200,
       message: `${toDelete!.title} was successfully deleted`,

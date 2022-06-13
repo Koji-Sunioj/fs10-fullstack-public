@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/', findOwners)
 router.post('/', verifyAuth, verifyAdmin, createOwner)
 router.get('/:ownerId', findOwner)
-router.patch('/:ownerId', updateOwner)
+router.patch('/:ownerId', verifyAuth, verifyAdmin, updateOwner)
 router.delete('/:ownerId', verifyAuth, verifyAdmin, deleteOwner)
 
 export default router

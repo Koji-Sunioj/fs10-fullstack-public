@@ -10,6 +10,17 @@ const findAll = async (): Promise<OwnerDocument[]> => {
   return Owner.find()
 }
 
+const addProperty = async (propertyId: string, ownerId: string) => {
+  return await Owner.updateOne(
+    { _id: ownerId },
+    { $push: { properties: propertyId } }
+  )
+}
+
+const removeProperty = async (propertyId: string) => {
+  return await Owner.updateMany({ $pull: { properties: propertyId } })
+}
+
 const findById = async (ownerId: string): Promise<any> => {
   return Owner.aggregate([
     {
@@ -58,6 +69,8 @@ export default {
   findById,
   deleteById,
   updateById,
+  addProperty,
+  removeProperty,
 }
 
 /*[

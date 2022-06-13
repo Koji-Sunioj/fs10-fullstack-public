@@ -70,6 +70,10 @@ const deleteById = async (reservationId: string) => {
   return Reservation.findByIdAndDelete(reservationId)
 }
 
+const deleteByPropertyId = async (propertyId: string) => {
+  return Reservation.deleteMany({ propertyId: propertyId })
+}
+
 const updateById = async (
   reservationId: string,
   reservationData: Partial<ReservationType>
@@ -102,4 +106,5 @@ export default {
   updateById,
   findbyUserID,
   findBypropertyId,
+  deleteByPropertyId,
 }

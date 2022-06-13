@@ -1,6 +1,5 @@
 import { Row, Form, Button, Stack } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import moment from "moment";
 
 const OwnerForm = ({ properties, sendOwner, owner }: any) => {
   const [firstName, setFirstName] = useState("");
@@ -10,26 +9,23 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
   const [inputLang, setInputLang] = useState("");
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
-  /*useEffect(() => {
-    if (property) {
-      setProperty();
+  useEffect(() => {
+    if (owner) {
+      setOwner();
     }
-  }, [property]);
+  }, [owner]);
 
-
-  function setProperty() {
-    setTitle(property.title);
-    setDescription(property.description);
-    setCategory(property.category);
-    setPrice(Number(property.nightlyRate));
-    setRooms(Number(property.rooms));
-    setLocation(property.location);
-    setBuildDate(property.buildDate.split("T")[0]);
-    setTheOwners(property.owners.map((owner: any) => owner._id));
-  }*/
+  
+  function setOwner() {
+    console.log(owner)
+    setFirstName(owner.firstName)
+    setLastName(owner.lastName)
+    setBiography(owner.biography)
+    setLanguages(owner.languages)
+    setTheProperties(owner.properties.map((owner: any) => owner._id))
+  }
 
   function removeLang(lang: string) {
-    console.log(lang);
     const filtered = languages.filter((language: any) => language !== lang);
     setLanguages(filtered);
   }
