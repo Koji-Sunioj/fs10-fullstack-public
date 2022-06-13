@@ -1,10 +1,9 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { isNonNullChain } from "typescript";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteOwner: any = createAsyncThunk(
   "deleteowner",
   async (data: any) => {
-    const url = "http://localhost:5000/api/v1/owners/"+data.ownerId;
+    const url = "http://localhost:5000/api/v1/owners/" + data.ownerId;
     return await await fetch(url, {
       headers: {
         Authorization: `Bearer ${data.token}`,
@@ -25,7 +24,7 @@ export const deleteowner = createSlice({
   name: "deleteowner",
   initialState,
   reducers: {
-    resetDeleteOwner: () => initialState
+    resetDeleteOwner: () => initialState,
   },
   extraReducers(builder) {
     builder

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Row, Col, InputGroup, FormSelect } from "react-bootstrap";
+import { Row, Col, InputGroup, FormSelect } from "react-bootstrap";
 
 import { AppState, FilterType, PropertyState } from "../types/types";
 import { getProperties } from "../redux/reducers/properties";
@@ -32,7 +32,7 @@ const HomePage = () => {
   }
 
   return (
-    <Container>
+    <>
       <Row>
         <Col style={{ textAlign: "center" }}>
           <h1>Where do you want to go?</h1>
@@ -125,7 +125,7 @@ const HomePage = () => {
           </Col>
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

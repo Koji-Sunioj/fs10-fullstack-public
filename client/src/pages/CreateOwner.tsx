@@ -1,4 +1,4 @@
-import { Col, Container, Row, Alert } from "react-bootstrap";
+import { Col, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ const CreateOwner = () => {
     }
   }, [client]);
 
-  async function sendOwner(event: any) {
+  function sendOwner(event: any) {
     event.preventDefault();
     const form = event.target;
     const owner = {
@@ -29,8 +29,12 @@ const CreateOwner = () => {
           return option.selected === true;
         })
         .map((property: any) => property.value),
-      firstName:form.firstName.value[0].toUpperCase()  + form.firstName.value.substring(1).toLowerCase(),
-      lastName: form.lastName.value[0].toUpperCase() + form.lastName.value.substring(1).toLowerCase(),
+      firstName:
+        form.firstName.value[0].toUpperCase() +
+        form.firstName.value.substring(1).toLowerCase(),
+      lastName:
+        form.lastName.value[0].toUpperCase() +
+        form.lastName.value.substring(1).toLowerCase(),
       biography: form.biography.value,
     };
 
@@ -38,7 +42,7 @@ const CreateOwner = () => {
   }
 
   return (
-    <Container>
+    <>
       {client.valid && client.data.isAdmin ? (
         <>
           <Row>
@@ -51,7 +55,9 @@ const CreateOwner = () => {
             {addOwner.success && (
               <Alert variant="success">
                 <Link to={`/owner/${addOwner.data._id}`}>
-                  <h3>{addOwner.message}. click here to see their information.</h3>
+                  <h3>
+                    {addOwner.message}. click here to see their information.
+                  </h3>
                 </Link>
               </Alert>
             )}
@@ -69,7 +75,7 @@ const CreateOwner = () => {
           </Col>
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

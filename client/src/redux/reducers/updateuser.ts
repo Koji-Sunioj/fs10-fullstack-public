@@ -1,48 +1,44 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const updateUser: any = createAsyncThunk(
   "updateuser",
   async (data: any) => {
-    const url =
-      "http://localhost:5000/api/v1/users/" + data.userId;
-    return await fetch(url,{headers: {
+    const url = "http://localhost:5000/api/v1/users/" + data.userId;
+    return await fetch(url, {
+      headers: {
         Authorization: `Bearer ${data.token}`,
         "Content-Type": "application/json",
       },
-      mode: 'cors',
+      mode: "cors",
       body: JSON.stringify(data.data),
-      method: "PATCH"}).then((resp) => resp.json());
+      method: "PATCH",
+    }).then((resp) => resp.json());
   }
 );
 
 const initialState: any = {
-  success :null,
+  success: null,
   error: null,
-  message: null
+  message: null,
 };
 
 export const updateuser = createSlice({
   name: "updateuser",
   initialState,
   reducers: {
-    resetUpdateUser: (state) => {
-      state.success = null;
-      state.error = null;
-      state.message = null;
-    },
+    resetUpdateUser: () => initialState,
   },
   extraReducers(builder) {
     builder
       .addCase(updateUser.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
-            state.error = true;
-            state.success = false;
-            state.message = action.payload.message
+          state.error = true;
+          state.success = false;
+          state.message = action.payload.message;
         } else if (action.payload.status === 200) {
-
           state.error = false;
-        state.success = true;
-        state.message = action.payload.message
+          state.success = true;
+          state.message = action.payload.message;
         }
       })
       .addCase(updateUser.rejected, (state, action) => {

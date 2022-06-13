@@ -6,7 +6,6 @@ import { getPropery } from "../redux/reducers/property";
 import {
   Button,
   Row,
-  Container,
   InputGroup,
   FormControl,
   Col,
@@ -117,10 +116,8 @@ const PropertyPage = () => {
     }, 1500);
   }
 
-  console.log(removeProp);
-
   return (
-    <Container>
+    <>
       {property.data && property.data._id === propertyId && (
         <>
           <Row>
@@ -332,7 +329,7 @@ const PropertyPage = () => {
           </Row>
         </>
       )}
-    </Container>
+    </>
   );
 };
 

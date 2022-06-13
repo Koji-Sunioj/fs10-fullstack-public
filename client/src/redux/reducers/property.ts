@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getPropery: any = createAsyncThunk(
   "property",
@@ -26,18 +26,15 @@ export const properties = createSlice({
         state.error = false;
       })
       .addCase(getPropery.fulfilled, (state, action) => {
-        if (action.payload.data.length === 0){
+        if (action.payload.data.length === 0) {
           state.loading = false;
           state.data = null;
           state.error = true;
-        }
-        else
-        {
+        } else {
           state.loading = false;
           state.data = action.payload.data[0];
           state.error = false;
         }
-        
       })
       .addCase(getPropery.rejected, (state, action) => {
         state.loading = false;

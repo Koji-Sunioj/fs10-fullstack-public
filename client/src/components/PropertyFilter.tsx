@@ -1,6 +1,6 @@
 import { Form, Button, FormControl, InputGroup } from "react-bootstrap";
 
-import { updateSearch, updatePage } from "../redux/reducers/filterby";
+import { updateSearch } from "../redux/reducers/filterby";
 import { useDispatch } from "react-redux";
 
 const PropertyFilter = ({ filter }: any) => {

@@ -19,13 +19,11 @@ const EditProperty = () => {
   const property = useSelector((state: any) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
 
-  console.log(client)
-
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
       dispatch(getPropery(propertyId));
-      dispatch(resetUpdateProp())
+      dispatch(resetUpdateProp());
     }
   }, [client]);
 
@@ -46,8 +44,10 @@ const EditProperty = () => {
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
-    await dispatch(updateProperty({token:token,data:property,propertyId:propertyId}))
-    dispatch(crudRefresh())
+    await dispatch(
+      updateProperty({ token: token, data: property, propertyId: propertyId })
+    );
+    dispatch(crudRefresh());
   }
 
   return (

@@ -20,13 +20,13 @@ const EditOwner = () => {
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
-      dispatch(resetUpdateOwner())
+      dispatch(resetUpdateOwner());
       dispatch(getAllProperties());
       dispatch(getOwner(ownerId));
     }
   }, [client]);
 
-  async function sendOwner(event: any) {
+  function sendOwner(event: any) {
     event.preventDefault();
     const form = event.target;
     const owner = {
@@ -44,11 +44,11 @@ const EditOwner = () => {
         form.lastName.value.substring(1).toLowerCase(),
       biography: form.biography.value,
     };
-    dispatch(updateOwner({token:token,ownerId:ownerId,data:owner}));
+    dispatch(updateOwner({ token: token, ownerId: ownerId, data: owner }));
   }
 
   return (
-    <Container>
+    <>
       {client.valid && client.data.isAdmin ? (
         <>
           <Row>
@@ -83,7 +83,7 @@ const EditOwner = () => {
           </Col>
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { isNonNullChain } from "typescript";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createProperty: any = createAsyncThunk(
   "createproperty",
@@ -27,7 +26,7 @@ export const createproperty = createSlice({
   name: "createproperty",
   initialState,
   reducers: {
-    resetCreateProp: () => initialState
+    resetCreateProp: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -40,7 +39,7 @@ export const createproperty = createSlice({
           state.success = true;
           state.error = false;
           state.message = action.payload.message;
-          state.data = action.payload.data
+          state.data = action.payload.data;
         }
       })
       .addCase(createProperty.rejected, (state, action) => {

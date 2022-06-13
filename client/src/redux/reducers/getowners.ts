@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getOwners: any = createAsyncThunk("owners", async () => {
   const url = "http://localhost:5000/api/v1/owners/";
@@ -26,13 +26,13 @@ export const viewowners = createSlice({
           const { data } = action.payload;
           state.data = data;
           state.error = false;
-          state.loading = false
+          state.loading = false;
         }
       })
       .addCase(getOwners.rejected, (state, action) => {
         state.data = null;
         state.error = true;
-        state.loading = false
+        state.loading = false;
       });
   },
 });

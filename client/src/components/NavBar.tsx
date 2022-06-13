@@ -2,7 +2,7 @@ import { Navbar, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { verifyToken } from "../redux/reducers/client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { setFromGoogle } from "../redux/reducers/client";
 
@@ -14,7 +14,7 @@ const NavBar = () => {
   const client = useSelector((state: any) => state.client);
   const dispatch = useDispatch();
 
-  console.log(token)
+  console.log(token);
   console.log(client);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const NavBar = () => {
   const clientId =
     "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";
 
-  async function googleSuccess(response: any) {
+  function googleSuccess(response: any) {
     const googleCred = response.credential;
     dispatch(verifyGoogle(googleCred));
   }

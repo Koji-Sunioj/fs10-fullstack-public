@@ -1,7 +1,7 @@
-import { useParams, Link,useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Container, Row, Col, Button, Stack, Alert} from "react-bootstrap";
+import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { getOwner } from "../redux/reducers/owner";
 import { useEffect } from "react";
 import { deleteOwner } from "../redux/reducers/deleteowner";
@@ -13,23 +13,21 @@ const OwnerPage = () => {
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
   const owner = useSelector((state: any) => state.owner);
-  const removeOwner = useSelector((state:any) => state.deleteOwner)
+  const removeOwner = useSelector((state: any) => state.deleteOwner);
 
   useEffect(() => {
     dispatch(getOwner(ownerId));
   }, [ownerId]);
 
-  function test(ownerId:string)
-  {
-    dispatch(deleteOwner({token:token,ownerId:ownerId}))
+  function test(ownerId: string) {
+    dispatch(deleteOwner({ token: token, ownerId: ownerId }));
     setTimeout(() => {
       navigate("/");
     }, 1500);
   }
 
-
   return (
-    <Container>
+    <>
       {owner.data !== null && (
         <>
           <Row style={{ textAlign: "center" }}>
@@ -44,7 +42,14 @@ const OwnerPage = () => {
               <p>speaks: {owner.data.languages.join(", ")}</p>
               {client.valid && client.data.isAdmin && (
                 <Stack direction="horizontal" gap={3}>
-                  <Button variant="danger" onClick={()=>{test(ownerId!)}}>Delete owner</Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      test(ownerId!);
+                    }}
+                  >
+                    Delete owner
+                  </Button>
                   <Link to={`/admin/edit-owner/${ownerId}`}>
                     <Button variant="primary">Edit owner</Button>
                   </Link>
@@ -66,7 +71,6 @@ const OwnerPage = () => {
             )}
           </Row>
 
-
           {owner.data.properties.length > 0 && (
             <>
               <Row style={{ textAlign: "center" }}>
@@ -85,7 +89,7 @@ const OwnerPage = () => {
           )}
         </>
       )}
-    </Container>
+    </>
   );
 };
 

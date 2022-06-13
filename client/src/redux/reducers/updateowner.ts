@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const updateOwner: any = createAsyncThunk(
   "updateowner",
   async (data: any) => {
-    const url = "http://localhost:5000/api/v1/owners/"+data.ownerId;
+    const url = "http://localhost:5000/api/v1/owners/" + data.ownerId;
     return await await fetch(url, {
       headers: {
         Authorization: `Bearer ${data.token}`,
@@ -11,7 +11,7 @@ export const updateOwner: any = createAsyncThunk(
       },
       body: JSON.stringify(data.data),
       method: "PATCH",
-      mode: 'cors',
+      mode: "cors",
     }).then((resp) => resp.json());
   }
 );
@@ -26,7 +26,7 @@ export const updateproperty = createSlice({
   name: "updateowner",
   initialState,
   reducers: {
-    resetUpdateOwner: ()=> initialState
+    resetUpdateOwner: () => initialState,
   },
   extraReducers(builder) {
     builder

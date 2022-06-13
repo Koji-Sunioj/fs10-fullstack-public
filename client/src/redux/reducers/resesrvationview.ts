@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const reservationView: any = createAsyncThunk(
   "reservationview",
@@ -19,11 +19,7 @@ export const viewpropres = createSlice({
   name: "viewreservations",
   initialState,
   reducers: {
-    resetResView: (state) => {
-      state.loading = false;
-      state.error = null;
-      state.data = null;
-    },
+    resetResView: () => initialState,
   },
   extraReducers(builder) {
     builder

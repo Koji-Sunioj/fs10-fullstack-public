@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const verifyGoogle: any = createAsyncThunk(
   "googleauth",
@@ -23,10 +23,7 @@ export const verifygoogle = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetAuth: (state) => {
-      state.jwt = null;
-      state.user = null;
-    },
+    resetAuth: () => initialState,
   },
   extraReducers(builder) {
     builder

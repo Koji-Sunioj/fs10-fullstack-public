@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createReservation: any = createAsyncThunk(
   "reservation",
@@ -27,7 +27,7 @@ export const createres = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetRes: () =>  initialState,
+    resetRes: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -37,11 +37,11 @@ export const createres = createSlice({
         state.error = false;
       })
       .addCase(createReservation.fulfilled, (state, action) => {
-        if (action.payload.status === 403) {
+        if (action.payload.status !== 200) {
           state.success = false;
           state.loading = false;
           state.error = true;
-          state.message = "there was a problem creating that reservation";
+          state.message = action.payload.message;
         } else if (action.payload.status === 200) {
           const { data } = action.payload;
           state.success = true;

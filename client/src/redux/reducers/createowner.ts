@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createOwner: any = createAsyncThunk(
   "createproperty",
@@ -26,7 +26,7 @@ export const creatowner = createSlice({
   name: "createproperty",
   initialState,
   reducers: {
-    resetCreateOwner: () => initialState
+    resetCreateOwner: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -39,7 +39,7 @@ export const creatowner = createSlice({
           state.success = true;
           state.error = false;
           state.message = action.payload.message;
-          state.data = action.payload.data
+          state.data = action.payload.data;
         }
       })
       .addCase(createOwner.rejected, (state, action) => {

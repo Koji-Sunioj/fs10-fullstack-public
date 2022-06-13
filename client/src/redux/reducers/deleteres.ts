@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteReservation: any = createAsyncThunk(
   "delete-reservation",
@@ -25,11 +25,7 @@ export const deleteres = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetDel: (state) => {
-      state.error = false;
-      state.success = false;
-      state.message = "";
-    },
+    resetDel: () => initialState,
   },
   extraReducers(builder) {
     builder

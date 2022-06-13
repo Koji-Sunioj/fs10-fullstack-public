@@ -1,13 +1,11 @@
-import { Col, Container, Row, Form, Button, Alert } from "react-bootstrap";
+import { Col, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createProperty } from "../redux/reducers/createproperty";
 import { Link } from "react-router-dom";
 import { resetCreateProp } from "../redux/reducers/createproperty";
-import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
-
 
 import PropertyForm from "../components/PropertyForm";
 
@@ -42,16 +40,12 @@ const CreateProperty = () => {
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
-    await dispatch(createProperty({ token: token, data: property }))
-    dispatch(crudRefresh())
-  }
-
-  function smth() {
-    console.log("asdasd");
+    await dispatch(createProperty({ token: token, data: property }));
+    dispatch(crudRefresh());
   }
 
   return (
-    <Container>
+    <>
       {client.valid && client.data.isAdmin ? (
         <>
           <Row>
@@ -82,7 +76,7 @@ const CreateProperty = () => {
           </Col>
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

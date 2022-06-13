@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { PropertyState, FilterType } from "../../types/types";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getAllProperties: any = createAsyncThunk(
   "allproperties",
