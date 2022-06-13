@@ -22,15 +22,12 @@ const AdminPage = () => {
       {client.valid && client.data.isAdmin ? (
         <>
           <UserView client={client.data}>
-            <Row>
-              <h2 style={{ textAlign: "center" }}>Actions</h2>
-            </Row>
+            <h2>Actions</h2>
             <Row style={{ backgroundColor: "white" }}>
               <span
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
-                  padding: "40px",
                 }}
               >
                 <Link to={"/admin/create-property"}>

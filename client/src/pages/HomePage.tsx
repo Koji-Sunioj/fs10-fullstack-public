@@ -33,11 +33,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Row>
-        <Col style={{ textAlign: "center" }}>
-          <h1>Where do you want to go?</h1>
-        </Col>
-      </Row>
+      <h1>Where do you want to go?</h1>
       <Row>
         <Col>
           <PropertyFilter filter={filterBy.searchBy} />

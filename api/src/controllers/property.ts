@@ -102,9 +102,6 @@ export const findProperty = async (
   res: Response,
   next: NextFunction
 ) => {
-  //const token = req.headers.authorization?.split(' ')[1]
-  //const decoded: any = jwt.decode(token!)
-  //console.log(new Date(decoded.iat * 1000))
   try {
     const { propertyId } = req.params
     const property = await PropertyService.findProperty(propertyId)
@@ -134,6 +131,12 @@ export const updateProperty = async (
       owners: req.body.owners,
       category: req.body.category,
       buildDate: req.body.buildDate,
+    }
+    await OwnerService.removeProperty(propertyId)
+    if (newData.owners.length > 0) {
+      newData.owners.forEach(async (owner) => {
+        await OwnerService.addProperty(propertyId, owner)
+      })
     }
     const updated = await PropertyService.updateById(propertyId, newData)
     res.json({ status: 200, message: 'property successfully updated' })

@@ -37,11 +37,10 @@ const PropertyPage = () => {
   const removeProp = useSelector((state: any) => state.deleteProp);
   const updateProp = useSelector((state: any) => state.updateProp);
   const viewRes = useSelector((state: any) => state.reservationView);
+  const editOwner = useSelector((state: any) => state.updateOwner);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
-
-  console.log(property);
 
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
@@ -49,7 +48,8 @@ const PropertyPage = () => {
     if (
       property.data === null ||
       (property.data !== null && property.data._id !== propertyId) ||
-      updateProp.success
+      updateProp.success ||
+      editOwner.success
     ) {
       dispatch(getPropery(propertyId));
     }
@@ -57,7 +57,7 @@ const PropertyPage = () => {
     dispatch(resetRes());
     dispatch(resetDel());
     dispatch(resetUpdateProp());
-  }, [propertyId, updateProp]);
+  }, [propertyId, updateProp, editOwner]);
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -120,14 +120,10 @@ const PropertyPage = () => {
     <>
       {property.data && property.data._id === propertyId && (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h2>Property Overview</h2>
-            </Col>
-          </Row>
+          <h2>Property Overview</h2>
           <Row style={{ backgroundColor: "white" }}>
             <Col md={6}>
-              <h1>{property.data.title}</h1>
+              <h3>{property.data.title}</h3>
               <p>{property.data.description}</p>
               <p>
                 <strong>type: {property.data.category}</strong>
@@ -164,28 +160,28 @@ const PropertyPage = () => {
               )}
             </Col>
           </Row>
-          <Row style={{ backgroundColor: "white" }}>
-            <h3>Your host(s)</h3>
-            <Stack direction="horizontal" gap={3}>
-              {property.data.owners.map((owner: any) => (
-                <div key={owner._id}>
-                  <Link to={`/owner/${owner._id}`}>
-                    <p>
-                      {owner.firstName} {owner.lastName}
-                    </p>
-                  </Link>
-                  <p>
-                    <strong>speaks {owner.languages.join(", ")}</strong>
-                  </p>
-                </div>
-              ))}
-            </Stack>
-          </Row>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h2>Book your holiday</h2>
-            </Col>
-          </Row>
+          {property.data.owners.length > 0 && (
+            <>
+              <Row style={{ backgroundColor: "white" }}>
+                <h3>Your host(s)</h3>
+                <Stack direction="horizontal" gap={3}>
+                  {property.data.owners.map((owner: any) => (
+                    <div key={owner._id}>
+                      <Link to={`/owner/${owner._id}`}>
+                        <p>
+                          {owner.firstName} {owner.lastName}
+                        </p>
+                      </Link>
+                      <p>
+                        <strong>speaks: {owner.languages.join(", ")}</strong>
+                      </p>
+                    </div>
+                  ))}
+                </Stack>
+              </Row>
+            </>
+          )}
+          <h2>Book your holiday</h2>
           <Row style={{ backgroundColor: "white" }}>
             <CalendarView
               bookedDates={bookedDates}
@@ -247,11 +243,7 @@ const PropertyPage = () => {
 
           {shouldRenderRows && (
             <>
-              <Row>
-                <Col style={{ textAlign: "center" }}>
-                  <h2>Your reservations</h2>
-                </Col>
-              </Row>
+              <h2>Your reservations</h2>
               {viewRes.data.map((reservation: any) => {
                 if (reservation.userId === client.data._id) {
                   return (

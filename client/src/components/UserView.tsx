@@ -52,11 +52,9 @@ const UserView = ({ client, children }: any) => {
 
   return (
     <>
-      <Row>
-        <h2 style={{ textAlign: "center" }}>
-          Welcome {client.firstName} {client.lastName}
-        </h2>
-      </Row>
+      <h2>
+        Welcome {client.firstName} {client.lastName}
+      </h2>
       <Row style={{ backgroundColor: "white" }}>
         <Col>
           <p>email address: {client.email}</p>
@@ -68,9 +66,7 @@ const UserView = ({ client, children }: any) => {
         </Col>
       </Row>
       {children}
-      <Row>
-        <h2 style={{ textAlign: "center" }}>Update your details</h2>
-      </Row>
+      <h2>Update your details</h2>
       <Row>
         <Form
           style={{ padding: "0px" }}
@@ -111,11 +107,7 @@ const UserView = ({ client, children }: any) => {
       )}
       {reservations.data !== null && reservations.data.length > 0 && (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h2>Your reservations</h2>
-            </Col>
-          </Row>
+          <h2>Your reservations</h2>
           {reservations.data.map((reservation: any) => (
             <Row
               style={{ backgroundColor: "white" }}
