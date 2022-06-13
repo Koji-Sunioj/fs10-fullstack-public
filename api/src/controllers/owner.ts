@@ -4,6 +4,7 @@ import { OwnerType } from 'types'
 import Owner from '../models/Owner'
 import OwnerService from '../services/owner'
 import { BadRequestError } from '../helpers/apiError'
+import PropertyService from '../services/property'
 
 export const createOwner = async (
   req: Request,
@@ -13,8 +14,18 @@ export const createOwner = async (
   try {
     const newOwner = req.body
     const newData = new Owner(newOwner)
-    await OwnerService.create(newData)
-    res.json({ status: 200 })
+    console.log(newData._id)
+    const created = await OwnerService.create(newData)
+    if (created.properties.length > 0) {
+      created.properties.forEach(async (property) => {
+        const updateable = await PropertyService.addOwner(property, newData._id)
+      })
+    }
+    res.json({
+      status: 200,
+      data: created,
+      message: 'owner successfully created',
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -66,6 +77,7 @@ export const deleteOwner = async (
 ) => {
   try {
     const { ownerId } = req.params
+    await PropertyService.removeOwner(ownerId)
     const owner = await OwnerService.deleteById(ownerId)
     res.json({
       status: 200,

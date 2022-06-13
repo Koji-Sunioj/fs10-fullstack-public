@@ -14,6 +14,9 @@ import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
 import allproperties from "./reducers/allproperties";
+import createowner from "./reducers/createowner";
+import owner from "./reducers/owner";
+import deleteowner from "./reducers/deleteowner";
 
 import {
   updateSearch,
@@ -59,7 +62,10 @@ export const store = configureStore({
     createProp: createproperty,
     deleteProp: deleteproperty,
     updateProp:updateproperty,
-    getAllProperties: allproperties
+    getAllProperties: allproperties,
+    addOwner: createowner,
+    owner: owner,
+    deleteOwner: deleteowner
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,

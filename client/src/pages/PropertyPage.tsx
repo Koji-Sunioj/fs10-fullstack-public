@@ -12,6 +12,7 @@ import {
   Col,
   Form,
   Alert,
+  Stack,
 } from "react-bootstrap";
 import checkBooked from "../utils/checkBooked";
 import moment from "moment";
@@ -24,7 +25,6 @@ import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
-
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
@@ -42,20 +42,23 @@ const PropertyPage = () => {
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
 
+  console.log(property);
+
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
   useEffect(() => {
     if (
       property.data === null ||
-      (property.data !== null && property.data._id !== propertyId) || updateProp.success
+      (property.data !== null && property.data._id !== propertyId) ||
+      updateProp.success
     ) {
       dispatch(getPropery(propertyId));
     }
-    dispatch(reservationView(propertyId))
+    dispatch(reservationView(propertyId));
     dispatch(resetRes());
     dispatch(resetDel());
     dispatch(resetUpdateProp());
-  }, [propertyId,updateProp]);
+  }, [propertyId, updateProp]);
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -108,7 +111,7 @@ const PropertyPage = () => {
 
   async function adminDelete(propertyId: any) {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
-    dispatch(crudRefresh())
+    dispatch(crudRefresh());
     setTimeout(() => {
       navigate("/");
     }, 1500);
@@ -150,7 +153,7 @@ const PropertyPage = () => {
                 </strong>
               </p>
               {client.data !== null && client.data.isAdmin && (
-                <>
+                <Stack direction="horizontal" gap={3}>
                   <Button
                     variant="danger"
                     onClick={() => adminDelete(property.data._id)}
@@ -160,22 +163,26 @@ const PropertyPage = () => {
                   <Link to={`/admin/edit-property/${propertyId}`}>
                     <Button variant="primary">Edit property</Button>
                   </Link>
-                </>
+                </Stack>
               )}
             </Col>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
             <h3>Your host(s)</h3>
-            {property.data.owners.map((owner: any) => (
-              <Col md={3} key={owner._id}>
-                <p>
-                  {owner.firstName} {owner.lastName}
-                </p>
-                <p>
-                  <strong>speaks {owner.languages.join(", ")}</strong>
-                </p>
-              </Col>
-            ))}
+            <Stack direction="horizontal" gap={3}>
+              {property.data.owners.map((owner: any) => (
+                <div key={owner._id}>
+                  <Link to={`/owner/${owner._id}`}>
+                    <p>
+                      {owner.firstName} {owner.lastName}
+                    </p>
+                  </Link>
+                  <p>
+                    <strong>speaks {owner.languages.join(", ")}</strong>
+                  </p>
+                </div>
+              ))}
+            </Stack>
           </Row>
           <Row>
             <Col style={{ textAlign: "center" }}>
@@ -192,7 +199,9 @@ const PropertyPage = () => {
               disabled={client.valid === false || client.valid === null}
             />
           </Row>
-          <Row> <Col></Col>
+          <Row>
+            {" "}
+            <Col></Col>
             <Form
               style={{ padding: "0px" }}
               onSubmit={(e) => {
@@ -270,7 +279,10 @@ const PropertyPage = () => {
                         </p>
                         <Button
                           variant={"danger"}
-                          disabled={moment(reservation.startDate).startOf('day') < moment().startOf('day')}
+                          disabled={
+                            moment(reservation.startDate).startOf("day") <
+                            moment().startOf("day")
+                          }
                           onClick={() => {
                             removeReservation(reservation._id);
                           }}

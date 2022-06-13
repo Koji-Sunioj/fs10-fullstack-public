@@ -10,8 +10,6 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
   const [inputLang, setInputLang] = useState("");
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
-  console.log(theProperties);
-
   /*useEffect(() => {
     if (property) {
       setProperty();
@@ -72,6 +70,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
             <Form.Control
               name="biography"
               as="textarea"
+              placeholder="i am a great host and here to show you good time walla"
               rows={3}
               value={biography}
               onChange={(event) => {
@@ -94,7 +93,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
                   )
                 ) {
                   event.preventDefault()
-                  setLanguages([...languages, event.currentTarget.value.toLocaleLowerCase()]);
+                  setLanguages([...languages, event.currentTarget.value.toLowerCase()]);
                   setInputLang("")
                 }
               }}

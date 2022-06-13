@@ -73,7 +73,7 @@ const AdminPage = () => {
               <p>email address: {client.data.email}</p>
               <p>joined: {client.data.joinDate.split("T")[0]}</p>
               <p>role: {client.data.isAdmin ? "administrator" : "user"}</p>
-              <Button variant={"danger"} onClick={logout}>
+              <Button variant={"danger"} onClick={logout} size="lg">
                 Log Out
               </Button>
             </Col>
@@ -123,14 +123,14 @@ const AdminPage = () => {
             <h2 style={{ textAlign: "center" }}>Actions</h2>
           </Row>
           <Row style={{ backgroundColor: "white" }}>
-            <Col>
+            <span style={{display:"flex",justifyContent:"space-around",padding:"40px"}}>
               <Link to={"/admin/create-property"}>
-                <Button variant="primary">Create a property</Button>
+                <Button variant="link" size="lg">Create a property</Button>
               </Link>
               <Link to={"/admin/create-owner"}>
-                <Button variant="primary">Create a owner</Button>
+                <Button variant="link" size="lg">Create a owner</Button>
               </Link>
-            </Col>
+            </span>
           </Row>
           {reservations.data !== null && reservations.data.length > 0 && (
             <>

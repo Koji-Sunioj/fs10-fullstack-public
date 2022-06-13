@@ -20,7 +20,6 @@ export default async function (
       res.json({ status: 200, data: user })
     } else {
       req.body.userId = user!._id
-      console.log(user)
       next()
     }
   } catch (error) {

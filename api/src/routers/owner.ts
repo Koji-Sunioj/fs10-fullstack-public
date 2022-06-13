@@ -1,4 +1,5 @@
 import express from 'express'
+import verifyAdmin from '../middlewares/verifyAdmin'
 import {
   createOwner,
   findOwners,
@@ -12,9 +13,9 @@ import verifyAuth from '../middlewares/verifyAuth'
 const router = express.Router()
 
 router.get('/', findOwners)
-router.post('/', createOwner)
+router.post('/', verifyAuth, verifyAdmin, createOwner)
 router.get('/:ownerId', findOwner)
 router.patch('/:ownerId', updateOwner)
-router.delete('/:ownerId', deleteOwner)
+router.delete('/:ownerId', verifyAuth, verifyAdmin, deleteOwner)
 
 export default router

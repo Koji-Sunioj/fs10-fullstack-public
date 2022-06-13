@@ -1,6 +1,7 @@
 import Property from '../models/Property'
 import { PropertyDocument, PropertyType, FilterType } from 'types'
 import mongoose from 'mongoose'
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants'
 
 const create = async (propertyData: PropertyDocument) => {
   return propertyData.save()
@@ -15,6 +16,17 @@ const countProperties = async (filter: FilterType) => {
       { title: stringFilter },
     ],
   })
+}
+
+const addOwner = async (propertyId: string, ownerId: string) => {
+  return await Property.updateOne(
+    { _id: propertyId },
+    { $push: { owners: ownerId } }
+  )
+}
+
+const removeOwner = async (ownerId: string) => {
+  return await Property.updateMany({ $pull: { owners: ownerId } })
 }
 
 const findProperties = async (filter: FilterType) => {
@@ -119,8 +131,10 @@ export default {
   create,
   findProperties,
   findAllProperties,
+  addOwner,
   deleteById,
   findProperty,
   updateById,
   countProperties,
+  removeOwner,
 }
