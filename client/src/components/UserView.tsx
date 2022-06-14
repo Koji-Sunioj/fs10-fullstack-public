@@ -67,7 +67,7 @@ const UserView = ({ client, children }: any) => {
       </Row>
       {children}
       <h2>Update your details</h2>
-      <Row>
+      <Row style={{ backgroundColor: "white" }}>
         <Form
           style={{ padding: "0px" }}
           onSubmit={(e) => {

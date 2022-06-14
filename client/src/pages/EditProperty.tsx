@@ -51,14 +51,11 @@ const EditProperty = () => {
   }
 
   return (
-    <Container>
+    <>
       {client.valid && client.data.isAdmin ? (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h1>Edit property</h1>
-            </Col>
-          </Row>
+          <h1>Edit property</h1>
+
           <PropertyForm
             sendProperty={sendProperty}
             owners={owners}
@@ -86,7 +83,7 @@ const EditProperty = () => {
           </Col>
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

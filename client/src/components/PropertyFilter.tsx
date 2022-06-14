@@ -1,4 +1,4 @@
-import { Form, Button, FormControl, InputGroup } from "react-bootstrap";
+import { Form, Button, FormControl, InputGroup, Row } from "react-bootstrap";
 
 import { updateSearch } from "../redux/reducers/filterby";
 import { useDispatch } from "react-redux";
@@ -13,17 +13,19 @@ const PropertyFilter = ({ filter }: any) => {
   }
 
   return (
-    <Form className="d-flex" onSubmit={updateView}>
-      <InputGroup>
-        <FormControl
-          type="search"
-          placeholder="property type, location, title..."
-          name="search"
-          defaultValue={filter}
-        />
-        <Button type="submit">Go</Button>
-      </InputGroup>
-    </Form>
+    <Row>
+      <Form className="d-flex" onSubmit={updateView}>
+        <InputGroup>
+          <FormControl
+            type="search"
+            placeholder="property type, location, title..."
+            name="search"
+            defaultValue={filter}
+          />
+          <Button type="submit">Go</Button>
+        </InputGroup>
+      </Form>
+    </Row>
   );
 };
 

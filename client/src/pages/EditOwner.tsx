@@ -51,11 +51,7 @@ const EditOwner = () => {
     <>
       {client.valid && client.data.isAdmin ? (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h1>Edit Owner</h1>
-            </Col>
-          </Row>
+          <h1>Edit Owner</h1>
           <OwnerForm
             sendOwner={sendOwner}
             properties={properties}

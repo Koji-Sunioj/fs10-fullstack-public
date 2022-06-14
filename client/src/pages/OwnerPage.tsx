@@ -30,14 +30,12 @@ const OwnerPage = () => {
     <>
       {owner.data !== null && (
         <>
-          <Row style={{ textAlign: "center" }}>
-            <h2>Owner overview</h2>
-          </Row>
+          <h2>Owner overview</h2>
           <Row style={{ backgroundColor: "white" }}>
             <Col>
-              <h2>
+              <h3>
                 {owner.data.firstName} {owner.data.lastName}
-              </h2>
+              </h3>
               <p>{owner.data.biography}</p>
               <p>speaks: {owner.data.languages.join(", ")}</p>
               {client.valid && client.data.isAdmin && (
@@ -58,24 +56,24 @@ const OwnerPage = () => {
             </Col>
           </Row>
 
-          <Row style={{ textAlign: "center" }}>
-            {removeOwner.success && (
+          {removeOwner.success && (
+            <Row style={{ textAlign: "center" }}>
               <Alert variant="success">
                 <h3>{removeOwner.message}</h3>
               </Alert>
-            )}
-            {removeOwner.error && (
+            </Row>
+          )}
+          {removeOwner.error && (
+            <Row style={{ textAlign: "center" }}>
               <Alert variant="danger">
                 <h3>{removeOwner.message}</h3>
               </Alert>
-            )}
-          </Row>
+            </Row>
+          )}
 
           {owner.data.properties.length > 0 && (
             <>
-              <Row style={{ textAlign: "center" }}>
-                <h2>properties</h2>
-              </Row>
+              <h2>properties</h2>
               {owner.data.properties.map((property: any) => (
                 <Row style={{ backgroundColor: "white" }} key={property._id}>
                   <Link to={`/property/${property._id}`}>

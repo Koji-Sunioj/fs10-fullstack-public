@@ -15,14 +15,12 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
     }
   }, [owner]);
 
-  
   function setOwner() {
-    console.log(owner)
-    setFirstName(owner.firstName)
-    setLastName(owner.lastName)
-    setBiography(owner.biography)
-    setLanguages(owner.languages)
-    setTheProperties(owner.properties.map((owner: any) => owner._id))
+    setFirstName(owner.firstName);
+    setLastName(owner.lastName);
+    setBiography(owner.biography);
+    setLanguages(owner.languages);
+    setTheProperties(owner.properties.map((owner: any) => owner._id));
   }
 
   function removeLang(lang: string) {
@@ -34,7 +32,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
     firstName.length < 3 ||
     lastName.length < 3 ||
     biography.length < 11 ||
-    languages.length < 1
+    languages.length < 1;
   return (
     <>
       <Row style={{ backgroundColor: "white" }}>
@@ -76,7 +74,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Languages</Form.Label>
-            
+
             <Form.Control
               placeholder="English... Swahili... "
               type="search"
@@ -88,16 +86,19 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
                     language.includes(inputLang)
                   )
                 ) {
-                  event.preventDefault()
-                  setLanguages([...languages, event.currentTarget.value.toLowerCase()]);
-                  setInputLang("")
+                  event.preventDefault();
+                  setLanguages([
+                    ...languages,
+                    event.currentTarget.value.toLowerCase(),
+                  ]);
+                  setInputLang("");
                 }
               }}
               onChange={(event) => {
                 setInputLang(event.target.value);
               }}
             />
-            <input type="hidden" value={languages} name="languages"/>
+            <input type="hidden" value={languages} name="languages" />
             <Stack direction="horizontal" gap={3} style={{ marginTop: "20px" }}>
               {languages.length > 0 &&
                 languages.map((language: any) => (
@@ -120,11 +121,13 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
               name="properties"
               value={theProperties}
               onChange={(event) => {
-                setTheProperties(Array.from(event.target)
-                .filter((option: any) => {
-                  return option.selected === true;
-                })
-                .map((owner: any) => owner.value));
+                setTheProperties(
+                  Array.from(event.target)
+                    .filter((option: any) => {
+                      return option.selected === true;
+                    })
+                    .map((owner: any) => owner.value)
+                );
               }}
             >
               {properties.data !== null &&
@@ -145,4 +148,3 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
 };
 
 export default OwnerForm;
- 

@@ -191,10 +191,6 @@ const PropertyPage = () => {
               focusDay={focusDay}
               disabled={client.valid === false || client.valid === null}
             />
-          </Row>
-          <Row>
-            {" "}
-            <Col></Col>
             <Form
               style={{ padding: "0px" }}
               onSubmit={(e) => {
@@ -240,7 +236,6 @@ const PropertyPage = () => {
               </fieldset>
             </Form>
           </Row>
-
           {shouldRenderRows && (
             <>
               <h2>Your reservations</h2>

@@ -29,7 +29,6 @@ export const properties = createSlice({
       .addCase(getProperties.pending, (state, action) => {
         state.loading = true;
         state.error = false;
-        state.data = null;
       })
       .addCase(getProperties.fulfilled, (state, action) => {
         state.loading = false;

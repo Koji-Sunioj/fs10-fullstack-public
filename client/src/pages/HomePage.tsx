@@ -13,6 +13,7 @@ import {
 
 import { initialState } from "../redux/reducers/properties";
 import mapCategory from "../utils/mapCategory";
+import { Form } from "react-bootstrap";
 
 const HomePage = () => {
   const properties: PropertyState = useSelector(
@@ -34,62 +35,61 @@ const HomePage = () => {
   return (
     <>
       <h1>Where do you want to go?</h1>
+      <PropertyFilter filter={filterBy.searchBy} />
       <Row>
-        <Col>
-          <PropertyFilter filter={filterBy.searchBy} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <InputGroup>
-            <InputGroup.Text>Page:</InputGroup.Text>
-            <FormSelect
-              onChange={(event) => {
-                dispatch(updatePage(event.target.value));
-              }}
-              value={String(filterBy.page)}
-            >
-              {pages.reverse().map((page: any) =>
-                Number(page) === filterBy.page ? (
-                  <option key={page}>{page}</option>
-                ) : (
-                  <option value={page} key={page}>
-                    {page}
-                  </option>
-                )
-              )}
-            </FormSelect>
-            <InputGroup.Text>Direction:</InputGroup.Text>
-            <FormSelect
-              onChange={(event) => {
-                dispatch(updateDirection(event.target.value));
-              }}
-            >
-              {Object.entries(pointer).map((direction: any[]) => (
-                <option value={direction[1]} key={direction[0]}>
-                  {direction[0]}
-                </option>
-              ))}
-            </FormSelect>
-            <InputGroup.Text>Sort by:</InputGroup.Text>
-            <FormSelect
-              onChange={(event) => {
-                dispatch(updateSortCategory(event.target.value));
-              }}
-            >
-              {["nightly rate", "rooms", "category", "location"].map(
-                (category: any) => {
-                  const optValue = mapCategory(category);
-                  return (
-                    <option value={optValue} key={category}>
-                      {category}
+        {" "}
+        <Form>
+          <fieldset disabled={properties.data?.length === 0}>
+            <InputGroup>
+              <InputGroup.Text>Page:</InputGroup.Text>
+              <FormSelect
+                onChange={(event) => {
+                  dispatch(updatePage(event.target.value));
+                }}
+                value={String(filterBy.page)}
+              >
+                {pages.reverse().map((page: any) =>
+                  Number(page) === filterBy.page ? (
+                    <option key={page}>{page}</option>
+                  ) : (
+                    <option value={page} key={page}>
+                      {page}
                     </option>
-                  );
-                }
-              )}
-            </FormSelect>
-          </InputGroup>
-        </Col>
+                  )
+                )}
+              </FormSelect>
+              <InputGroup.Text>Direction:</InputGroup.Text>
+              <FormSelect
+                onChange={(event) => {
+                  dispatch(updateDirection(event.target.value));
+                }}
+              >
+                {Object.entries(pointer).map((direction: any[]) => (
+                  <option value={direction[1]} key={direction[0]}>
+                    {direction[0]}
+                  </option>
+                ))}
+              </FormSelect>
+              <InputGroup.Text>Sort by:</InputGroup.Text>
+              <FormSelect
+                onChange={(event) => {
+                  dispatch(updateSortCategory(event.target.value));
+                }}
+              >
+                {["nightly rate", "rooms", "category", "location"].map(
+                  (category: any) => {
+                    const optValue = mapCategory(category);
+                    return (
+                      <option value={optValue} key={category}>
+                        {category}
+                      </option>
+                    );
+                  }
+                )}
+              </FormSelect>
+            </InputGroup>
+          </fieldset>{" "}
+        </Form>
       </Row>
       {properties.data && properties.data.length > 0 && (
         <PropertyView properties={properties} filter={filterBy} />
