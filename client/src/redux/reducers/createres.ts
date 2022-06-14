@@ -27,7 +27,7 @@ export const createres = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
-    resetRes: () => initialState,
+    resetCreateReservation: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -61,5 +61,5 @@ export const createres = createSlice({
   },
 });
 
-export const { resetRes } = createres.actions;
+export const { resetCreateReservation } = createres.actions;
 export default createres.reducer;

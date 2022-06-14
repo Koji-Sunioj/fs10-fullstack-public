@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { getOwner } from "../redux/reducers/owner";
 import { useEffect } from "react";
-import { deleteOwner } from "../redux/reducers/deleteowner";
+import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
+import { resetUpdateOwner } from "../redux/reducers/updateowner";
 
 const OwnerPage = () => {
   const { ownerId } = useParams();
@@ -14,9 +15,20 @@ const OwnerPage = () => {
   const client = useSelector((state: any) => state.client);
   const owner = useSelector((state: any) => state.owner);
   const removeOwner = useSelector((state: any) => state.deleteOwner);
+  const editOwner = useSelector((state: any) => state.updateOwner);
 
   useEffect(() => {
-    dispatch(getOwner(ownerId));
+    {
+      if (
+        owner.data === null ||
+        (owner.data && owner.data._id !== ownerId) ||
+        editOwner.success
+      ) {
+        dispatch(getOwner(ownerId));
+      }
+      dispatch(resetUpdateOwner());
+      dispatch(resetDeleteOwner());
+    }
   }, [ownerId]);
 
   function test(ownerId: string) {

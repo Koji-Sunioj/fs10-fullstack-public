@@ -48,11 +48,7 @@ const CreateProperty = () => {
     <>
       {client.valid && client.data.isAdmin ? (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h1>Create property</h1>
-            </Col>
-          </Row>
+          <h1>Create property</h1>
           <PropertyForm sendProperty={sendProperty} owners={owners} />
           <Row style={{ textAlign: "center" }}>
             {addProperty.success && (

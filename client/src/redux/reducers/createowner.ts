@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createOwner: any = createAsyncThunk(
-  "createproperty",
+  "createowner",
   async (data: any) => {
     const url = "http://localhost:5000/api/v1/owners/";
     return await await fetch(url, {
@@ -23,7 +23,7 @@ const initialState: any = {
 };
 
 export const creatowner = createSlice({
-  name: "createproperty",
+  name: "createowner",
   initialState,
   reducers: {
     resetCreateOwner: () => initialState,

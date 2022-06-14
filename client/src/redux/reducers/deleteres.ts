@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const deleteReservation: any = createAsyncThunk(
-  "delete-reservation",
+  "deletereservation",
   async (data: any) => {
     const url =
       "http://localhost:5000/api/v1/reservations/" + data.reservationId;
@@ -22,10 +22,10 @@ const initialState: any = {
 };
 
 export const deleteres = createSlice({
-  name: "createreservation",
+  name: "deletereservation",
   initialState,
   reducers: {
-    resetDel: () => initialState,
+    resetDeleteReservation: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -48,5 +48,5 @@ export const deleteres = createSlice({
   },
 });
 
-export const { resetDel } = deleteres.actions;
+export const { resetDeleteReservation } = deleteres.actions;
 export default deleteres.reducer;

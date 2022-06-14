@@ -15,12 +15,20 @@ import {
 } from "react-bootstrap";
 import checkBooked from "../utils/checkBooked";
 import moment from "moment";
-import { createReservation } from "../redux/reducers/createres";
-import { resetRes } from "../redux/reducers/createres";
-import { deleteReservation, resetDel } from "../redux/reducers/deleteres";
+import {
+  createReservation,
+  resetCreateReservation,
+} from "../redux/reducers/createres";
+import {
+  deleteReservation,
+  resetDeleteReservation,
+} from "../redux/reducers/deleteres";
 import CalendarView from "../components/CalendarView";
 import { reservationView } from "../redux/reducers/resesrvationview";
-import { deleteProperty } from "../redux/reducers/deleteproperty";
+import {
+  deleteProperty,
+  resetDeleteProp,
+} from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
@@ -38,6 +46,8 @@ const PropertyPage = () => {
   const updateProp = useSelector((state: any) => state.updateProp);
   const viewRes = useSelector((state: any) => state.reservationView);
   const editOwner = useSelector((state: any) => state.updateOwner);
+  const createOwner = useSelector((state: any) => state.owner);
+  const deleteOwner = useSelector((state: any) => state.deleteOwner);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
@@ -45,19 +55,28 @@ const PropertyPage = () => {
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
   useEffect(() => {
-    if (
+    /*if (
       property.data === null ||
       (property.data !== null && property.data._id !== propertyId) ||
       updateProp.success ||
-      editOwner.success
+      editOwner.success ||
+      deleteOwner.success ||
+      createOwner.success
     ) {
       dispatch(getPropery(propertyId));
-    }
-    dispatch(reservationView(propertyId));
-    dispatch(resetRes());
-    dispatch(resetDel());
+      //dispatch(resetDeleteProp());
+    }*/
+    dispatch(getPropery(propertyId));
+    dispatch(resetDeleteProp());
+    dispatch(resetCreateReservation());
+    dispatch(resetDeleteReservation());
     dispatch(resetUpdateProp());
-  }, [propertyId, updateProp, editOwner]);
+  }, [propertyId, updateProp, editOwner, deleteOwner]);
+
+  /*||
+      updateProp.success ||
+      editOwner.success ||
+      deleteOwner.success*/
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -70,6 +89,7 @@ const PropertyPage = () => {
   }
   async function update(event: any, id: any) {
     event.preventDefault();
+    dispatch(resetDeleteReservation());
     setCheckIn("");
     setNumNights("");
     const formData = {
@@ -79,7 +99,6 @@ const PropertyPage = () => {
     };
     await dispatch(createReservation({ token: token, data: formData }));
     dispatch(reservationView(propertyId));
-    dispatch(resetDel());
   }
 
   let requestedNights: string[] = [];
@@ -96,10 +115,10 @@ const PropertyPage = () => {
   }
 
   async function removeReservation(reservationId: any) {
+    dispatch(resetCreateReservation());
     await dispatch(
       deleteReservation({ token: token, reservationId: reservationId })
     );
-    dispatch(resetRes());
     dispatch(reservationView(propertyId));
   }
 
@@ -118,6 +137,7 @@ const PropertyPage = () => {
 
   return (
     <>
+      {property.loading && <h2>loading...</h2>}
       {property.data && property.data._id === propertyId && (
         <>
           <h2>Property Overview</h2>
@@ -142,6 +162,7 @@ const PropertyPage = () => {
               </p>
               <p>
                 <strong>
+                  built:
                   {new Date(property.data.buildDate).getUTCFullYear()}
                 </strong>
               </p>

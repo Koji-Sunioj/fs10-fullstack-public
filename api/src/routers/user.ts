@@ -13,9 +13,9 @@ import {
 const router = express.Router()
 
 router.get('/', viewUsers)
-router.post('/', createUser)
+router.post('/', verifyAuth, createUser)
 router.get('/:userId', viewUser)
 router.patch('/:userId', verifyAuth, updateUser)
-router.delete('/:userId', deleteUser)
+router.delete('/:userId', verifyAuth, deleteUser)
 
 export default router

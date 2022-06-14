@@ -88,7 +88,7 @@ const HomePage = () => {
                 )}
               </FormSelect>
             </InputGroup>
-          </fieldset>{" "}
+          </fieldset>
         </Form>
       </Row>
       {properties.data && properties.data.length > 0 && (

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import OwnerForm from "../components/OwnerForm";
 import { getAllProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
+import { resetCreateOwner } from "../redux/reducers/createowner";
 
 const CreateOwner = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const CreateOwner = () => {
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
+      dispatch(resetCreateOwner());
       dispatch(getAllProperties());
     }
   }, [client]);
@@ -45,11 +47,7 @@ const CreateOwner = () => {
     <>
       {client.valid && client.data.isAdmin ? (
         <>
-          <Row>
-            <Col style={{ textAlign: "center" }}>
-              <h1>Create owner</h1>
-            </Col>
-          </Row>
+          <h1>Create owner</h1>
           <OwnerForm sendOwner={sendOwner} properties={properties} />
           <Row style={{ textAlign: "center" }}>
             {addOwner.success && (
