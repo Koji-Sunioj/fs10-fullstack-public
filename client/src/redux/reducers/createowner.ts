@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { PostType } from "../../types/types";
+import { OwnerType } from "../../types/types";
 
-export const createOwner: any = createAsyncThunk(
+export const createOwner = createAsyncThunk(
   "createowner",
-  async (data: any) => {
+  async (data: { data: OwnerType; token: string }) => {
     const url = "http://localhost:5000/api/v1/owners/";
     return await await fetch(url, {
       headers: {

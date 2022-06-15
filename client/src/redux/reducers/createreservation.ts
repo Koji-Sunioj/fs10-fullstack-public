@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+import { PostType } from "../../types/types";
+
 export const createReservation: any = createAsyncThunk(
   "reservation",
   async (data: any) => {
@@ -16,7 +18,7 @@ export const createReservation: any = createAsyncThunk(
   }
 );
 
-const initialState: any = {
+const initialState: PostType = {
   loading: false,
   error: false,
   success: false,

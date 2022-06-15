@@ -6,11 +6,12 @@ import { createProperty } from "../redux/reducers/createproperty";
 import { Link } from "react-router-dom";
 import { resetCreateProp } from "../redux/reducers/createproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
-
+import { AppDispatch } from "../redux/store";
 import PropertyForm from "../components/PropertyForm";
+import { PropertyType } from "../types/types";
 
 const CreateProperty = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const client = useSelector((state: any) => state.client);
   const owners = useSelector((state: any) => state.owners);
   const token = JSON.parse(localStorage.getItem("token") as string);
@@ -26,11 +27,11 @@ const CreateProperty = () => {
   async function sendProperty(event: any) {
     event.preventDefault();
     const form = event.target;
-    const property = {
+    const property: Omit<PropertyType, "_id"> = {
       location: form.location.value,
       title: form.title.value,
       description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value).toFixed(2),
+      nightlyRate: Number(form.nightlyRate.value),
       rooms: Number(form.rooms.value),
       owners: Array.from(form.owners)
         .filter((option: any) => {

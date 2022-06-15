@@ -5,15 +5,15 @@ import { verifyToken } from "../redux/reducers/client";
 import { useEffect } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { setFromGoogle } from "../redux/reducers/client";
-import { useAppDispatch } from "../redux/store";
+
 import { verifyGoogle } from "../redux/reducers/verifygoogle";
+import { AppDispatch } from "../redux/store";
 
 const NavBar = () => {
   const googleAuth = useSelector((state: any) => state.googleAuth);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
-  const dispatch = useDispatch();
-  const apiDispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   console.log(token);
   console.log(client);
 
@@ -22,7 +22,7 @@ const NavBar = () => {
       dispatch(setFromGoogle({ user: googleAuth.user, valid: true }));
       localStorage.setItem("token", JSON.stringify(googleAuth.jwt));
     } else if (token && token.length) {
-      apiDispatch(verifyToken(token));
+      dispatch(verifyToken(token));
     }
   }, [googleAuth]);
 

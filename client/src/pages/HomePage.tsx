@@ -14,13 +14,14 @@ import {
 import { initialState } from "../redux/reducers/properties";
 import mapCategory from "../utils/mapCategory";
 import { Form } from "react-bootstrap";
+import { AppDispatch } from "../redux/store";
 
 const HomePage = () => {
   const properties: PropertyState = useSelector(
     (state: AppState) => state.properties
   );
   const filterBy: FilterType = useSelector((state: AppState) => state.filterBy);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const pages = [];
   for (let page = Math.ceil(properties.count! / 6); page !== 0; page--) {

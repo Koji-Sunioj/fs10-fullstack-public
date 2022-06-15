@@ -10,11 +10,10 @@ import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
-
-//import { useAppDispatch } from "../redux/store";
+import { AppDispatch } from "../redux/store";
 
 const EditProperty = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { propertyId } = useParams();
   const client = useSelector((state: any) => state.client);

@@ -2,11 +2,10 @@ import { Col, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getMyReservations } from "../redux/reducers/myreservations";
-import { resetUpdateUser } from "../redux/reducers/updateuser";
 import UserView from "../components/UserView";
-
+import { AppDispatch } from "../redux/store";
 const MyAccount = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const updateName = useSelector((state: any) => state.updateUser);
   const client = useSelector((state: any) => state.client);
 

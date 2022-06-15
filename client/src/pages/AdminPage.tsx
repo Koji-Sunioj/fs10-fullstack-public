@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import UserView from "../components/UserView";
 import { getMyReservations } from "../redux/reducers/myreservations";
+import { AppDispatch } from "../redux/store";
 
 const AdminPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const client = useSelector((state: any) => state.client);
 
   useEffect(() => {

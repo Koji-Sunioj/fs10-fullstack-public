@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { PropertyType, PostType } from "../../types/types";
 
-export const createProperty: any = createAsyncThunk(
+export const createProperty = createAsyncThunk(
   "createproperty",
-  async (data: any) => {
+  async (data: { token: string; data: Omit<PropertyType, "_id"> }) => {
     const url = "http://localhost:5000/api/v1/properties/";
     return await await fetch(url, {
       headers: {
@@ -15,7 +16,7 @@ export const createProperty: any = createAsyncThunk(
   }
 );
 
-const initialState: any = {
+const initialState: PostType = {
   data: null,
   error: false,
   success: false,

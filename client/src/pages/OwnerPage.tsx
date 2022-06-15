@@ -6,10 +6,11 @@ import { useEffect } from "react";
 import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { AppDispatch } from "../redux/store";
 
 const OwnerPage = () => {
   const { ownerId } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);

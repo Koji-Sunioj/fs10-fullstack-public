@@ -29,6 +29,7 @@ import { reservationView } from "../redux/reducers/resesrvationview";
 import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
+import { AppDispatch } from "../redux/store";
 
 import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
 
@@ -36,7 +37,7 @@ const PropertyPage = () => {
   let { propertyId } = useParams();
   const token = JSON.parse(localStorage.getItem("token") as string);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const property = useSelector((state: any) => state.property);
 
   const client = useSelector((state: any) => state.client);

@@ -5,13 +5,14 @@ export type FetchTYpe = {
 };
 
 export type PostType = {
-  data: null;
+  data?: null;
+  loading?: boolean;
   message: string;
   success: boolean;
   error: boolean;
 };
 
-export type TokenType = {
+export type ClientType = {
   valid: null | boolean;
   data: null;
 };
@@ -21,6 +22,14 @@ export type FilterType = {
   sortBy: string;
   direction: number;
   page: number;
+};
+
+export type OwnerType = {
+  languages: string[];
+  properties: string[];
+  firstName: string;
+  lastName: string;
+  biography: string;
 };
 
 export type PropertyType = {

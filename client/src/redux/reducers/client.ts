@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { TokenType } from "../../types/types";
+import { ClientType } from "../../types/types";
 
 export const verifyToken = createAsyncThunk("client", async (token: string) => {
   const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
@@ -12,7 +12,7 @@ export const verifyToken = createAsyncThunk("client", async (token: string) => {
   }).then((resp) => resp.json());
 });
 
-const initialState: TokenType = {
+const initialState: ClientType = {
   valid: null,
   data: null,
 };
