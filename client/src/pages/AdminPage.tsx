@@ -1,8 +1,9 @@
-import { Col, Row, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import UserView from "../components/UserView";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Col, Row, Button } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+
+import UserView from "../components/UserView";
 import { getMyReservations } from "../redux/reducers/myreservations";
 
 const AdminPage = () => {
@@ -14,8 +15,6 @@ const AdminPage = () => {
       dispatch(getMyReservations(client.data._id));
     }
   }, [client]);
-
-  console.log(client);
 
   return (
     <>

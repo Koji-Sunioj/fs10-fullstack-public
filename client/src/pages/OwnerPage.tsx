@@ -5,7 +5,7 @@ import { getOwner } from "../redux/reducers/owner";
 import { useEffect } from "react";
 import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 const OwnerPage = () => {
   const { ownerId } = useParams();

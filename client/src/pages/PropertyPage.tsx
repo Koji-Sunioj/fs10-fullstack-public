@@ -18,18 +18,19 @@ import moment from "moment";
 import {
   createReservation,
   resetCreateReservation,
-} from "../redux/reducers/createres";
+} from "../redux/reducers/createreservation";
 import {
   deleteReservation,
   resetDeleteReservation,
-} from "../redux/reducers/deleteres";
+} from "../redux/reducers/deletereservation";
 import CalendarView from "../components/CalendarView";
+import { resetDeleteProperty } from "../redux/reducers/deleteproperty";
 import { reservationView } from "../redux/reducers/resesrvationview";
 import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
 
-import { toggleModifiedFalse } from "../redux/reducers/propertyRefresh";
+import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
@@ -39,9 +40,9 @@ const PropertyPage = () => {
   const property = useSelector((state: any) => state.property);
 
   const client = useSelector((state: any) => state.client);
-  const createRes = useSelector((state: any) => state.createRes);
-  const deleteRes = useSelector((state: any) => state.deleteRes);
-  const removeProp = useSelector((state: any) => state.deleteProp);
+  const pushReservation = useSelector((state: any) => state.createReservation);
+  const pullReservation = useSelector((state: any) => state.deleteReservation);
+  const pullProperty = useSelector((state: any) => state.deleteProperty);
   const viewRes = useSelector((state: any) => state.reservationView);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
@@ -59,6 +60,7 @@ const PropertyPage = () => {
     dispatch(resetDeleteReservation());
     dispatch(resetCreateReservation());
     dispatch(toggleModifiedFalse());
+    dispatch(resetDeleteProperty());
     dispatch(reservationView(propertyId));
   }, [propertyId]);
 
@@ -287,35 +289,35 @@ const PropertyPage = () => {
           )}
 
           <Row style={{ textAlign: "center" }}>
-            {createRes.success && (
+            {pushReservation.success && (
               <Alert variant="success">
-                <h3>{createRes.message}</h3>
+                <h3>{pushReservation.message}</h3>
               </Alert>
             )}
-            {createRes.error && (
+            {pushReservation.error && (
               <Alert variant="danger">
-                <h3>{createRes.message}</h3>
+                <h3>{pushReservation.message}</h3>
               </Alert>
             )}
-            {deleteRes.success && (
+            {pullReservation.success && (
               <Alert variant="success">
-                <h3>{deleteRes.message}</h3>
+                <h3>{pullReservation.message}</h3>
               </Alert>
             )}
-            {deleteRes.error && (
+            {pullReservation.error && (
               <Alert variant="danger">
-                <h3>{deleteRes.message}</h3>
+                <h3>{pullReservation.message}</h3>
               </Alert>
             )}
 
-            {removeProp.success && (
+            {pullProperty.success && (
               <Alert variant="success">
-                <h3>{removeProp.message}</h3>
+                <h3>{pullProperty.message}</h3>
               </Alert>
             )}
-            {removeProp.error && (
+            {pullProperty.error && (
               <Alert variant="danger">
-                <h3>{removeProp.message}</h3>
+                <h3>{pullProperty.message}</h3>
               </Alert>
             )}
           </Row>

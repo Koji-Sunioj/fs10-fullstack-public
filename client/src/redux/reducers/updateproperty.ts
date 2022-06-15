@@ -4,7 +4,7 @@ export const updateProperty: any = createAsyncThunk(
   "updateproperty",
   async (data: any) => {
     const url = "http://localhost:5000/api/v1/properties/" + data.propertyId;
-    return await await fetch(url, {
+    return await fetch(url, {
       headers: {
         Authorization: `Bearer ${data.token}`,
         "Content-Type": "application/json",
@@ -17,13 +17,13 @@ export const updateProperty: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  error: null,
-  success: null,
+  error: false,
+  success: false,
   message: "",
 };
 
 export const updateproperty = createSlice({
-  name: "createproperty",
+  name: "updateproperty",
   initialState,
   reducers: {
     resetUpdateProp: () => initialState,
@@ -41,7 +41,7 @@ export const updateproperty = createSlice({
           state.message = action.payload.message;
         }
       })
-      .addCase(updateProperty.rejected, (state, action) => {
+      .addCase(updateProperty.rejected, (state) => {
         state.success = false;
         state.error = true;
         state.message = "there was a problem creating that property";

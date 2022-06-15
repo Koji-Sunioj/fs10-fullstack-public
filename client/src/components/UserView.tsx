@@ -109,10 +109,7 @@ const UserView = ({ client, children }: any) => {
         <>
           <h2>Your reservations</h2>
           {reservations.data.map((reservation: any) => (
-            <Row
-              style={{ backgroundColor: "white" }}
-              key={reservation.property._id}
-            >
+            <Row style={{ backgroundColor: "white" }} key={reservation._id}>
               <Link to={`/property/${reservation.property._id}`}>
                 <h3>
                   {reservation.property.title} in{" "}

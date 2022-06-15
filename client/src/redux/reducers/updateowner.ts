@@ -17,8 +17,8 @@ export const updateOwner: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  error: null,
-  success: null,
+  error: false,
+  success: false,
   message: "",
 };
 
@@ -41,7 +41,7 @@ export const updateproperty = createSlice({
           state.message = action.payload.message;
         }
       })
-      .addCase(updateOwner.rejected, (state, action) => {
+      .addCase(updateOwner.rejected, (state) => {
         state.success = false;
         state.error = true;
         state.message = "there was a problem updating that owner";

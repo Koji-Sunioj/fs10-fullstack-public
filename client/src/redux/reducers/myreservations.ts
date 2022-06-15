@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getMyReservations: any = createAsyncThunk(
-  "myreservations",
+  "viewmyreservations",
   async (userId: any) => {
     const url = "http://localhost:5000/api/v1/reservations/?userId=" + userId;
     return await fetch(url).then((resp) => resp.json());
@@ -9,8 +9,8 @@ export const getMyReservations: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  loading: false,
   data: null,
+  loading: false,
   error: false,
 };
 
@@ -22,24 +22,23 @@ export const viewmyreservations = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getMyReservations.pending, (state, action) => {
-        state.error = false;
+      .addCase(getMyReservations.pending, (state) => {
         state.loading = true;
+        state.error = false;
       })
       .addCase(getMyReservations.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.loading = false;
           state.error = true;
         } else if (action.payload.status === 200) {
-          const { data } = action.payload;
-          state.data = data;
+          state.data = action.payload.data;
           state.loading = false;
           state.error = false;
         }
       })
-      .addCase(getMyReservations.rejected, (state, action) => {
-        state.loading = false;
+      .addCase(getMyReservations.rejected, (state) => {
         state.data = null;
+        state.loading = false;
         state.error = true;
       });
   },

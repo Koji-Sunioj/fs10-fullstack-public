@@ -12,23 +12,23 @@ const initialState: any = {
 };
 
 export const owner = createSlice({
-  name: "propertyfilter",
+  name: "owner",
   initialState,
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getOwner.pending, (state, action) => {
+      .addCase(getOwner.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
       .addCase(getOwner.fulfilled, (state, action) => {
         if (action.payload.data.length === 0) {
-          state.loading = false;
           state.data = null;
+          state.loading = false;
           state.error = true;
         } else {
-          state.loading = false;
           state.data = action.payload.data[0];
+          state.loading = false;
           state.error = false;
         }
       })

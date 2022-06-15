@@ -26,7 +26,7 @@ export const properties = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getProperties.pending, (state, action) => {
+      .addCase(getProperties.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
@@ -36,7 +36,7 @@ export const properties = createSlice({
         state.count = action.payload.count;
         state.error = false;
       })
-      .addCase(getProperties.rejected, (state, action) => {
+      .addCase(getProperties.rejected, (state) => {
         state.loading = false;
         state.data = null;
         state.count = null;

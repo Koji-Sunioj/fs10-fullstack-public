@@ -15,8 +15,8 @@ export const deleteProperty: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  error: null,
-  success: null,
+  error: false,
+  success: false,
   message: "",
 };
 
@@ -24,28 +24,28 @@ export const deleteproperty = createSlice({
   name: "deleteproperty",
   initialState,
   reducers: {
-    resetDeleteProp: () => initialState,
+    resetDeleteProperty: () => initialState,
   },
   extraReducers(builder) {
     builder
       .addCase(deleteProperty.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
-          state.success = false;
           state.error = true;
+          state.success = false;
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
-          state.success = true;
           state.error = false;
+          state.success = true;
           state.message = action.payload.message;
         }
       })
       .addCase(deleteProperty.rejected, (state, action) => {
-        state.success = false;
         state.error = true;
+        state.success = false;
         state.message = "there was a problem deleting that property";
       });
   },
 });
 
-export const { resetDeleteProp } = deleteproperty.actions;
+export const { resetDeleteProperty } = deleteproperty.actions;
 export default deleteproperty.reducer;

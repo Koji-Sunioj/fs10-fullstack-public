@@ -14,7 +14,7 @@ const CreateProperty = () => {
   const client = useSelector((state: any) => state.client);
   const owners = useSelector((state: any) => state.owners);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const addProperty = useSelector((state: any) => state.createProp);
+  const addProperty = useSelector((state: any) => state.createProperty);
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {

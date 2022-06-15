@@ -20,7 +20,7 @@ const initialState: any = {
 };
 
 export const verifygoogle = createSlice({
-  name: "createreservation",
+  name: "verifygoogle",
   initialState,
   reducers: {
     resetAuth: () => initialState,

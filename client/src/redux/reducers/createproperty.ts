@@ -17,8 +17,8 @@ export const createProperty: any = createAsyncThunk(
 
 const initialState: any = {
   data: null,
-  error: null,
-  success: null,
+  error: false,
+  success: false,
   message: "",
 };
 
@@ -32,19 +32,19 @@ export const createproperty = createSlice({
     builder
       .addCase(createProperty.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
-          state.success = false;
           state.error = true;
+          state.success = false;
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
-          state.success = true;
-          state.error = false;
-          state.message = action.payload.message;
           state.data = action.payload.data;
+          state.error = false;
+          state.success = true;
+          state.message = action.payload.message;
         }
       })
-      .addCase(createProperty.rejected, (state, action) => {
-        state.success = false;
+      .addCase(createProperty.rejected, (state) => {
         state.error = true;
+        state.success = false;
         state.message = "there was a problem creating that property";
       });
   },

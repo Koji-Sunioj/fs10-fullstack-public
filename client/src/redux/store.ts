@@ -1,21 +1,21 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
-import properties from "./reducers/properties";
-import filterby from "./reducers/filterby";
-import property from "./reducers/property";
-import createres from "./reducers/createres";
 import createclient from "./reducers/client";
-import deleteres from "./reducers/deleteres";
-import updateuser from "./reducers/updateuser";
-import viewpropres from "./reducers/resesrvationview";
-import viewmyreservations from "./reducers/myreservations";
 import verifygoogle from "./reducers/verifygoogle";
+import updateuser from "./reducers/updateuser";
+import filterby from "./reducers/filterby";
+import properties from "./reducers/properties";
+import property from "./reducers/property";
+import createreservation from "./reducers/createreservation";
+import deletereservation from "./reducers/deletereservation";
+import propertyreservations from "./reducers/resesrvationview";
+import viewmyreservations from "./reducers/myreservations";
 import viewowners from "./reducers/getowners";
+import allproperties from "./reducers/allproperties";
 import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
-import allproperties from "./reducers/allproperties";
-import createowner from "./reducers/createowner";
 import owner from "./reducers/owner";
+import createowner from "./reducers/createowner";
 import deleteowner from "./reducers/deleteowner";
 import updateowner from "./reducers/updateowner";
 
@@ -28,32 +28,25 @@ import {
   crudRefresh,
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
-import propertyrefresh from "./reducers/propertyRefresh";
+import propertyrefresh from "./reducers/propertyrefresh";
 import { getProperties } from "./reducers/properties";
-import {
-  toggleModifiedTrue,
-  toggleModifiedFalse,
-} from "./reducers/propertyRefresh";
+import { toggleModifiedTrue } from "./reducers/propertyrefresh";
 import { getProperty } from "./reducers/property";
 
-const listenerMiddleware = createListenerMiddleware();
-const testMiddleWare = createListenerMiddleware();
+const propertyCrudMiddleWare = createListenerMiddleware();
+const propertiesCrudMiddlware = createListenerMiddleware();
 
-testMiddleWare.startListening({
+propertyCrudMiddleWare.startListening({
   matcher: isAnyOf(toggleModifiedTrue),
   effect: (action, state: any) => {
     const property: any = state.getState().property;
-    const owner: any = state.getState().owner;
-    if (property.data !== null && owner.data !== null) {
+    if (property.data !== null) {
       state.dispatch(getProperty(property.data._id));
-      console.log(property);
     }
-    //const afterFilter: any = something.getState().filterBy;
-    //something.dispatch(getProperties(afterFilter));
   },
 });
 
-listenerMiddleware.startListening({
+propertiesCrudMiddlware.startListening({
   matcher: isAnyOf(
     updateSearch,
     updatePage,
@@ -73,17 +66,17 @@ export const store = configureStore({
     properties: properties,
     filterBy: filterby,
     property: property,
-    createRes: createres,
     client: createclient,
-    deleteRes: deleteres,
-    reservationView: viewpropres,
+    createReservation: createreservation,
+    deleteReservation: deletereservation,
+    reservationView: propertyreservations,
     myReservations: viewmyreservations,
     googleAuth: verifygoogle,
     updateUser: updateuser,
     owners: viewowners,
-    createProp: createproperty,
-    deleteProp: deleteproperty,
-    updateProp: updateproperty,
+    createProperty: createproperty,
+    deleteProperty: deleteproperty,
+    updateProperty: updateproperty,
     getAllProperties: allproperties,
     addOwner: createowner,
     owner: owner,
@@ -91,12 +84,10 @@ export const store = configureStore({
     updateOwner: updateowner,
     propertyModified: propertyrefresh,
   },
-  // Add the listener middleware to the store.
-  // NOTE: Since this can receive actions with functions inside,
-  // it should go before the serializability check middleware
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(
-      listenerMiddleware.middleware,
-      testMiddleWare.middleware
+      propertiesCrudMiddlware.middleware,
+      propertyCrudMiddleWare.middleware
     ),
 });

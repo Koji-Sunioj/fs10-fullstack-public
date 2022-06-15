@@ -7,12 +7,12 @@ export const getOwners: any = createAsyncThunk("owners", async () => {
 
 const initialState: any = {
   data: null,
-  error: null,
-  loading: null,
+  loading: false,
+  error: false,
 };
 
 export const viewowners = createSlice({
-  name: "viewowners",
+  name: "owners",
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -20,22 +20,20 @@ export const viewowners = createSlice({
       .addCase(getOwners.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.data = null;
-          state.error = true;
           state.loading = false;
+          state.error = true;
         } else if (action.payload.status === 200) {
-          const { data } = action.payload;
-          state.data = data;
+          state.data = action.payload.data;
           state.error = false;
           state.loading = false;
         }
       })
-      .addCase(getOwners.rejected, (state, action) => {
+      .addCase(getOwners.rejected, (state) => {
         state.data = null;
-        state.error = true;
         state.loading = false;
+        state.error = true;
       });
   },
 });
 
-//export const { resetMyView } = viewmyreservations.actions;
 export default viewowners.reducer;

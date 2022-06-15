@@ -11,11 +11,11 @@ export const reservationView: any = createAsyncThunk(
 
 const initialState: any = {
   loading: false,
-  data: null,
   error: false,
+  data: null,
 };
 
-export const viewpropres = createSlice({
+export const propertyreservations = createSlice({
   name: "viewreservations",
   initialState,
   reducers: {
@@ -23,28 +23,26 @@ export const viewpropres = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(reservationView.pending, (state, action) => {
-        state.error = false;
+      .addCase(reservationView.pending, (state) => {
         state.loading = true;
+        state.error = false;
       })
       .addCase(reservationView.fulfilled, (state, action) => {
         if (action.payload.status === 403) {
           state.loading = false;
           state.error = true;
         } else if (action.payload.status === 200) {
-          const { data } = action.payload;
-          state.data = data;
+          state.data = action.payload.data;
           state.loading = false;
           state.error = false;
         }
       })
-      .addCase(reservationView.rejected, (state, action) => {
-        state.success = false;
+      .addCase(reservationView.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });
   },
 });
 
-export const { resetResView } = viewpropres.actions;
-export default viewpropres.reducer;
+export const { resetResView } = propertyreservations.actions;
+export default propertyreservations.reducer;

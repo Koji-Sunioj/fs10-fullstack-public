@@ -10,8 +10,8 @@ export const getAllProperties: any = createAsyncThunk(
 
 export const initialState: any = {
   data: null,
-  loading: null,
-  error: null,
+  loading: false,
+  error: false,
 };
 
 export const allproperties = createSlice({
@@ -20,18 +20,18 @@ export const allproperties = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getAllProperties.pending, (state, action) => {
+      .addCase(getAllProperties.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
       .addCase(getAllProperties.fulfilled, (state, action) => {
-        state.loading = false;
         state.data = action.payload.data;
+        state.loading = false;
         state.error = false;
       })
-      .addCase(getAllProperties.rejected, (state, action) => {
-        state.loading = false;
+      .addCase(getAllProperties.rejected, (state) => {
         state.data = null;
+        state.loading = false;
         state.error = true;
       });
   },

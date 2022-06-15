@@ -17,8 +17,8 @@ export const updateUser: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  success: null,
-  error: null,
+  success: false,
+  error: false,
   message: null,
 };
 
@@ -44,7 +44,7 @@ export const updateuser = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.error = true;
         state.success = false;
-        state.message = "could not update resources";
+        state.message = action.payload.message;
       });
   },
 });

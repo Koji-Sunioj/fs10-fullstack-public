@@ -8,7 +8,7 @@ import { getAllProperties } from "../redux/reducers/allproperties";
 import { updateOwner } from "../redux/reducers/updateowner";
 import { Link } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 const EditOwner = () => {
   const { ownerId } = useParams();

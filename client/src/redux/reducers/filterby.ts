@@ -29,7 +29,6 @@ export const filterby = createSlice({
   },
 });
 
-export const searchState = (state: any) => state.filterby.searchBy;
 export const {
   updateSearch,
   updatePage,

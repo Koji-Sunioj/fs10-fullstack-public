@@ -21,7 +21,7 @@ const initialState: any = {
   message: "",
 };
 
-export const deleteres = createSlice({
+export const deletereservation = createSlice({
   name: "deletereservation",
   initialState,
   reducers: {
@@ -30,23 +30,23 @@ export const deleteres = createSlice({
   extraReducers(builder) {
     builder
       .addCase(deleteReservation.fulfilled, (state, action) => {
-        if (action.payload.status === 403) {
-          state.success = false;
+        if (action.payload.status !== 200) {
           state.error = true;
+          state.success = false;
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
-          state.success = true;
           state.error = false;
+          state.success = true;
           state.message = action.payload.message;
         }
       })
       .addCase(deleteReservation.rejected, (state, action) => {
-        state.success = false;
         state.error = true;
+        state.success = false;
         state.message = "error processing request";
       });
   },
 });
 
-export const { resetDeleteReservation } = deleteres.actions;
-export default deleteres.reducer;
+export const { resetDeleteReservation } = deletereservation.actions;
+export default deletereservation.reducer;

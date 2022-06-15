@@ -6,7 +6,7 @@ import OwnerForm from "../components/OwnerForm";
 import { getAllProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
 import { resetCreateOwner } from "../redux/reducers/createowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 const CreateOwner = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const verifyToken: any = createAsyncThunk(
-  "token",
+  "client",
   async (token: any) => {
     const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
     return await fetch(url, {
@@ -20,7 +20,7 @@ const initialState: any = {
 };
 
 export const createclient = createSlice({
-  name: "createreservation",
+  name: "client",
   initialState,
   reducers: {
     resetClient: () => initialState,
@@ -32,7 +32,7 @@ export const createclient = createSlice({
   extraReducers(builder) {
     builder
       .addCase(verifyToken.fulfilled, (state, action) => {
-        if (action.payload.status === 403) {
+        if (action.payload.status !== 200) {
           state.valid = null;
           state.data = null;
         } else if (action.payload.status === 200) {
@@ -40,7 +40,7 @@ export const createclient = createSlice({
           state.data = action.payload.data;
         }
       })
-      .addCase(verifyToken.rejected, (state, action) => {
+      .addCase(verifyToken.rejected, (state) => {
         state.valid = null;
         state.data = null;
       });

@@ -15,30 +15,30 @@ const initialState: any = {
 };
 
 export const properties = createSlice({
-  name: "propertyfilter",
+  name: "property",
   initialState,
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getProperty.pending, (state, action) => {
+      .addCase(getProperty.pending, (state) => {
         state.data = null;
         state.loading = true;
         state.error = false;
       })
       .addCase(getProperty.fulfilled, (state, action) => {
         if (action.payload.data.length === 0) {
-          state.loading = false;
           state.data = null;
+          state.loading = false;
           state.error = true;
         } else {
-          state.loading = false;
           state.data = action.payload.data[0];
+          state.loading = false;
           state.error = false;
         }
       })
-      .addCase(getProperty.rejected, (state, action) => {
-        state.loading = false;
+      .addCase(getProperty.rejected, (state) => {
         state.data = null;
+        state.loading = false;
         state.error = true;
       });
   },

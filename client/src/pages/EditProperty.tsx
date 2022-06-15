@@ -9,13 +9,13 @@ import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
-import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 const EditProperty = () => {
   const dispatch = useDispatch();
   const { propertyId } = useParams();
   const client = useSelector((state: any) => state.client);
-  const updateProp = useSelector((state: any) => state.updateProp);
+  const patchProperty = useSelector((state: any) => state.updateProperty);
   const owners = useSelector((state: any) => state.owners);
   const property = useSelector((state: any) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
@@ -48,8 +48,8 @@ const EditProperty = () => {
     await dispatch(
       updateProperty({ token: token, data: property, propertyId: propertyId })
     );
-    dispatch(crudRefresh());
     dispatch(toggleModifiedTrue());
+    dispatch(crudRefresh());
   }
 
   return (
@@ -64,16 +64,18 @@ const EditProperty = () => {
             property={property.data}
           />
           <Row style={{ textAlign: "center" }}>
-            {updateProp.success && (
+            {patchProperty.success && (
               <Alert variant="success">
                 <Link to={`/property/${propertyId}`}>
-                  <h3>{updateProp.message}. click here to see the listing.</h3>
+                  <h3>
+                    {patchProperty.message}. click here to see the listing.
+                  </h3>
                 </Link>
               </Alert>
             )}
-            {updateProp.error && (
+            {patchProperty.error && (
               <Alert variant="danger">
-                <h3>{updateProp.message}.</h3>
+                <h3>{patchProperty.message}.</h3>
               </Alert>
             )}
           </Row>

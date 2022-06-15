@@ -15,8 +15,8 @@ export const deleteOwner: any = createAsyncThunk(
 );
 
 const initialState: any = {
-  error: null,
-  success: null,
+  error: false,
+  success: false,
   message: "",
 };
 
@@ -30,19 +30,19 @@ export const deleteowner = createSlice({
     builder
       .addCase(deleteOwner.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
-          state.success = false;
           state.error = true;
+          state.success = false;
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
-          state.success = true;
           state.error = false;
+          state.success = true;
           state.message = action.payload.message;
         }
       })
-      .addCase(deleteOwner.rejected, (state, action) => {
-        state.success = false;
+      .addCase(deleteOwner.rejected, (state) => {
         state.error = true;
-        state.message = "there was a problem deleting that property";
+        state.success = false;
+        state.message = "there was a problem deleting that owner";
       });
   },
 });

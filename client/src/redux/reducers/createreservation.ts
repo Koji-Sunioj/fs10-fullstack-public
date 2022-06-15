@@ -23,7 +23,7 @@ const initialState: any = {
   message: "",
 };
 
-export const createres = createSlice({
+export const createreservation = createSlice({
   name: "createreservation",
   initialState,
   reducers: {
@@ -52,7 +52,7 @@ export const createres = createSlice({
           } on for ${data.nights} nights`;
         }
       })
-      .addCase(createReservation.rejected, (state, action) => {
+      .addCase(createReservation.rejected, (state) => {
         state.success = false;
         state.loading = false;
         state.error = true;
@@ -61,5 +61,5 @@ export const createres = createSlice({
   },
 });
 
-export const { resetCreateReservation } = createres.actions;
-export default createres.reducer;
+export const { resetCreateReservation } = createreservation.actions;
+export default createreservation.reducer;
