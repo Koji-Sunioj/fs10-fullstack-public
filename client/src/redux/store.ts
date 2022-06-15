@@ -1,4 +1,5 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import createclient from "./reducers/client";
 import verifygoogle from "./reducers/verifygoogle";
 import updateuser from "./reducers/updateuser";
@@ -18,6 +19,7 @@ import owner from "./reducers/owner";
 import createowner from "./reducers/createowner";
 import deleteowner from "./reducers/deleteowner";
 import updateowner from "./reducers/updateowner";
+import propertyrefresh from "./reducers/propertyrefresh";
 
 import {
   updateSearch,
@@ -28,7 +30,6 @@ import {
   crudRefresh,
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
-import propertyrefresh from "./reducers/propertyrefresh";
 import { getProperties } from "./reducers/properties";
 import { toggleModifiedTrue } from "./reducers/propertyrefresh";
 import { getProperty } from "./reducers/property";
@@ -91,3 +92,6 @@ export const store = configureStore({
       propertyCrudMiddleWare.middleware
     ),
 });
+
+export type AppDispatch = typeof store.dispatch; // you can use this Dispatch type in your thunks
+export const useAppDispatch = () => useDispatch<AppDispatch>();

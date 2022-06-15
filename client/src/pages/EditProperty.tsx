@@ -11,8 +11,11 @@ import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
+//import { useAppDispatch } from "../redux/store";
+
 const EditProperty = () => {
   const dispatch = useDispatch();
+
   const { propertyId } = useParams();
   const client = useSelector((state: any) => state.client);
   const patchProperty = useSelector((state: any) => state.updateProperty);

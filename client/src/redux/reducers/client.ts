@@ -1,20 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { TokenType } from "../../types/types";
 
-export const verifyToken: any = createAsyncThunk(
-  "client",
-  async (token: any) => {
-    const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
-    return await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      method: "get",
-    }).then((resp) => resp.json());
-  }
-);
+export const verifyToken = createAsyncThunk("client", async (token: string) => {
+  const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
+  return await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    method: "get",
+  }).then((resp) => resp.json());
+});
 
-const initialState: any = {
+const initialState: TokenType = {
   valid: null,
   data: null,
 };

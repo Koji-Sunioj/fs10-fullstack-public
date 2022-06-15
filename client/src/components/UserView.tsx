@@ -15,10 +15,12 @@ import { updateUser } from "../redux/reducers/updateuser";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetUpdateUser } from "../redux/reducers/updateuser";
 import { verifyToken, resetClient } from "../redux/reducers/client";
+import { useAppDispatch } from "../redux/store";
 
 const UserView = ({ client, children }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const apiDispatch = useAppDispatch();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const updateName = useSelector((state: any) => state.updateUser);
@@ -47,7 +49,7 @@ const UserView = ({ client, children }: any) => {
         data: { firstName: firstName, lastName: lastName },
       })
     );
-    dispatch(verifyToken(token));
+    dispatch(apiDispatch(token));
   }
 
   return (

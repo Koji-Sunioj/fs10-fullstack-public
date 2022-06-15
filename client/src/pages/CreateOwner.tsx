@@ -7,9 +7,11 @@ import { getAllProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
 import { resetCreateOwner } from "../redux/reducers/createowner";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { useAppDispatch } from "../redux/store";
 
 const CreateOwner = () => {
   const dispatch = useDispatch();
+  const apiDispatch = useAppDispatch();
   const client = useSelector((state: any) => state.client);
   const properties = useSelector((state: any) => state.getAllProperties);
   const addOwner = useSelector((state: any) => state.addOwner);
@@ -17,7 +19,7 @@ const CreateOwner = () => {
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
-      dispatch(getAllProperties());
+      apiDispatch(getAllProperties());
     }
     dispatch(resetCreateOwner());
   }, [client]);

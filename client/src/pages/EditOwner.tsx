@@ -9,10 +9,12 @@ import { updateOwner } from "../redux/reducers/updateowner";
 import { Link } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { useAppDispatch } from "../redux/store";
 
 const EditOwner = () => {
   const { ownerId } = useParams();
   const dispatch = useDispatch();
+  const apiDispatch = useAppDispatch();
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
   const properties = useSelector((state: any) => state.getAllProperties);
@@ -22,7 +24,7 @@ const EditOwner = () => {
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(resetUpdateOwner());
-      dispatch(getAllProperties());
+      apiDispatch(getAllProperties());
       dispatch(getOwner(ownerId));
     }
   }, [client]);

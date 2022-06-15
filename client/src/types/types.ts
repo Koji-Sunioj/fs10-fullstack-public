@@ -1,3 +1,21 @@
+export type FetchTYpe = {
+  data: null;
+  loading: boolean;
+  error: boolean;
+};
+
+export type PostType = {
+  data: null;
+  message: string;
+  success: boolean;
+  error: boolean;
+};
+
+export type TokenType = {
+  valid: null | boolean;
+  data: null;
+};
+
 export type FilterType = {
   searchBy: string;
   sortBy: string;
