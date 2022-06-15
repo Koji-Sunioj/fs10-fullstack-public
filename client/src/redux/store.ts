@@ -9,7 +9,7 @@ import updateuser from "./reducers/updateuser";
 import viewpropres from "./reducers/resesrvationview";
 import viewmyreservations from "./reducers/myreservations";
 import verifygoogle from "./reducers/verifygoogle";
-import viewowners  from "./reducers/getowners";
+import viewowners from "./reducers/getowners";
 import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
@@ -28,9 +28,30 @@ import {
   crudRefresh,
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
+import propertyrefresh from "./reducers/propertyRefresh";
 import { getProperties } from "./reducers/properties";
+import {
+  toggleModifiedTrue,
+  toggleModifiedFalse,
+} from "./reducers/propertyRefresh";
+import { getProperty } from "./reducers/property";
 
 const listenerMiddleware = createListenerMiddleware();
+const testMiddleWare = createListenerMiddleware();
+
+testMiddleWare.startListening({
+  matcher: isAnyOf(toggleModifiedTrue),
+  effect: (action, state: any) => {
+    const property: any = state.getState().property;
+    const owner: any = state.getState().owner;
+    if (property.data !== null && owner.data !== null) {
+      state.dispatch(getProperty(property.data._id));
+      console.log(property);
+    }
+    //const afterFilter: any = something.getState().filterBy;
+    //something.dispatch(getProperties(afterFilter));
+  },
+});
 
 listenerMiddleware.startListening({
   matcher: isAnyOf(
@@ -39,11 +60,11 @@ listenerMiddleware.startListening({
     updateDirection,
     updateSortCategory,
     resetFilter,
-    crudRefresh,
+    crudRefresh
   ),
-  effect: (action, something: any) => {
-    const afterFilter: any = something.getState().filterBy;
-    something.dispatch(getProperties(afterFilter));
+  effect: (action, state: any) => {
+    const afterFilter: any = state.getState().filterBy;
+    state.dispatch(getProperties(afterFilter));
   },
 });
 
@@ -62,16 +83,20 @@ export const store = configureStore({
     owners: viewowners,
     createProp: createproperty,
     deleteProp: deleteproperty,
-    updateProp:updateproperty,
+    updateProp: updateproperty,
     getAllProperties: allproperties,
     addOwner: createowner,
     owner: owner,
     deleteOwner: deleteowner,
-    updateOwner: updateowner
+    updateOwner: updateowner,
+    propertyModified: propertyrefresh,
   },
   // Add the listener middleware to the store.
   // NOTE: Since this can receive actions with functions inside,
   // it should go before the serializability check middleware
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+    getDefaultMiddleware().prepend(
+      listenerMiddleware.middleware,
+      testMiddleWare.middleware
+    ),
 });

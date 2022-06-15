@@ -8,6 +8,7 @@ import { getAllProperties } from "../redux/reducers/allproperties";
 import { updateOwner } from "../redux/reducers/updateowner";
 import { Link } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
+import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
 
 const EditOwner = () => {
   const { ownerId } = useParams();
@@ -26,7 +27,7 @@ const EditOwner = () => {
     }
   }, [client]);
 
-  function sendOwner(event: any) {
+  async function sendOwner(event: any) {
     event.preventDefault();
     const form = event.target;
     const owner = {
@@ -44,7 +45,11 @@ const EditOwner = () => {
         form.lastName.value.substring(1).toLowerCase(),
       biography: form.biography.value,
     };
-    dispatch(updateOwner({ token: token, ownerId: ownerId, data: owner }));
+
+    await dispatch(
+      updateOwner({ token: token, ownerId: ownerId, data: owner })
+    );
+    dispatch(toggleModifiedTrue());
   }
 
   return (

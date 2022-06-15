@@ -18,7 +18,6 @@ export const owner = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getOwner.pending, (state, action) => {
-        state.data = null;
         state.loading = true;
         state.error = false;
       })

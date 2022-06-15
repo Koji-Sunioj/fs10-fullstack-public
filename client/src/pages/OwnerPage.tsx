@@ -1,11 +1,11 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { getOwner } from "../redux/reducers/owner";
 import { useEffect } from "react";
 import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
+import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
 
 const OwnerPage = () => {
   const { ownerId } = useParams();
@@ -24,15 +24,16 @@ const OwnerPage = () => {
         (owner.data && owner.data._id !== ownerId) ||
         editOwner.success
       ) {
+        dispatch(resetDeleteOwner());
+        dispatch(resetUpdateOwner());
         dispatch(getOwner(ownerId));
       }
-      dispatch(resetUpdateOwner());
-      dispatch(resetDeleteOwner());
     }
   }, [ownerId]);
 
-  function test(ownerId: string) {
-    dispatch(deleteOwner({ token: token, ownerId: ownerId }));
+  async function test(ownerId: string) {
+    await dispatch(deleteOwner({ token: token, ownerId: ownerId }));
+    dispatch(toggleModifiedTrue());
     setTimeout(() => {
       navigate("/");
     }, 1500);

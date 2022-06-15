@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPropery } from "../redux/reducers/property";
+import { getProperty } from "../redux/reducers/property";
 import {
   Button,
   Row,
@@ -25,13 +25,11 @@ import {
 } from "../redux/reducers/deleteres";
 import CalendarView from "../components/CalendarView";
 import { reservationView } from "../redux/reducers/resesrvationview";
-import {
-  deleteProperty,
-  resetDeleteProp,
-} from "../redux/reducers/deleteproperty";
+import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
-import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
+
+import { toggleModifiedFalse } from "../redux/reducers/propertyRefresh";
 
 const PropertyPage = () => {
   let { propertyId } = useParams();
@@ -39,15 +37,12 @@ const PropertyPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const property = useSelector((state: any) => state.property);
-  const deleteRes = useSelector((state: any) => state.deleteRes);
+
   const client = useSelector((state: any) => state.client);
   const createRes = useSelector((state: any) => state.createRes);
+  const deleteRes = useSelector((state: any) => state.deleteRes);
   const removeProp = useSelector((state: any) => state.deleteProp);
-  const updateProp = useSelector((state: any) => state.updateProp);
   const viewRes = useSelector((state: any) => state.reservationView);
-  const editOwner = useSelector((state: any) => state.updateOwner);
-  const createOwner = useSelector((state: any) => state.owner);
-  const deleteOwner = useSelector((state: any) => state.deleteOwner);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
@@ -55,28 +50,17 @@ const PropertyPage = () => {
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
   useEffect(() => {
-    /*if (
+    if (
       property.data === null ||
-      (property.data !== null && property.data._id !== propertyId) ||
-      updateProp.success ||
-      editOwner.success ||
-      deleteOwner.success ||
-      createOwner.success
+      (property.data !== null && property.data._id !== propertyId)
     ) {
-      dispatch(getPropery(propertyId));
-      //dispatch(resetDeleteProp());
-    }*/
-    dispatch(getPropery(propertyId));
-    dispatch(resetDeleteProp());
-    dispatch(resetCreateReservation());
+      dispatch(getProperty(propertyId));
+    }
     dispatch(resetDeleteReservation());
-    dispatch(resetUpdateProp());
-  }, [propertyId, updateProp, editOwner, deleteOwner]);
-
-  /*||
-      updateProp.success ||
-      editOwner.success ||
-      deleteOwner.success*/
+    dispatch(resetCreateReservation());
+    dispatch(toggleModifiedFalse());
+    dispatch(reservationView(propertyId));
+  }, [propertyId]);
 
   function decrementFocus() {
     const date = focusDay.clone();

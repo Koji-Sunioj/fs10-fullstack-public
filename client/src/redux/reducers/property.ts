@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getPropery: any = createAsyncThunk(
+export const getProperty: any = createAsyncThunk(
   "property",
   async (propertyId) => {
     let url = "http://localhost:5000/api/v1/properties/" + propertyId;
@@ -20,12 +20,12 @@ export const properties = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getPropery.pending, (state, action) => {
+      .addCase(getProperty.pending, (state, action) => {
         state.data = null;
         state.loading = true;
         state.error = false;
       })
-      .addCase(getPropery.fulfilled, (state, action) => {
+      .addCase(getProperty.fulfilled, (state, action) => {
         if (action.payload.data.length === 0) {
           state.loading = false;
           state.data = null;
@@ -36,7 +36,7 @@ export const properties = createSlice({
           state.error = false;
         }
       })
-      .addCase(getPropery.rejected, (state, action) => {
+      .addCase(getProperty.rejected, (state, action) => {
         state.loading = false;
         state.data = null;
         state.error = true;

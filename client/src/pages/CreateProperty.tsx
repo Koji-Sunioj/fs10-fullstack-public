@@ -19,8 +19,8 @@ const CreateProperty = () => {
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
-      dispatch(resetCreateProp());
     }
+    dispatch(resetCreateProp());
   }, [client]);
 
   async function sendProperty(event: any) {

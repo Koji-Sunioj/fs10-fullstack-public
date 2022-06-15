@@ -6,6 +6,7 @@ import OwnerForm from "../components/OwnerForm";
 import { getAllProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
 import { resetCreateOwner } from "../redux/reducers/createowner";
+import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
 
 const CreateOwner = () => {
   const dispatch = useDispatch();
@@ -16,12 +17,12 @@ const CreateOwner = () => {
 
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
-      dispatch(resetCreateOwner());
       dispatch(getAllProperties());
     }
+    dispatch(resetCreateOwner());
   }, [client]);
 
-  function sendOwner(event: any) {
+  async function sendOwner(event: any) {
     event.preventDefault();
     const form = event.target;
     const owner = {
@@ -40,7 +41,8 @@ const CreateOwner = () => {
       biography: form.biography.value,
     };
 
-    dispatch(createOwner({ token: token, data: owner }));
+    await dispatch(createOwner({ token: token, data: owner }));
+    dispatch(toggleModifiedTrue());
   }
 
   return (

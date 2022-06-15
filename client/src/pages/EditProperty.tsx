@@ -1,14 +1,15 @@
-import { Col, Container, Row, Alert } from "react-bootstrap";
+import { Col, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getPropery } from "../redux/reducers/property";
+import { getProperty } from "../redux/reducers/property";
 import { getOwners } from "../redux/reducers/getowners";
 import { updateProperty } from "../redux/reducers/updateproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
+import { toggleModifiedTrue } from "../redux/reducers/propertyRefresh";
 
 const EditProperty = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const EditProperty = () => {
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
-      dispatch(getPropery(propertyId));
+      dispatch(getProperty(propertyId));
       dispatch(resetUpdateProp());
     }
   }, [client]);
@@ -48,6 +49,7 @@ const EditProperty = () => {
       updateProperty({ token: token, data: property, propertyId: propertyId })
     );
     dispatch(crudRefresh());
+    dispatch(toggleModifiedTrue());
   }
 
   return (
