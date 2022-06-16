@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiType } from "../../types/types";
+import { UpdateType } from "../../types/types";
 
 export const deleteOwner = createAsyncThunk(
   "deleteowner",
@@ -15,7 +15,7 @@ export const deleteOwner = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: UpdateType = {
   error: false,
   success: false,
   message: "",

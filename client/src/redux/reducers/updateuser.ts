@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiType } from "../../types/types";
-import PayloadAction from "@reduxjs/toolkit";
+import { UpdateType } from "../../types/types";
 
 export const updateUser = createAsyncThunk(
   "updateuser",
@@ -18,7 +17,7 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: UpdateType = {
   success: false,
   error: false,
   message: "",

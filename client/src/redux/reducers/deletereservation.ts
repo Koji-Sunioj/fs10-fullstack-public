@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiType } from "../../types/types";
+import { UpdateType } from "../../types/types";
 
 export const deleteReservation = createAsyncThunk(
   "deletereservation",
@@ -16,7 +16,7 @@ export const deleteReservation = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: UpdateType = {
   error: false,
   success: false,
   message: "",

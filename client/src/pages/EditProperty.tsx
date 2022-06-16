@@ -11,38 +11,43 @@ import { crudRefresh } from "../redux/reducers/filterby";
 import PropertyForm from "../components/PropertyForm";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 import { AppDispatch } from "../redux/store";
+import { PropertyType, AppType } from "../types/types";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { propertyId } = useParams<string>();
-  const client = useSelector((state: any) => state.client);
-  const patchProperty = useSelector((state: any) => state.updateProperty);
-  const owners = useSelector((state: any) => state.owners);
-  const property = useSelector((state: any) => state.property);
+  const client = useSelector((state: AppType) => state.client);
+  const patchProperty = useSelector((state: AppType) => state.updateProperty);
+  const owners = useSelector((state: AppType) => state.owners);
+  const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
 
   useEffect(() => {
-    if (client.valid === true && client.data.isAdmin === true) {
+    if (
+      client.valid === true &&
+      client.data !== null &&
+      client.data.isAdmin === true
+    ) {
       dispatch(getOwners());
       dispatch(getProperty(String(propertyId)));
       dispatch(resetUpdateProp());
     }
   }, [client]);
 
-  async function sendProperty(event: any) {
+  async function sendProperty(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.target;
-    const property = {
+    const form = event.currentTarget;
+    const property: Omit<PropertyType, "_id"> = {
       location: form.location.value,
-      title: form.title.value,
+      title: form.propertyTitle.value,
       description: form.description.value,
       nightlyRate: Number(form.nightlyRate.value),
       rooms: Number(form.rooms.value),
-      owners: Array.from(form.owners)
-        .filter((option: any) => {
+      owners: Array.from(form.owners as HTMLSelectElement["options"])
+        .filter((option) => {
           return option.selected === true;
         })
-        .map((owner: any) => owner.value),
+        .map((owner) => owner.value),
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
@@ -52,10 +57,10 @@ const EditProperty = () => {
     dispatch(toggleModifiedTrue());
     dispatch(crudRefresh());
   }
-
+  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
   return (
     <>
-      {client.valid && client.data.isAdmin ? (
+      {amIAdmin ? (
         <>
           <h1>Edit property</h1>
 

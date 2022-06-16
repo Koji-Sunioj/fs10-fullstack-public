@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, InputGroup, FormSelect } from "react-bootstrap";
 
-import { AppState, FilterType, PropertyState } from "../types/types";
 import { getProperties } from "../redux/reducers/properties";
 import PropertyView from "../components/PropertyView";
 import PropertyFilter from "../components/PropertyFilter";
@@ -15,10 +14,11 @@ import { initialState } from "../redux/reducers/properties";
 import mapCategory from "../utils/mapCategory";
 import { Form } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
+import { AppType } from "../types/types";
 
 const HomePage = () => {
-  const properties = useSelector((state: AppState) => state.properties);
-  const filterBy: FilterType = useSelector((state: AppState) => state.filterBy);
+  const properties = useSelector((state: AppType) => state.properties);
+  const filterBy = useSelector((state: AppType) => state.filterBy);
   const dispatch = useDispatch<AppDispatch>();
 
   const pages = [];
@@ -93,7 +93,7 @@ const HomePage = () => {
       {properties.data && properties.data.length > 0 && (
         <PropertyView properties={properties} filter={filterBy} />
       )}
-      {properties.data && properties.data.length == 0 && (
+      {properties.data && properties.data.length === 0 && (
         <Row>
           <Col style={{ textAlign: "center" }}>
             <div className="property">

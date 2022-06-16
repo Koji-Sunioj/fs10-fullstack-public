@@ -8,36 +8,40 @@ import { resetCreateProp } from "../redux/reducers/createproperty";
 import { crudRefresh } from "../redux/reducers/filterby";
 import { AppDispatch } from "../redux/store";
 import PropertyForm from "../components/PropertyForm";
-import { PropertyType } from "../types/types";
+import { PropertyType, AppType } from "../types/types";
 
 const CreateProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const client = useSelector((state: any) => state.client);
-  const owners = useSelector((state: any) => state.owners);
+  const client = useSelector((state: AppType) => state.client);
+  const owners = useSelector((state: AppType) => state.owners);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const addProperty = useSelector((state: any) => state.createProperty);
+  const addProperty = useSelector((state: AppType) => state.createProperty);
 
   useEffect(() => {
-    if (client.valid === true && client.data.isAdmin === true) {
+    if (
+      client.valid === true &&
+      client.data !== null &&
+      client.data.isAdmin === true
+    ) {
       dispatch(getOwners());
     }
     dispatch(resetCreateProp());
   }, [client]);
 
-  async function sendProperty(event: any) {
+  async function sendProperty(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.target;
-    const property: PropertyType = {
+    const form = event.currentTarget as HTMLFormElement;
+    const property: Omit<PropertyType, "_id"> = {
       location: form.location.value,
-      title: form.title.value,
+      title: form.propertyTitle.value,
       description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value.toFixed(2)),
+      nightlyRate: Number(form.nightlyRate.value),
       rooms: Number(form.rooms.value),
-      owners: Array.from(form.owners)
-        .filter((option: any) => {
+      owners: Array.from(form.owners as HTMLSelectElement["options"])
+        .filter((option) => {
           return option.selected === true;
         })
-        .map((owner: any) => owner.value),
+        .map((owner) => owner.value),
       category: form.type.value,
       buildDate: form.buildDate.value,
     };
@@ -45,14 +49,16 @@ const CreateProperty = () => {
     dispatch(crudRefresh());
   }
 
+  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
+
   return (
     <>
-      {client.valid && client.data.isAdmin ? (
+      {amIAdmin ? (
         <>
           <h1>Create property</h1>
           <PropertyForm sendProperty={sendProperty} owners={owners} />
           <Row style={{ textAlign: "center" }}>
-            {addProperty.success && (
+            {addProperty.success && addProperty.data !== null && (
               <Alert variant="success">
                 <Link to={`/property/${addProperty.data._id}`}>
                   <h3>{addProperty.message}. click here to see the listing.</h3>

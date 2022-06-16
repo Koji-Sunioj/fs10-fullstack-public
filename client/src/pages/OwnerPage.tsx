@@ -7,16 +7,17 @@ import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 import { AppDispatch } from "../redux/store";
+import { AppType } from "../types/types";
 
 const OwnerPage = () => {
   const { ownerId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: any) => state.client);
-  const owner = useSelector((state: any) => state.owner);
-  const removeOwner = useSelector((state: any) => state.deleteOwner);
-  const editOwner = useSelector((state: any) => state.updateOwner);
+  const client = useSelector((state: AppType) => state.client);
+  const owner = useSelector((state: AppType) => state.owner);
+  const removeOwner = useSelector((state: AppType) => state.deleteOwner);
+  const editOwner = useSelector((state: AppType) => state.updateOwner);
 
   useEffect(() => {
     if (
@@ -38,6 +39,9 @@ const OwnerPage = () => {
     }, 1500);
   }
 
+  console.log(owner.data);
+
+  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
   return (
     <>
       {owner.data !== null && (
@@ -50,7 +54,7 @@ const OwnerPage = () => {
               </h3>
               <p>{owner.data.biography}</p>
               <p>speaks: {owner.data.languages.join(", ")}</p>
-              {client.valid && client.data.isAdmin && (
+              {amIAdmin && (
                 <Stack direction="horizontal" gap={3}>
                   <Button
                     variant="danger"
@@ -86,7 +90,7 @@ const OwnerPage = () => {
           {owner.data.properties.length > 0 && (
             <>
               <h2>properties</h2>
-              {owner.data.properties.map((property: any) => (
+              {owner.data.properties.map((property) => (
                 <Row style={{ backgroundColor: "white" }} key={property._id}>
                   <Link to={`/property/${property._id}`}>
                     <p>

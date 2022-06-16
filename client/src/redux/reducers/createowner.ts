@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiType, OwnerType } from "../../types/types";
+import { OwnerType, CreateOwnerType } from "../../types/types";
 
 export const createOwner = createAsyncThunk(
   "createowner",
-  async (data: { data: OwnerType; token: string }) => {
+  async (data: { data: Omit<OwnerType, "_id">; token: string }) => {
     const url = "http://localhost:5000/api/v1/owners/";
     return await await fetch(url, {
       headers: {
@@ -16,7 +16,7 @@ export const createOwner = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: CreateOwnerType = {
   data: null,
   error: false,
   success: false,

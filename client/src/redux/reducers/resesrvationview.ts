@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiType } from "../../types/types";
+import { FetchReservationViewType } from "../../types/types";
 
 export const reservationView = createAsyncThunk(
   "reservationview",
@@ -10,7 +10,7 @@ export const reservationView = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: FetchReservationViewType = {
   loading: false,
   error: false,
   data: null,

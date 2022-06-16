@@ -1,23 +1,26 @@
-import { Col, Row, Alert } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getMyReservations } from "../redux/reducers/myreservations";
 import UserView from "../components/UserView";
 import { AppDispatch } from "../redux/store";
+import { AppType } from "../types/types";
 const MyAccount = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const updateName = useSelector((state: any) => state.updateUser);
-  const client = useSelector((state: any) => state.client);
+  const client = useSelector((state: AppType) => state.client);
 
   useEffect(() => {
-    if (client.valid) {
+    if (client.valid && client.data !== null) {
       dispatch(getMyReservations(client.data._id));
     }
   }, [client]);
 
+  const amInotAdmin =
+    client.valid && client.data !== null && !client.data.isAdmin;
+
   return (
     <>
-      {client.valid && !client.data.isAdmin ? (
+      {amInotAdmin ? (
         <>
           <UserView client={client.data} />
         </>

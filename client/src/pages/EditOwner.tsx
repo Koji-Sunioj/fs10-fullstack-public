@@ -10,34 +10,39 @@ import { Link } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 import { AppDispatch } from "../redux/store";
+import { OwnerType, AppType } from "../types/types";
 
 const EditOwner = () => {
   const { ownerId } = useParams<string>();
   const dispatch = useDispatch<AppDispatch>();
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: any) => state.client);
-  const properties = useSelector((state: any) => state.getAllProperties);
-  const owner = useSelector((state: any) => state.owner);
-  const editOwner = useSelector((state: any) => state.updateOwner);
+  const client = useSelector((state: AppType) => state.client);
+  const properties = useSelector((state: AppType) => state.getAllProperties);
+  const owner = useSelector((state: AppType) => state.owner);
+  const editOwner = useSelector((state: AppType) => state.updateOwner);
 
   useEffect(() => {
-    if (client.valid === true && client.data.isAdmin === true) {
+    if (
+      client.valid === true &&
+      client.data !== null &&
+      client.data.isAdmin === true
+    ) {
       dispatch(resetUpdateOwner());
       dispatch(getAllProperties());
       dispatch(getOwner(ownerId as string));
     }
   }, [client]);
 
-  async function sendOwner(event: any) {
+  async function sendOwner(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.target;
-    const owner = {
+    const form = event.currentTarget;
+    const owner: Omit<OwnerType, "_id"> = {
       languages: form.languages.value.split(","),
-      properties: Array.from(form.properties)
-        .filter((option: any) => {
+      properties: Array.from(form.properties as HTMLSelectElement["options"])
+        .filter((option) => {
           return option.selected === true;
         })
-        .map((property: any) => property.value),
+        .map((property) => property.value),
       firstName:
         form.firstName.value[0].toUpperCase() +
         form.firstName.value.substring(1).toLowerCase(),
@@ -53,9 +58,11 @@ const EditOwner = () => {
     dispatch(toggleModifiedTrue());
   }
 
+  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
+
   return (
     <>
-      {client.valid && client.data.isAdmin ? (
+      {amIAdmin ? (
         <>
           <h1>Edit Owner</h1>
           <OwnerForm

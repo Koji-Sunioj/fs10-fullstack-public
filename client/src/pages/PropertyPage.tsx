@@ -31,7 +31,7 @@ import { deleteProperty } from "../redux/reducers/deleteproperty";
 import { Link } from "react-router-dom";
 import { crudRefresh } from "../redux/reducers/filterby";
 import { AppDispatch } from "../redux/store";
-
+import { AppType } from "../types/types";
 import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
 
 const PropertyPage = () => {
@@ -39,13 +39,17 @@ const PropertyPage = () => {
   const token = JSON.parse(localStorage.getItem("token") as string);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const property = useSelector((state: any) => state.property);
+  const property = useSelector((state: AppType) => state.property);
 
-  const client = useSelector((state: any) => state.client);
-  const pushReservation = useSelector((state: any) => state.createReservation);
-  const pullReservation = useSelector((state: any) => state.deleteReservation);
-  const pullProperty = useSelector((state: any) => state.deleteProperty);
-  const viewRes = useSelector((state: any) => state.reservationView);
+  const client = useSelector((state: AppType) => state.client);
+  const pushReservation = useSelector(
+    (state: AppType) => state.createReservation
+  );
+  const pullReservation = useSelector(
+    (state: AppType) => state.deleteReservation
+  );
+  const pullProperty = useSelector((state: AppType) => state.deleteProperty);
+  const viewRes = useSelector((state: AppType) => state.reservationView);
   const [focusDay, setFocusDate] = useState(moment().startOf("month"));
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
@@ -54,7 +58,7 @@ const PropertyPage = () => {
 
   useEffect(() => {
     if (
-      property.data === null ||
+      (property.data !== undefined && property.data === null) ||
       (property.data !== null && property.data._id !== propertyId)
     ) {
       dispatch(getProperty(propertyId!));
@@ -76,7 +80,7 @@ const PropertyPage = () => {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
   }
-  async function update(event: any, id: string) {
+  async function update(event: React.FormEvent<HTMLFormElement>, id: string) {
     event.preventDefault();
     dispatch(resetDeleteReservation());
     setCheckIn("");
@@ -114,9 +118,9 @@ const PropertyPage = () => {
   const shouldRenderRows =
     client.valid === true &&
     viewRes.data !== null &&
-    viewRes.data.some((r: any) => r.userId === client.data._id);
+    viewRes.data.some((r) => r.userId === client.data!._id);
 
-  async function adminDelete(propertyId: any) {
+  async function adminDelete(propertyId: string) {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
     dispatch(crudRefresh());
     setTimeout(() => {
@@ -159,7 +163,7 @@ const PropertyPage = () => {
                 <Stack direction="horizontal" gap={3}>
                   <Button
                     variant="danger"
-                    onClick={() => adminDelete(property.data._id)}
+                    onClick={() => adminDelete(property.data!._id)}
                   >
                     Delete property
                   </Button>
@@ -175,7 +179,7 @@ const PropertyPage = () => {
               <Row style={{ backgroundColor: "white" }}>
                 <h3>Your host(s)</h3>
                 <Stack direction="horizontal" gap={3}>
-                  {property.data.owners.map((owner: any) => (
+                  {property.data.owners.map((owner) => (
                     <div key={owner._id}>
                       <Link to={`/owner/${owner._id}`}>
                         <p>
@@ -204,7 +208,7 @@ const PropertyPage = () => {
             <Form
               style={{ padding: "0px" }}
               onSubmit={(e) => {
-                update(e, property.data._id);
+                update(e, property.data!._id);
               }}
             >
               <fieldset
@@ -236,7 +240,7 @@ const PropertyPage = () => {
                       !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
                       nights < 1 ||
                       nights > 7 ||
-                      requestedNights.some((r: any) => bookedDates.includes(r))
+                      requestedNights.some((r) => bookedDates.includes(r))
                     }
                     type="submit"
                   >
@@ -249,9 +253,9 @@ const PropertyPage = () => {
           {shouldRenderRows && (
             <>
               <h2>Your reservations</h2>
-              {viewRes.data.map((reservation: any) => {
-                if (reservation.userId === client.data._id) {
-                  return (
+              {viewRes.data!.map((reservation) => {
+                return (
+                  reservation.userId === client.data!._id && (
                     <Row
                       style={{ backgroundColor: "white" }}
                       key={reservation._id}
@@ -268,8 +272,10 @@ const PropertyPage = () => {
                         <p>nights: {reservation.nights}</p>
                         <p>
                           total: &euro;
-                          {reservation.nights.toFixed(2) *
-                            Number(property.data.nightlyRate)}
+                          {(
+                            Number(reservation.nights) *
+                            Number(property.data!.nightlyRate)
+                          ).toFixed(2)}
                         </p>
                         <Button
                           variant={"danger"}
@@ -285,8 +291,8 @@ const PropertyPage = () => {
                         </Button>
                       </Col>
                     </Row>
-                  );
-                }
+                  )
+                );
               })}
             </>
           )}

@@ -33,15 +33,15 @@ import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
 import { toggleModifiedTrue } from "./reducers/propertyrefresh";
 import { getProperty } from "./reducers/property";
-import { ThunkDispatch, ListenerEffectAPI, AnyAction } from "@reduxjs/toolkit";
-import { AppType, FilterType, PropertyType } from "../types/types";
+
+import { AppType } from "../types/types";
 
 const propertyCrudMiddleWare = createListenerMiddleware();
 const propertiesCrudMiddlware = createListenerMiddleware();
 
 propertyCrudMiddleWare.startListening({
   matcher: isAnyOf(toggleModifiedTrue),
-  effect: (action, state: any) => {
+  effect: (action, state) => {
     const afterState = state.getState() as AppType;
     const property = afterState.property;
     if (

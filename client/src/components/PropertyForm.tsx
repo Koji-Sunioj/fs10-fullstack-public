@@ -45,7 +45,7 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
             <Form.Label>Title</Form.Label>
             <Form.Control
               placeholder="amazing stay"
-              name="title"
+              name="propertyTitle"
               defaultValue={title}
               onChange={(event) => {
                 setTitle(event.target.value);

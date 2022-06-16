@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ReservationType, ApiType } from "../../types/types";
+import { ReservationType, UpdateType } from "../../types/types";
 
 export const createReservation: any = createAsyncThunk(
   "reservation",
@@ -16,7 +16,7 @@ export const createReservation: any = createAsyncThunk(
   }
 );
 
-const initialState: ApiType = {
+const initialState: UpdateType & { loading: boolean } = {
   loading: false,
   error: false,
   success: false,
