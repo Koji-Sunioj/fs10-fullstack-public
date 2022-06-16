@@ -17,9 +17,7 @@ import { Form } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
 
 const HomePage = () => {
-  const properties: PropertyState = useSelector(
-    (state: AppState) => state.properties
-  );
+  const properties = useSelector((state: AppState) => state.properties);
   const filterBy: FilterType = useSelector((state: AppState) => state.filterBy);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -49,7 +47,7 @@ const HomePage = () => {
                 }}
                 value={String(filterBy.page)}
               >
-                {pages.reverse().map((page: any) =>
+                {pages.reverse().map((page: number) =>
                   Number(page) === filterBy.page ? (
                     <option key={page}>{page}</option>
                   ) : (
@@ -65,7 +63,7 @@ const HomePage = () => {
                   dispatch(updateDirection(event.target.value));
                 }}
               >
-                {Object.entries(pointer).map((direction: any[]) => (
+                {Object.entries(pointer).map((direction) => (
                   <option value={direction[1]} key={direction[0]}>
                     {direction[0]}
                   </option>
@@ -78,7 +76,7 @@ const HomePage = () => {
                 }}
               >
                 {["nightly rate", "rooms", "category", "location"].map(
-                  (category: any) => {
+                  (category: string) => {
                     const optValue = mapCategory(category);
                     return (
                       <option value={optValue} key={category}>

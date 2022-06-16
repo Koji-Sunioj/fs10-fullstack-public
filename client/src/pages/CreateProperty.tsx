@@ -27,11 +27,11 @@ const CreateProperty = () => {
   async function sendProperty(event: any) {
     event.preventDefault();
     const form = event.target;
-    const property: Omit<PropertyType, "_id"> = {
+    const property: PropertyType = {
       location: form.location.value,
       title: form.title.value,
       description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value),
+      nightlyRate: Number(form.nightlyRate.value.toFixed(2)),
       rooms: Number(form.rooms.value),
       owners: Array.from(form.owners)
         .filter((option: any) => {

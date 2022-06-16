@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { PropertyState, FilterType } from "../../types/types";
+import { FilterType, ApiType } from "../../types/types";
 
-export const getProperties: any = createAsyncThunk(
+export const getProperties = createAsyncThunk(
   "properties",
   async (query: FilterType) => {
     let url = "http://localhost:5000/api/v1/properties/?";
@@ -13,7 +13,7 @@ export const getProperties: any = createAsyncThunk(
   }
 );
 
-export const initialState: PropertyState = {
+export const initialState: ApiType = {
   data: null,
   loading: false,
   error: false,

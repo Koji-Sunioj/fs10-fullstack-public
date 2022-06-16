@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { FilterType } from "../../types/types";
 
-const initialState: any = {
+const initialState: FilterType = {
   searchBy: "",
   sortBy: "nightlyRate",
   page: 1,

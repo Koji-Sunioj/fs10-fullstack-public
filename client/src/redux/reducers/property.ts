@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { ApiType } from "../../types/types";
 
-export const getProperty: any = createAsyncThunk(
+export const getProperty = createAsyncThunk(
   "property",
-  async (propertyId) => {
+  async (propertyId: string) => {
     let url = "http://localhost:5000/api/v1/properties/" + propertyId;
     return await fetch(url).then((res) => res.json());
   }
 );
 
-const initialState: any = {
+const initialState: ApiType = {
   data: null,
   loading: false,
   error: false,

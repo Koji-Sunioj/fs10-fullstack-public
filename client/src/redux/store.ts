@@ -33,6 +33,8 @@ import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
 import { toggleModifiedTrue } from "./reducers/propertyrefresh";
 import { getProperty } from "./reducers/property";
+import { ThunkDispatch, ListenerEffectAPI, AnyAction } from "@reduxjs/toolkit";
+import { AppType, FilterType, PropertyType } from "../types/types";
 
 const propertyCrudMiddleWare = createListenerMiddleware();
 const propertiesCrudMiddlware = createListenerMiddleware();
@@ -40,9 +42,14 @@ const propertiesCrudMiddlware = createListenerMiddleware();
 propertyCrudMiddleWare.startListening({
   matcher: isAnyOf(toggleModifiedTrue),
   effect: (action, state: any) => {
-    const property: any = state.getState().property;
-    if (property.data !== null) {
-      state.dispatch(getProperty(property.data._id));
+    const afterState = state.getState() as AppType;
+    const property = afterState.property;
+    if (
+      property.data !== null &&
+      property.data !== undefined &&
+      "_id" in property.data
+    ) {
+      state.dispatch(getProperty(property.data._id!));
     }
   },
 });
@@ -56,9 +63,10 @@ propertiesCrudMiddlware.startListening({
     resetFilter,
     crudRefresh
   ),
-  effect: (action, state: any) => {
-    const afterFilter: any = state.getState().filterBy;
-    state.dispatch(getProperties(afterFilter));
+  effect: (action, state) => {
+    const afterState = state.getState() as AppType;
+    const filterBy = afterState.filterBy;
+    state.dispatch(getProperties(filterBy));
   },
 });
 
@@ -93,5 +101,6 @@ export const store = configureStore({
     ),
 });
 
-export type AppDispatch = typeof store.dispatch; // you can use this Dispatch type in your thunks
+export type AppDispatch = typeof store.dispatch;
+export type StateType = typeof store.getState;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

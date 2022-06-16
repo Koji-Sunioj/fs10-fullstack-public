@@ -1,7 +1,8 @@
 import moment from "moment";
+import { ReservationType } from "../types/types";
 
-function checkBooked(reservations: any) {
-  let booked: any = [];
+function checkBooked(reservations: ReservationType[]) {
+  let booked: string[] = [];
   reservations.forEach((res: any) => {
     const start = moment(res.startDate);
     const end = moment(res.startDate).add(res.nights, "days");

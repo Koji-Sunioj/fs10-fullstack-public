@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { PostType } from "../../types/types";
-import { OwnerType } from "../../types/types";
+import { ApiType, OwnerType } from "../../types/types";
 
 export const createOwner = createAsyncThunk(
   "createowner",
@@ -17,7 +16,7 @@ export const createOwner = createAsyncThunk(
   }
 );
 
-const initialState: PostType = {
+const initialState: ApiType = {
   data: null,
   error: false,
   success: false,

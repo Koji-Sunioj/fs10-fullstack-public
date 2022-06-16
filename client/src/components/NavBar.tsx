@@ -8,14 +8,14 @@ import { setFromGoogle } from "../redux/reducers/client";
 
 import { verifyGoogle } from "../redux/reducers/verifygoogle";
 import { AppDispatch } from "../redux/store";
+import { AppType } from "../types/types";
+import { CredentialResponse } from "@react-oauth/google";
 
 const NavBar = () => {
-  const googleAuth = useSelector((state: any) => state.googleAuth);
+  const googleAuth = useSelector((state: AppType) => state.googleAuth);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: any) => state.client);
+  const client = useSelector((state: AppType) => state.client);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(token);
-  console.log(client);
 
   useEffect(() => {
     if (googleAuth.jwt !== null) {
@@ -29,9 +29,9 @@ const NavBar = () => {
   const clientId =
     "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";
 
-  function googleSuccess(response: any) {
+  function googleSuccess(response: CredentialResponse) {
     const googleCred = response.credential;
-    dispatch(verifyGoogle(googleCred));
+    dispatch(verifyGoogle(googleCred!));
   }
 
   return (
@@ -40,7 +40,7 @@ const NavBar = () => {
         <Link to={"/"} className="navbar-brand">
           Home
         </Link>
-        {client.valid ? (
+        {client.valid && client.data !== null ? (
           client.data.isAdmin ? (
             <Link to={"/admin"} className="navbar-brand">
               admin

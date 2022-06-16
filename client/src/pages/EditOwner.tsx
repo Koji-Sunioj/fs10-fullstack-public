@@ -12,7 +12,7 @@ import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 import { AppDispatch } from "../redux/store";
 
 const EditOwner = () => {
-  const { ownerId } = useParams();
+  const { ownerId } = useParams<string>();
   const dispatch = useDispatch<AppDispatch>();
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: any) => state.client);
@@ -24,7 +24,7 @@ const EditOwner = () => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(resetUpdateOwner());
       dispatch(getAllProperties());
-      dispatch(getOwner(ownerId));
+      dispatch(getOwner(ownerId as string));
     }
   }, [client]);
 
@@ -48,7 +48,7 @@ const EditOwner = () => {
     };
 
     await dispatch(
-      updateOwner({ token: token, ownerId: ownerId, data: owner })
+      updateOwner({ token: token, ownerId: ownerId!, data: owner })
     );
     dispatch(toggleModifiedTrue());
   }

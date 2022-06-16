@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { GoogleType } from "../../types/types";
 
-export const verifyGoogle: any = createAsyncThunk(
+export const verifyGoogle = createAsyncThunk(
   "googleauth",
-  async (googleCred: any) => {
+  async (googleCred: string) => {
     const url = "http://localhost:5000/google-login";
     return await fetch(url, {
       headers: {
@@ -14,7 +15,7 @@ export const verifyGoogle: any = createAsyncThunk(
   }
 );
 
-const initialState: any = {
+const initialState: GoogleType = {
   jwt: null,
   user: null,
 };
@@ -32,8 +33,8 @@ export const verifygoogle = createSlice({
         state.user = action.payload.user;
       })
       .addCase(verifyGoogle.rejected, (state, action) => {
-        state.valid = null;
-        state.data = null;
+        state.jwt = null;
+        state.user = null;
       });
   },
 });

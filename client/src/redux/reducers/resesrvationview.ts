@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { ApiType } from "../../types/types";
 
-export const reservationView: any = createAsyncThunk(
+export const reservationView = createAsyncThunk(
   "reservationview",
-  async (propertyId: any) => {
+  async (propertyId: string) => {
     const url =
       "http://localhost:5000/api/v1/reservations/?propertyId=" + propertyId;
     return await fetch(url).then((resp) => resp.json());
   }
 );
 
-const initialState: any = {
+const initialState: ApiType = {
   loading: false,
   error: false,
   data: null,

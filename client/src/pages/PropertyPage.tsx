@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProperty } from "../redux/reducers/property";
+import { ReservationType } from "../types/types";
 import {
   Button,
   Row,
@@ -34,7 +35,7 @@ import { AppDispatch } from "../redux/store";
 import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
 
 const PropertyPage = () => {
-  let { propertyId } = useParams();
+  let { propertyId } = useParams<string>();
   const token = JSON.parse(localStorage.getItem("token") as string);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -56,14 +57,15 @@ const PropertyPage = () => {
       property.data === null ||
       (property.data !== null && property.data._id !== propertyId)
     ) {
-      dispatch(getProperty(propertyId));
+      dispatch(getProperty(propertyId!));
     }
+    window.scrollTo(0, 0);
     dispatch(resetDeleteReservation());
     dispatch(resetCreateReservation());
     dispatch(toggleModifiedFalse());
     dispatch(resetDeleteProperty());
-    dispatch(reservationView(propertyId));
-  }, [propertyId]);
+    dispatch(reservationView(propertyId!));
+  }, [propertyId, dispatch, property.data]);
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -74,18 +76,18 @@ const PropertyPage = () => {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
   }
-  async function update(event: any, id: any) {
+  async function update(event: any, id: string) {
     event.preventDefault();
     dispatch(resetDeleteReservation());
     setCheckIn("");
     setNumNights("");
-    const formData = {
+    const formData: ReservationType = {
       startDate: checkIn,
-      nights: nights,
+      nights: Number(nights),
       propertyId: id,
     };
     await dispatch(createReservation({ token: token, data: formData }));
-    dispatch(reservationView(propertyId));
+    dispatch(reservationView(propertyId!));
   }
 
   let requestedNights: string[] = [];
@@ -101,12 +103,12 @@ const PropertyPage = () => {
     }
   }
 
-  async function removeReservation(reservationId: any) {
+  async function removeReservation(reservationId: string) {
     dispatch(resetCreateReservation());
     await dispatch(
       deleteReservation({ token: token, reservationId: reservationId })
     );
-    dispatch(reservationView(propertyId));
+    dispatch(reservationView(propertyId!));
   }
 
   const shouldRenderRows =

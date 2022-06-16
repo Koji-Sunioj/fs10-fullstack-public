@@ -1,12 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-import { PostType } from "../../types/types";
+import { ReservationType, ApiType } from "../../types/types";
 
 export const createReservation: any = createAsyncThunk(
   "reservation",
-  async (data: any) => {
+  async (data: { token: string; data: ReservationType }) => {
     const url = "http://localhost:5000/api/v1/reservations/";
-    console.log(data);
     return await await fetch(url, {
       headers: {
         Authorization: `Bearer ${data.token}`,
@@ -18,7 +16,7 @@ export const createReservation: any = createAsyncThunk(
   }
 );
 
-const initialState: PostType = {
+const initialState: ApiType = {
   loading: false,
   error: false,
   success: false,

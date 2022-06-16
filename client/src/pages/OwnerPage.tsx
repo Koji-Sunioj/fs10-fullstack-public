@@ -19,16 +19,14 @@ const OwnerPage = () => {
   const editOwner = useSelector((state: any) => state.updateOwner);
 
   useEffect(() => {
-    {
-      if (
-        owner.data === null ||
-        (owner.data && owner.data._id !== ownerId) ||
-        editOwner.success
-      ) {
-        dispatch(resetDeleteOwner());
-        dispatch(resetUpdateOwner());
-        dispatch(getOwner(ownerId));
-      }
+    if (
+      owner.data === null ||
+      (owner.data && owner.data._id !== ownerId) ||
+      editOwner.success
+    ) {
+      dispatch(resetDeleteOwner());
+      dispatch(resetUpdateOwner());
+      dispatch(getOwner(ownerId as string));
     }
   }, [ownerId]);
 

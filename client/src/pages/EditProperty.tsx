@@ -14,8 +14,7 @@ import { AppDispatch } from "../redux/store";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const { propertyId } = useParams();
+  const { propertyId } = useParams<string>();
   const client = useSelector((state: any) => state.client);
   const patchProperty = useSelector((state: any) => state.updateProperty);
   const owners = useSelector((state: any) => state.owners);
@@ -25,7 +24,7 @@ const EditProperty = () => {
   useEffect(() => {
     if (client.valid === true && client.data.isAdmin === true) {
       dispatch(getOwners());
-      dispatch(getProperty(propertyId));
+      dispatch(getProperty(String(propertyId)));
       dispatch(resetUpdateProp());
     }
   }, [client]);
@@ -37,7 +36,7 @@ const EditProperty = () => {
       location: form.location.value,
       title: form.title.value,
       description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value).toFixed(2),
+      nightlyRate: Number(form.nightlyRate.value),
       rooms: Number(form.rooms.value),
       owners: Array.from(form.owners)
         .filter((option: any) => {
@@ -48,7 +47,7 @@ const EditProperty = () => {
       buildDate: form.buildDate.value,
     };
     await dispatch(
-      updateProperty({ token: token, data: property, propertyId: propertyId })
+      updateProperty({ token: token, data: property, propertyId: propertyId! })
     );
     dispatch(toggleModifiedTrue());
     dispatch(crudRefresh());
