@@ -2,11 +2,12 @@ import { Form, Button, FormControl, InputGroup, Row } from "react-bootstrap";
 
 import { updateSearch } from "../redux/reducers/filterby";
 import { useDispatch } from "react-redux";
+import React from "react";
 
-const PropertyFilter = ({ filter }: any) => {
+const PropertyFilter = ({ filter }: { filter: string }) => {
   const dispatch = useDispatch();
 
-  function updateView(event: any) {
+  function updateView(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const searchString = event.currentTarget.search.value;
     dispatch(updateSearch(searchString));

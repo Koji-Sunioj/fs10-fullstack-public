@@ -36,7 +36,6 @@ const HomePage = () => {
       <h1>Where do you want to go?</h1>
       <PropertyFilter filter={filterBy.searchBy} />
       <Row>
-        {" "}
         <Form>
           <fieldset disabled={properties.data?.length === 0}>
             <InputGroup>
@@ -91,7 +90,7 @@ const HomePage = () => {
         </Form>
       </Row>
       {properties.data && properties.data.length > 0 && (
-        <PropertyView properties={properties} filter={filterBy} />
+        <PropertyView properties={properties.data} />
       )}
       {properties.data && properties.data.length === 0 && (
         <Row>

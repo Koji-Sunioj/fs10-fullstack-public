@@ -22,7 +22,7 @@ const MyAccount = () => {
     <>
       {amInotAdmin ? (
         <>
-          <UserView client={client.data} />
+          <UserView client={client.data!} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

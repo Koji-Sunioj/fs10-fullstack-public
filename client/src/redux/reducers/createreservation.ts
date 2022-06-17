@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ReservationType, UpdateType } from "../../types/types";
 
-export const createReservation: any = createAsyncThunk(
+export const createReservation = createAsyncThunk(
   "reservation",
   async (data: { token: string; data: ReservationType }) => {
     const url = "http://localhost:5000/api/v1/reservations/";

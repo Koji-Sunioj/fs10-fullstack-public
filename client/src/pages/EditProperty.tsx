@@ -67,7 +67,7 @@ const EditProperty = () => {
           <PropertyForm
             sendProperty={sendProperty}
             owners={owners}
-            property={property.data}
+            property={property.data!}
           />
           <Row style={{ textAlign: "center" }}>
             {patchProperty.success && (

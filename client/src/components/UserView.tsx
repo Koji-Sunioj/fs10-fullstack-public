@@ -7,7 +7,7 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetFilter } from "../redux/reducers/filterby";
@@ -16,14 +16,20 @@ import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetUpdateUser } from "../redux/reducers/updateuser";
 import { resetClient, verifyToken } from "../redux/reducers/client";
 import { AppDispatch } from "../redux/store";
+import { AppType, UserType } from "../types/types";
 
-const UserView = ({ client, children }: any) => {
+type UserViewType = {
+  client: UserType;
+  children?: JSX.Element[];
+};
+
+const UserView = ({ client, children }: UserViewType) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const updateName = useSelector((state: any) => state.updateUser);
-  const reservations = useSelector((state: any) => state.myReservations);
+  const updateName = useSelector((state: AppType) => state.updateUser);
+  const reservations = useSelector((state: AppType) => state.myReservations);
 
   useEffect(() => {
     dispatch(resetUpdateUser());
@@ -37,10 +43,13 @@ const UserView = ({ client, children }: any) => {
     navigate("/");
   }
 
-  async function editUser(event: any, userId: any) {
+  async function editUser(
+    event: React.FormEvent<HTMLFormElement>,
+    userId: string
+  ) {
     event.preventDefault();
-    const firstName = event.target.firstName.value;
-    const lastName = event.target.lastName.value;
+    const firstName = event.currentTarget.firstName.value;
+    const lastName = event.currentTarget.lastName.value;
     await dispatch(
       updateUser({
         token: token,
@@ -78,7 +87,7 @@ const UserView = ({ client, children }: any) => {
           <InputGroup style={{ padding: "0px" }}>
             <InputGroup.Checkbox
               checked={isToggleForm}
-              onChange={(event: any) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setToggleForm(event.target.checked);
               }}
             />
@@ -109,7 +118,7 @@ const UserView = ({ client, children }: any) => {
       {reservations.data !== null && reservations.data.length > 0 && (
         <>
           <h2>Your reservations</h2>
-          {reservations.data.map((reservation: any) => (
+          {reservations.data.map((reservation) => (
             <Row style={{ backgroundColor: "white" }} key={reservation._id}>
               <Link to={`/property/${reservation.property._id}`}>
                 <h3>

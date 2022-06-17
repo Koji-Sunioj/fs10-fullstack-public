@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { UpdateType } from "../../types/types";
+import { UpdateType, UserType } from "../../types/types";
 
 export const updateUser = createAsyncThunk(
   "updateuser",
-  async (data: { token: string; userId: string; data: any }) => {
+  async (data: { token: string; userId: string; data: Partial<UserType> }) => {
     const url = "http://localhost:5000/api/v1/users/" + data.userId;
     return await fetch(url, {
       headers: {

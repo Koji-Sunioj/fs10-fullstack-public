@@ -50,7 +50,9 @@ const PropertyPage = () => {
   );
   const pullProperty = useSelector((state: AppType) => state.deleteProperty);
   const viewRes = useSelector((state: AppType) => state.reservationView);
-  const [focusDay, setFocusDate] = useState(moment().startOf("month"));
+  const [focusDay, setFocusDate] = useState<moment.Moment>(
+    moment().startOf("month")
+  );
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
 

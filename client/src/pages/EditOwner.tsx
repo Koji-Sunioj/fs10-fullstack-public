@@ -68,7 +68,7 @@ const EditOwner = () => {
           <OwnerForm
             sendOwner={sendOwner}
             properties={properties}
-            owner={owner.data}
+            owner={owner.data!}
           />
           <Row style={{ textAlign: "center" }}>
             {editOwner.success && (

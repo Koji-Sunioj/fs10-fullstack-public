@@ -24,7 +24,7 @@ const AdminPage = () => {
     <>
       {amIAdmin ? (
         <>
-          <UserView client={client.data}>
+          <UserView client={client.data!}>
             <h2>Actions</h2>
             <Row style={{ backgroundColor: "white" }}>
               <span

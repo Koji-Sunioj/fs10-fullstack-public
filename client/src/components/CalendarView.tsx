@@ -1,6 +1,16 @@
 import { Button, Table } from "react-bootstrap";
 import moment from "moment";
 import calendarArray from "../utils/calendarArray";
+import useState from "react";
+
+type CalendarType = {
+  decrementFocus: React.MouseEventHandler<HTMLButtonElement>;
+  incrementFocus: React.MouseEventHandler<HTMLButtonElement>;
+  bookedDates: string[];
+  disabled: boolean;
+  focusDay: moment.Moment;
+  setCheckIn: React.Dispatch<React.SetStateAction<string>>;
+};
 
 const CalendarView = ({
   decrementFocus,
@@ -9,7 +19,7 @@ const CalendarView = ({
   setCheckIn,
   bookedDates,
   disabled,
-}: any) => {
+}: CalendarType) => {
   const calendar = calendarArray(focusDay);
   const rows = calendar.length / 7;
   const newRows = [];
@@ -57,15 +67,18 @@ const CalendarView = ({
           </tr>
         </thead>
         <tbody>
-          {newRows.map((val: number) => (
+          {newRows.map((val) => (
             <tr key={val}>
-              {calendar.slice(val * 7, val * 7 + 7).map((item: any) => {
+              {calendar.slice(val * 7, val * 7 + 7).map((item) => {
                 if (
                   item.format("M") !== focusDay.format("M") ||
                   item < moment().startOf("day")
                 ) {
                   return (
-                    <td style={{ backgroundColor: "lightgrey" }} key={item}>
+                    <td
+                      style={{ backgroundColor: "lightgrey" }}
+                      key={item.format("YYYY-MM-DD")}
+                    >
                       {item.format("DD")}
                     </td>
                   );
@@ -74,7 +87,7 @@ const CalendarView = ({
                     return (
                       <td
                         style={{ backgroundColor: "#f8d7da" }}
-                        key={item}
+                        key={item.format("YYYY-MM-DD")}
                         title={"booked"}
                       >
                         {item.format("DD")}
@@ -82,7 +95,7 @@ const CalendarView = ({
                     );
                   } else {
                     return (
-                      <td key={item}>
+                      <td key={item.format("YYYY-MM-DD")}>
                         <Button
                           variant="link"
                           style={{

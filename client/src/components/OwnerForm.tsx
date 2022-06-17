@@ -1,11 +1,18 @@
 import { Row, Form, Button, Stack } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { FetchPropertiesType, OwnerWithPropertiesType } from "../types/types";
 
-const OwnerForm = ({ properties, sendOwner, owner }: any) => {
+type OwnerFormType = {
+  properties: FetchPropertiesType;
+  owner?: OwnerWithPropertiesType;
+  sendOwner: React.FormEventHandler<HTMLFormElement>;
+};
+
+const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [biography, setBiography] = useState("");
-  const [languages, setLanguages] = useState<any>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
   const [inputLang, setInputLang] = useState("");
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
@@ -16,15 +23,15 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
   }, [owner]);
 
   function setOwner() {
-    setFirstName(owner.firstName);
-    setLastName(owner.lastName);
-    setBiography(owner.biography);
-    setLanguages(owner.languages);
-    setTheProperties(owner.properties.map((owner: any) => owner._id));
+    setFirstName(owner!.firstName);
+    setLastName(owner!.lastName);
+    setBiography(owner!.biography);
+    setLanguages(owner!.languages);
+    setTheProperties(owner!.properties.map((owner) => owner._id));
   }
 
   function removeLang(lang: string) {
-    const filtered = languages.filter((language: any) => language !== lang);
+    const filtered = languages.filter((language: string) => language !== lang);
     setLanguages(filtered);
   }
 
@@ -101,7 +108,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
             <input type="hidden" value={languages} name="languages" />
             <Stack direction="horizontal" gap={3} style={{ marginTop: "20px" }}>
               {languages.length > 0 &&
-                languages.map((language: any) => (
+                languages.map((language) => (
                   <Button
                     variant="success"
                     key={language}
@@ -122,16 +129,18 @@ const OwnerForm = ({ properties, sendOwner, owner }: any) => {
               value={theProperties}
               onChange={(event) => {
                 setTheProperties(
-                  Array.from(event.target)
-                    .filter((option: any) => {
+                  Array.from(
+                    event.currentTarget as HTMLSelectElement["options"]
+                  )
+                    .filter((option) => {
                       return option.selected === true;
                     })
-                    .map((owner: any) => owner.value)
+                    .map((owner) => owner.value)
                 );
               }}
             >
               {properties.data !== null &&
-                properties.data.map((property: any) => (
+                properties.data.map((property) => (
                   <option value={property._id} key={property._id}>
                     {property.title} - {property.location}
                   </option>

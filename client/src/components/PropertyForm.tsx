@@ -1,8 +1,23 @@
 import { Row, Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import moment from "moment";
+import {
+  FetchOwnersType,
+  PropertyType,
+  FetchPropertyType,
+  OwnerType,
+} from "../types/types";
 
-const PropertyForm = ({ owners, sendProperty, property }: any) => {
+type PropertyFormType = {
+  owners: FetchOwnersType;
+  property?: Omit<PropertyType, "owners"> & {
+    properties: PropertyType[];
+    owners: OwnerType[];
+  };
+  sendProperty: React.FormEventHandler<HTMLFormElement>;
+};
+
+const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<string>("cottage");
@@ -19,14 +34,14 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
   }, [property, setProperty]);
 
   function setProperty() {
-    setTitle(property.title);
-    setDescription(property.description);
-    setCategory(property.category);
-    setPrice(Number(property.nightlyRate));
-    setRooms(Number(property.rooms));
-    setLocation(property.location);
-    setBuildDate(property.buildDate.split("T")[0]);
-    setTheOwners(property.owners.map((owner: any) => owner._id));
+    setTitle(property!.title);
+    setDescription(property!.description);
+    setCategory(property!.category);
+    setPrice(Number(property!.nightlyRate));
+    setRooms(Number(property!.rooms));
+    setLocation(property!.location);
+    setBuildDate(property!.buildDate.split("T")[0]);
+    setTheOwners(property!.owners.map((owner) => owner._id));
   }
 
   const submittable =
@@ -132,11 +147,11 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
               value={theOwners}
               onChange={(event) => {
                 setTheOwners(
-                  Array.from(event.target)
-                    .filter((option: any) => {
+                  Array.from(event.target as HTMLSelectElement["options"])
+                    .filter((option) => {
                       return option.selected === true;
                     })
-                    .map((owner: any) => owner.value)
+                    .map((owner) => owner.value)
                 );
               }}
               name="owners"
@@ -144,7 +159,7 @@ const PropertyForm = ({ owners, sendProperty, property }: any) => {
               disabled={owners.loading || owners.error}
             >
               {owners.data !== null &&
-                owners.data.map((owner: any) => (
+                owners.data.map((owner) => (
                   <option value={owner._id} key={owner._id}>
                     {owner.firstName} {owner.lastName}
                   </option>

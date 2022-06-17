@@ -17,6 +17,7 @@ export type AppType = {
   deleteReservation: UpdateType;
   deleteProperty: UpdateType;
   reservationView: FetchReservationsType;
+  myReservations: FetchReservationsType;
 };
 
 export type UpdateType = {
@@ -65,7 +66,7 @@ export type FetchPropertiesQueryType = {
 };
 
 export type FetchReservationsType = {
-  data: null | PropertyReservationView[];
+  data: null | MyReservationViewType[];
   loading: boolean;
   error: boolean;
 };
@@ -105,6 +106,18 @@ export type ReservationType = {
   propertyId: string;
 };
 
+export type MyReservationViewType = {
+  _id: string;
+  startDate: string;
+  nights: number;
+  propertyId: string;
+  userId: string;
+  createdDate: string;
+  property: PropertyType;
+  checkOut: string;
+  bill: number;
+};
+
 export type PropertyReservationView = {
   _id: string;
   startDate: string;
@@ -137,7 +150,7 @@ export type PropertyType = {
   location: string;
   title: string;
   description: string;
-  buildDate: Date;
+  buildDate: string;
   nightlyRate: number;
   rooms: number;
   owners: string[];
