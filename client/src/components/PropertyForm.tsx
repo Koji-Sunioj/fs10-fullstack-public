@@ -1,12 +1,7 @@
 import { Row, Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import moment from "moment";
-import {
-  FetchOwnersType,
-  PropertyType,
-  FetchPropertyType,
-  OwnerType,
-} from "../types/types";
+import { FetchOwnersType, PropertyType, OwnerType } from "../types/types";
 
 type PropertyFormType = {
   owners: FetchOwnersType;
@@ -31,7 +26,7 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
     if (property) {
       setProperty();
     }
-  }, [property, setProperty]);
+  }, [property]);
 
   function setProperty() {
     setTitle(property!.title);

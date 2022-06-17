@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt = require('jsonwebtoken')
 import UserService from '../services/user'
+import { DecodedType } from 'types'
 
 export default async function (
   req: Request,
@@ -9,7 +10,10 @@ export default async function (
 ) {
   try {
     const token = req.headers.authorization?.split(' ')[1]
-    const decoded: any = jwt.verify(token!, process.env.JWT_SECRET as string)
+    const decoded = jwt.verify(
+      token!,
+      process.env.JWT_SECRET as string
+    ) as DecodedType
     const user = await UserService.findByEmail(decoded.email)
     const expiry = new Date(decoded.exp * 1000)
     if (!user) {

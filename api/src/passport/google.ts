@@ -2,6 +2,7 @@
 import GoogleStrategy from 'passport-google-id-token'
 import UserService from '../services/user'
 import User from '../models/User'
+import { GoogleRespType, UserDocument } from 'types'
 
 function isAdmin(email: string) {
   if (email === 'koji.gabriel218@gmail.com') {
@@ -14,9 +15,9 @@ function isAdmin(email: string) {
 const loginGoogle = () => {
   return new GoogleStrategy(
     { clientId: process.env.GOOGLE_CLIENT_ID },
-    async (googleResp: any, googleId: any, done: any) => {
+    async (googleResp: GoogleRespType, googleId: string, done: Function) => {
       try {
-        let user: any = await UserService.findByEmail(googleResp.payload.email)
+        let user = await UserService.findByEmail(googleResp.payload.email)!
         if (!user) {
           const newUser = {
             firstName: googleResp.payload.given_name,

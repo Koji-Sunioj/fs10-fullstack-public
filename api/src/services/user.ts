@@ -23,7 +23,7 @@ const deleteById = async (userId: string): Promise<UserDocument | null> => {
 
 const updateById = async (
   userId: string,
-  userData: Omit<UserType, 'joinDate'>
+  userData: Partial<UserType>
 ): Promise<UserDocument | null> => {
   const user = await User.findById(userId)
   Object.assign(user, userData)

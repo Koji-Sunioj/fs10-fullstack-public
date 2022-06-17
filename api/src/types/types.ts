@@ -1,5 +1,12 @@
 import { Document } from 'mongoose'
 
+export type DecodedType = {
+  email: string
+  isAdmin: boolean
+  iat: number
+  exp: number
+}
+
 export const reqString = {
   type: String,
   required: true,
@@ -10,6 +17,10 @@ export type FilterType = {
   direction: number
   sortBy: string
   page: number
+}
+
+export type GoogleRespType = {
+  payload: { given_name: string; family_name: string; email: string }
 }
 
 export type UserType = {

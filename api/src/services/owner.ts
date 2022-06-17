@@ -21,7 +21,7 @@ const removeProperty = async (propertyId: string) => {
   return await Owner.updateMany({ $pull: { properties: propertyId } })
 }
 
-const findById = async (ownerId: string): Promise<any> => {
+const findById = async (ownerId: string): Promise<OwnerDocument[]> => {
   return Owner.aggregate([
     {
       $match: { _id: new mongoose.Types.ObjectId(ownerId) },
@@ -47,7 +47,6 @@ const findById = async (ownerId: string): Promise<any> => {
       },
     },
   ])
-  //return Owner.findById(ownerId)
 }
 
 const deleteById = async (ownerId: string): Promise<OwnerDocument | null> => {

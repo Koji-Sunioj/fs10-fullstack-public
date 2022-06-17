@@ -46,7 +46,7 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const newUser: Omit<UserType, 'joinDate'> = {
+    const newUser: Partial<UserType> = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -96,7 +96,7 @@ export const updateUser = async (
   try {
     console.log(req.body)
     const { userId } = req.params
-    const newData: any = {
+    const newData = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
     }
