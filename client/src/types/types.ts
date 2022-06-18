@@ -20,6 +20,15 @@ export type AppType = {
   myReservations: FetchReservationsType;
 };
 
+export type PropertyFormType = {
+  owners: FetchOwnersType;
+  property?: Omit<PropertyType, "owners"> & {
+    properties: PropertyType[];
+    owners: OwnerType[];
+  };
+  sendProperty: (property: Omit<PropertyType, "_id">) => void;
+};
+
 export type UpdateType = {
   message: string;
   success: boolean;

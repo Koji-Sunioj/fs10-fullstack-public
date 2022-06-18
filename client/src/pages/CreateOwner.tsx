@@ -28,25 +28,7 @@ const CreateOwner = () => {
     dispatch(resetCreateOwner());
   }, [client]);
 
-  async function sendOwner(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const owner: Omit<OwnerType, "_id"> = {
-      languages: form.languages.value.split(","),
-      properties: Array.from(form.properties as HTMLSelectElement["options"])
-        .filter((option) => {
-          return option.selected === true;
-        })
-        .map((property) => property.value),
-      firstName:
-        form.firstName.value[0].toUpperCase() +
-        form.firstName.value.substring(1).toLowerCase(),
-      lastName:
-        form.lastName.value[0].toUpperCase() +
-        form.lastName.value.substring(1).toLowerCase(),
-      biography: form.biography.value,
-    };
-
+  async function sendOwner(owner: Omit<OwnerType, "_id">) {
     await dispatch(createOwner({ token: token, data: owner }));
     dispatch(toggleModifiedTrue());
   }

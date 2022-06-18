@@ -20,7 +20,6 @@ const HomePage = () => {
   const properties = useSelector((state: AppType) => state.properties);
   const filterBy = useSelector((state: AppType) => state.filterBy);
   const dispatch = useDispatch<AppDispatch>();
-
   const pages = [];
   for (let page = Math.ceil(properties.count! / 6); page !== 0; page--) {
     pages.push(page);
@@ -58,6 +57,7 @@ const HomePage = () => {
               </FormSelect>
               <InputGroup.Text>Direction:</InputGroup.Text>
               <FormSelect
+                defaultValue={filterBy.direction}
                 onChange={(event) => {
                   dispatch(updateDirection(event.target.value));
                 }}
@@ -70,6 +70,7 @@ const HomePage = () => {
               </FormSelect>
               <InputGroup.Text>Sort by:</InputGroup.Text>
               <FormSelect
+                defaultValue={filterBy.sortBy}
                 onChange={(event) => {
                   dispatch(updateSortCategory(event.target.value));
                 }}

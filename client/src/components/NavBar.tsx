@@ -12,6 +12,7 @@ import { AppType } from "../types/types";
 import { CredentialResponse } from "@react-oauth/google";
 
 const NavBar = () => {
+  console.log("navbar");
   const googleAuth = useSelector((state: AppType) => state.googleAuth);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const client = useSelector((state: AppType) => state.client);
@@ -24,7 +25,7 @@ const NavBar = () => {
     } else if (token && token.length) {
       dispatch(verifyToken(token));
     }
-  }, [googleAuth]);
+  }, [googleAuth, dispatch, token]);
 
   const clientId =
     "590454976834-u7ot656u6f17u3seik97rsvj0rb3ktoh.apps.googleusercontent.com";

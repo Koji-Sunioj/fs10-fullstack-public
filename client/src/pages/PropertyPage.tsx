@@ -60,18 +60,24 @@ const PropertyPage = () => {
 
   useEffect(() => {
     if (
-      (property.data !== undefined && property.data === null) ||
-      (property.data !== null && property.data._id !== propertyId)
+      property.data === null ||
+      (property.data && property.data._id !== propertyId)
     ) {
       dispatch(getProperty(propertyId!));
+    } else if (pullProperty.success) {
+      dispatch(crudRefresh());
+      dispatch(resetDeleteProperty());
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } else {
+      window.scrollTo(0, 0);
+      dispatch(resetDeleteReservation());
+      dispatch(resetCreateReservation());
+      dispatch(toggleModifiedFalse());
+      dispatch(reservationView(propertyId!));
     }
-    window.scrollTo(0, 0);
-    dispatch(resetDeleteReservation());
-    dispatch(resetCreateReservation());
-    dispatch(toggleModifiedFalse());
-    dispatch(resetDeleteProperty());
-    dispatch(reservationView(propertyId!));
-  }, [propertyId, dispatch, property.data]);
+  }, [propertyId, dispatch, property.data, pullProperty.success, navigate]);
 
   function decrementFocus() {
     const date = focusDay.clone();
@@ -122,12 +128,8 @@ const PropertyPage = () => {
     viewRes.data !== null &&
     viewRes.data.some((r) => r.userId === client.data!._id);
 
-  async function adminDelete(propertyId: string) {
-    await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
-    dispatch(crudRefresh());
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
+  function adminDelete(propertyId: string) {
+    dispatch(deleteProperty({ token: token, propertyId: propertyId }));
   }
 
   return (

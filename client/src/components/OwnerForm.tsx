@@ -1,11 +1,15 @@
 import { Row, Form, Button, Stack } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { FetchPropertiesType, OwnerWithPropertiesType } from "../types/types";
+import {
+  FetchPropertiesType,
+  OwnerWithPropertiesType,
+  OwnerType,
+} from "../types/types";
 
 type OwnerFormType = {
   properties: FetchPropertiesType;
   owner?: OwnerWithPropertiesType;
-  sendOwner: React.FormEventHandler<HTMLFormElement>;
+  sendOwner: (owner: Omit<OwnerType, "_id">) => void;
 };
 
 const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
@@ -35,6 +39,27 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
     setLanguages(filtered);
   }
 
+  function parseOwnerForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const owner: Omit<OwnerType, "_id"> = {
+      languages: form.languages.value.split(","),
+      properties: Array.from(form.properties as HTMLSelectElement["options"])
+        .filter((option) => {
+          return option.selected === true;
+        })
+        .map((property) => property.value),
+      firstName:
+        form.firstName.value[0].toUpperCase() +
+        form.firstName.value.substring(1).toLowerCase(),
+      lastName:
+        form.lastName.value[0].toUpperCase() +
+        form.lastName.value.substring(1).toLowerCase(),
+      biography: form.biography.value,
+    };
+    sendOwner(owner);
+  }
+
   const submittable =
     firstName.length < 3 ||
     lastName.length < 3 ||
@@ -43,7 +68,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
   return (
     <>
       <Row style={{ backgroundColor: "white" }}>
-        <Form onSubmit={sendOwner}>
+        <Form onSubmit={parseOwnerForm}>
           <Form.Group className="mb-3">
             <Form.Label>First Name</Form.Label>
             <Form.Control

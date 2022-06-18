@@ -16,7 +16,7 @@ const AdminPage = () => {
     if (client.valid && client.data !== null) {
       dispatch(getMyReservations(client.data._id));
     }
-  }, [client]);
+  }, [client, dispatch]);
 
   const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
 

@@ -1,16 +1,7 @@
 import { Row, Form, Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import moment from "moment";
-import { FetchOwnersType, PropertyType, OwnerType } from "../types/types";
-
-type PropertyFormType = {
-  owners: FetchOwnersType;
-  property?: Omit<PropertyType, "owners"> & {
-    properties: PropertyType[];
-    owners: OwnerType[];
-  };
-  sendProperty: React.FormEventHandler<HTMLFormElement>;
-};
+import { PropertyType, PropertyFormType } from "../types/types";
 
 const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
   const [title, setTitle] = useState("");
@@ -22,13 +13,7 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
   const [buildDate, setBuildDate] = useState("");
   const [theOwners, setTheOwners] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (property) {
-      setProperty();
-    }
-  }, [property]);
-
-  function setProperty() {
+  const setProperty = useCallback(() => {
     setTitle(property!.title);
     setDescription(property!.description);
     setCategory(property!.category);
@@ -37,6 +22,32 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
     setLocation(property!.location);
     setBuildDate(property!.buildDate.split("T")[0]);
     setTheOwners(property!.owners.map((owner) => owner._id));
+  }, [property]);
+
+  useEffect(() => {
+    if (property) {
+      setProperty();
+    }
+  }, [property, setProperty]);
+
+  function parsePropertyForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
+    const property: Omit<PropertyType, "_id"> = {
+      location: form.location.value,
+      title: form.propertyTitle.value,
+      description: form.description.value,
+      nightlyRate: Number(form.nightlyRate.value),
+      rooms: Number(form.rooms.value),
+      owners: Array.from(form.owners as HTMLSelectElement["options"])
+        .filter((option) => {
+          return option.selected === true;
+        })
+        .map((owner) => owner.value),
+      category: form.type.value,
+      buildDate: form.buildDate.value,
+    };
+    sendProperty(property);
   }
 
   const submittable =
@@ -50,7 +61,7 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
   return (
     <>
       <Row style={{ backgroundColor: "white" }}>
-        <Form onSubmit={sendProperty}>
+        <Form onSubmit={parsePropertyForm}>
           <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control

@@ -28,23 +28,7 @@ const CreateProperty = () => {
     dispatch(resetCreateProp());
   }, [client]);
 
-  async function sendProperty(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget as HTMLFormElement;
-    const property: Omit<PropertyType, "_id"> = {
-      location: form.location.value,
-      title: form.propertyTitle.value,
-      description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value),
-      rooms: Number(form.rooms.value),
-      owners: Array.from(form.owners as HTMLSelectElement["options"])
-        .filter((option) => {
-          return option.selected === true;
-        })
-        .map((owner) => owner.value),
-      category: form.type.value,
-      buildDate: form.buildDate.value,
-    };
+  async function sendProperty(property: Omit<PropertyType, "_id">) {
     await dispatch(createProperty({ token: token, data: property }));
     dispatch(crudRefresh());
   }
