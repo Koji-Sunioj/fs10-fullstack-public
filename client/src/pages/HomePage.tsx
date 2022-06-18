@@ -10,7 +10,6 @@ import {
   updateSortCategory,
 } from "../redux/reducers/filterby";
 
-import { initialState } from "../redux/reducers/properties";
 import mapCategory from "../utils/mapCategory";
 import { Form } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
@@ -26,7 +25,7 @@ const HomePage = () => {
   }
   const pointer = { ascending: -1, descending: 1 };
 
-  if (initialState === properties) {
+  if (properties.data === null) {
     dispatch(getProperties(filterBy));
   }
 
@@ -106,7 +105,7 @@ const HomePage = () => {
         <Row>
           <Col style={{ textAlign: "center" }}>
             <div className="property">
-              <h3>Loading</h3>
+              <h2>Loading</h2>
             </div>
           </Col>
         </Row>

@@ -26,6 +26,12 @@ export const createclient = createSlice({
       state.valid = action.payload.valid;
       state.data = action.payload.user;
     },
+    setFromUpdate: (state, action) => {
+      if (state.data !== null) {
+        state.data.firstName = action.payload.firstName;
+        state.data.lastName = action.payload.lastName;
+      }
+    },
   },
   extraReducers(builder) {
     builder
@@ -45,5 +51,6 @@ export const createclient = createSlice({
   },
 });
 
-export const { resetClient, setFromGoogle } = createclient.actions;
+export const { resetClient, setFromGoogle, setFromUpdate } =
+  createclient.actions;
 export default createclient.reducer;

@@ -42,6 +42,9 @@ export const updateuser = createSlice({
           state.message = action.payload.message;
         }
       })
+      .addCase(updateUser.pending, (state) => {
+        return { ...state };
+      })
       .addCase(updateUser.rejected, (state) => {
         state.error = true;
         state.success = false;

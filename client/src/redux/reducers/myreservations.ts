@@ -9,7 +9,7 @@ export const getMyReservations = createAsyncThunk(
   }
 );
 
-const initialState: FetchReservationsType = {
+export const initialState: FetchReservationsType = {
   data: null,
   loading: false,
   error: false,
@@ -24,6 +24,7 @@ export const viewmyreservations = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getMyReservations.pending, (state) => {
+        state.data = [];
         state.loading = true;
         state.error = false;
       })

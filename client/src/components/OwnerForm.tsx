@@ -1,16 +1,6 @@
 import { Row, Form, Button, Stack } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import {
-  FetchPropertiesType,
-  OwnerWithPropertiesType,
-  OwnerType,
-} from "../types/types";
-
-type OwnerFormType = {
-  properties: FetchPropertiesType;
-  owner?: OwnerWithPropertiesType;
-  sendOwner: (owner: Omit<OwnerType, "_id">) => void;
-};
+import { useState, useEffect, useCallback } from "react";
+import { OwnerType, OwnerFormType } from "../types/types";
 
 const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
   const [firstName, setFirstName] = useState("");
@@ -20,19 +10,19 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
   const [inputLang, setInputLang] = useState("");
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (owner) {
-      setOwner();
-    }
-  }, [owner]);
-
-  function setOwner() {
+  const setOwner = useCallback(() => {
     setFirstName(owner!.firstName);
     setLastName(owner!.lastName);
     setBiography(owner!.biography);
     setLanguages(owner!.languages);
     setTheProperties(owner!.properties.map((owner) => owner._id));
-  }
+  }, [owner]);
+
+  useEffect(() => {
+    if (owner) {
+      setOwner();
+    }
+  }, [owner]);
 
   function removeLang(lang: string) {
     const filtered = languages.filter((language: string) => language !== lang);

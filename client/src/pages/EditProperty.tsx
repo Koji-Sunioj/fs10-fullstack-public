@@ -23,11 +23,7 @@ const EditProperty = () => {
   const token = JSON.parse(localStorage.getItem("token") as string);
 
   useEffect(() => {
-    if (
-      client.valid === true &&
-      client.data !== null &&
-      client.data.isAdmin === true
-    ) {
+    if (client.valid && client.data !== null && client.data.isAdmin) {
       dispatch(getOwners());
       dispatch(getProperty(String(propertyId)));
       dispatch(resetUpdateProp());

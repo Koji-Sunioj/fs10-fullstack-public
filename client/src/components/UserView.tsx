@@ -14,26 +14,41 @@ import { resetFilter } from "../redux/reducers/filterby";
 import { updateUser } from "../redux/reducers/updateuser";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetUpdateUser } from "../redux/reducers/updateuser";
-import { resetClient, verifyToken } from "../redux/reducers/client";
+import { resetClient } from "../redux/reducers/client";
 import { AppDispatch } from "../redux/store";
-import { AppType, UserType } from "../types/types";
-
-type UserViewType = {
-  client: UserType;
-  children?: JSX.Element[];
-};
+import { AppType, UserViewType } from "../types/types";
+import { getMyReservations } from "../redux/reducers/myreservations";
+import { setFromUpdate } from "../redux/reducers/client";
+import { resetCreateReservation } from "../redux/reducers/createreservation";
+import { resetDeleteReservation } from "../redux/reducers/deletereservation";
 
 const UserView = ({ client, children }: UserViewType) => {
+  console.log("rendered");
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const updateName = useSelector((state: AppType) => state.updateUser);
   const reservations = useSelector((state: AppType) => state.myReservations);
+  const pushReservation = useSelector(
+    (state: AppType) => state.createReservation
+  );
+  const pullReservation = useSelector(
+    (state: AppType) => state.deleteReservation
+  );
 
   useEffect(() => {
+    if (
+      (client.valid && reservations.data === null) ||
+      pushReservation.success ||
+      pullReservation.success
+    ) {
+      dispatch(getMyReservations(client.data!._id));
+      dispatch(resetCreateReservation());
+      dispatch(resetDeleteReservation());
+    }
     dispatch(resetUpdateUser());
-  }, []);
+  }, [client, dispatch, reservations.data]);
 
   function logout() {
     localStorage.removeItem("token");
@@ -50,26 +65,26 @@ const UserView = ({ client, children }: UserViewType) => {
     event.preventDefault();
     const firstName = event.currentTarget.firstName.value;
     const lastName = event.currentTarget.lastName.value;
-    await dispatch(
+    dispatch(
       updateUser({
         token: token,
         userId: userId,
         data: { firstName: firstName, lastName: lastName },
       })
     );
-    dispatch(verifyToken(token));
+    dispatch(setFromUpdate({ firstName, lastName }));
   }
 
   return (
     <>
       <h2>
-        Welcome {client.firstName} {client.lastName}
+        Welcome {client.data!.firstName} {client.data!.lastName}
       </h2>
       <Row style={{ backgroundColor: "white" }}>
         <Col>
-          <p>email address: {client.email}</p>
-          <p>joined: {client.joinDate.split("T")[0]}</p>
-          <p>role: {client.isAdmin ? "administrator" : "user"}</p>
+          <p>email address: {client.data!.email}</p>
+          <p>joined: {client.data!.joinDate.split("T")[0]}</p>
+          <p>role: {client.data!.isAdmin ? "administrator" : "user"}</p>
           <Button variant={"danger"} onClick={logout}>
             Log Out
           </Button>
@@ -81,7 +96,7 @@ const UserView = ({ client, children }: UserViewType) => {
         <Form
           style={{ padding: "0px" }}
           onSubmit={(e) => {
-            editUser(e, client._id);
+            editUser(e, client.data!._id);
           }}
         >
           <InputGroup style={{ padding: "0px" }}>
@@ -95,13 +110,13 @@ const UserView = ({ client, children }: UserViewType) => {
             <InputGroup.Text>first name:</InputGroup.Text>
             <FormControl
               disabled={!isToggleForm}
-              defaultValue={client.firstName}
+              defaultValue={client.data!.firstName}
               name="firstName"
             />
             <InputGroup.Text>last name: </InputGroup.Text>
             <FormControl
               disabled={!isToggleForm}
-              defaultValue={client.lastName}
+              defaultValue={client.data!.lastName}
               name="lastName"
             />
             <Button disabled={!isToggleForm} type="submit">
@@ -111,8 +126,14 @@ const UserView = ({ client, children }: UserViewType) => {
         </Form>
       </Row>
       {updateName.success && (
-        <Row style={{ textAlign: "center" }}>
-          <Alert variant="success">{updateName.message}</Alert>
+        <Row>
+          <Alert
+            variant="success"
+            onClose={() => dispatch(resetUpdateUser())}
+            dismissible
+          >
+            <h2>{updateName.message}</h2>
+          </Alert>
         </Row>
       )}
       {reservations.data !== null && reservations.data.length > 0 && (

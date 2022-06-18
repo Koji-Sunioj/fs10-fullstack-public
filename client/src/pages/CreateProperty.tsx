@@ -18,11 +18,7 @@ const CreateProperty = () => {
   const addProperty = useSelector((state: AppType) => state.createProperty);
 
   useEffect(() => {
-    if (
-      client.valid === true &&
-      client.data !== null &&
-      client.data.isAdmin === true
-    ) {
+    if (client.valid && client.data !== null && client.data.isAdmin) {
       dispatch(getOwners());
     }
     dispatch(resetCreateProp());

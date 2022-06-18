@@ -1,6 +1,6 @@
 import { Col, Row, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import OwnerForm from "../components/OwnerForm";
 import { getAllProperties } from "../redux/reducers/allproperties";
@@ -18,11 +18,7 @@ const CreateOwner = () => {
   const token = JSON.parse(localStorage.getItem("token") as string);
 
   useEffect(() => {
-    if (
-      client.valid === true &&
-      client.data !== null &&
-      client.data.isAdmin === true
-    ) {
+    if (client.valid && client.data !== null && client.data.isAdmin) {
       dispatch(getAllProperties());
     }
     dispatch(resetCreateOwner());
@@ -39,9 +35,6 @@ const CreateOwner = () => {
     <>
       {amIAdmin ? (
         <>
-          <select>
-            <option></option>
-          </select>
           <h1>Create owner</h1>
           <OwnerForm sendOwner={sendOwner} properties={properties} />
           <Row style={{ textAlign: "center" }}>

@@ -20,6 +20,17 @@ export type AppType = {
   myReservations: FetchReservationsType;
 };
 
+export type UserViewType = {
+  client: ClientType;
+  children?: JSX.Element[];
+};
+
+export type OwnerFormType = {
+  properties: FetchPropertiesType;
+  owner?: OwnerWithPropertiesType;
+  sendOwner: (owner: Omit<OwnerType, "_id">) => void;
+};
+
 export type PropertyFormType = {
   owners: FetchOwnersType;
   property?: Omit<PropertyType, "owners"> & {
