@@ -1,23 +1,24 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
-import { getOwner } from "../redux/reducers/owner";
 import { useEffect } from "react";
-import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
-import { resetUpdateOwner } from "../redux/reducers/updateowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 import { AppDispatch } from "../redux/store";
+import { getOwner } from "../redux/reducers/owner";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { resetUpdateOwner } from "../redux/reducers/updateowner";
+import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
+
 import { AppType } from "../types/types";
 
 const OwnerPage = () => {
+  const navigate = useNavigate();
   const { ownerId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: AppType) => state.client);
   const owner = useSelector((state: AppType) => state.owner);
-  const removeOwner = useSelector((state: AppType) => state.deleteOwner);
+  const client = useSelector((state: AppType) => state.client);
+  const token = JSON.parse(localStorage.getItem("token") as string);
   const editOwner = useSelector((state: AppType) => state.updateOwner);
+  const removeOwner = useSelector((state: AppType) => state.deleteOwner);
 
   useEffect(() => {
     if (
@@ -29,19 +30,18 @@ const OwnerPage = () => {
       dispatch(resetUpdateOwner());
       dispatch(getOwner(ownerId as string));
     }
-  }, [ownerId]);
+  }, [ownerId, dispatch, editOwner.success, owner.data]);
 
-  async function test(ownerId: string) {
+  const kickOwner = async (ownerId: string) => {
     await dispatch(deleteOwner({ token: token, ownerId: ownerId }));
     dispatch(toggleModifiedTrue());
     setTimeout(() => {
       navigate("/");
     }, 1500);
-  }
-
-  console.log(owner.data);
+  };
 
   const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
+  const isRemoved = removeOwner.success || removeOwner.error;
   return (
     <>
       {owner.data !== null && (
@@ -59,7 +59,7 @@ const OwnerPage = () => {
                   <Button
                     variant="danger"
                     onClick={() => {
-                      test(ownerId!);
+                      kickOwner(ownerId!);
                     }}
                   >
                     Delete owner
@@ -71,31 +71,22 @@ const OwnerPage = () => {
               )}
             </Col>
           </Row>
-
-          {removeOwner.success && (
-            <Row style={{ textAlign: "center" }}>
-              <Alert variant="success">
+          {isRemoved && (
+            <Row style={{ textAlign: "center", padding: "0px" }}>
+              <Alert variant={removeOwner.success ? "success" : "danger"}>
                 <h3>{removeOwner.message}</h3>
               </Alert>
             </Row>
           )}
-          {removeOwner.error && (
-            <Row style={{ textAlign: "center" }}>
-              <Alert variant="danger">
-                <h3>{removeOwner.message}</h3>
-              </Alert>
-            </Row>
-          )}
-
           {owner.data.properties.length > 0 && (
             <>
               <h2>properties</h2>
               {owner.data.properties.map((property) => (
                 <Row style={{ backgroundColor: "white" }} key={property._id}>
                   <Link to={`/property/${property._id}`}>
-                    <p>
+                    <h3>
                       {property.title} in {property.location}
-                    </p>
+                    </h3>
                   </Link>
                 </Row>
               ))}

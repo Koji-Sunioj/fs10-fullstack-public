@@ -1,4 +1,4 @@
-import { useParams, Routes as Router, Route } from "react-router-dom";
+import { Routes as Router, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import MyAccount from "./pages/MyAccount";
@@ -13,7 +13,7 @@ import EditOwner from "./pages/EditOwner";
 const Routes = () => (
   <Router>
     <Route path="/" element={<HomePage />} />
-    <Route path="/myaccount" element={<MyAccount />} />
+    <Route path="/my-account" element={<MyAccount />} />
     <Route path="/admin" element={<AdminPage />} />
     <Route path="/admin/create-property" element={<CreateProperty />} />
     <Route path="/admin/edit-property/:propertyId" element={<EditProperty />} />

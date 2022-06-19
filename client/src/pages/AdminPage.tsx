@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
-import { Col, Row, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { Col, Row, Button } from "react-bootstrap";
 
-import UserView from "../components/UserView";
 import { AppType } from "../types/types";
+import UserView from "../components/UserView";
 
 const AdminPage = () => {
   const client = useSelector((state: AppType) => state.client);
-  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
 
   return (
     <>
-      {amIAdmin ? (
+      {client.valid && client.data!.isAdmin ? (
         <>
           <UserView client={client}>
             <h2>Actions</h2>

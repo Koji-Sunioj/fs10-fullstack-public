@@ -1,17 +1,18 @@
-import { Col, Row, Alert } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { getProperty } from "../redux/reducers/property";
+import { AppDispatch } from "../redux/store";
+import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
+import { crudRefresh } from "../redux/reducers/filterby";
+import { getProperty } from "../redux/reducers/property";
 import { updateProperty } from "../redux/reducers/updateproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
-import { Link } from "react-router-dom";
-import { crudRefresh } from "../redux/reducers/filterby";
-import PropertyForm from "../components/PropertyForm";
 import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
-import { AppDispatch } from "../redux/store";
+
+import PropertyForm from "../components/PropertyForm";
 import { PropertyType, AppType } from "../types/types";
+import CrudPropertyFeedback from "../components/CrudPropertyFeedback";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +29,7 @@ const EditProperty = () => {
       dispatch(getProperty(String(propertyId)));
       dispatch(resetUpdateProp());
     }
-  }, [client]);
+  }, [client, dispatch, propertyId]);
 
   async function sendProperty(property: Omit<PropertyType, "_id">) {
     await dispatch(
@@ -38,7 +39,7 @@ const EditProperty = () => {
     dispatch(crudRefresh());
   }
 
-  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
+  const amIAdmin = client.valid && client.data && client.data.isAdmin;
   return (
     <>
       {amIAdmin ? (
@@ -49,23 +50,9 @@ const EditProperty = () => {
             sendProperty={sendProperty}
             owners={owners}
             property={property.data!}
+            status={patchProperty}
           />
-          <Row style={{ textAlign: "center" }}>
-            {patchProperty.success && (
-              <Alert variant="success">
-                <Link to={`/property/${propertyId}`}>
-                  <h3>
-                    {patchProperty.message}. click here to see the listing.
-                  </h3>
-                </Link>
-              </Alert>
-            )}
-            {patchProperty.error && (
-              <Alert variant="danger">
-                <h3>{patchProperty.message}.</h3>
-              </Alert>
-            )}
-          </Row>
+          <CrudPropertyFeedback status={patchProperty} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

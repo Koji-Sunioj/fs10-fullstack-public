@@ -1,16 +1,15 @@
+import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import UserView from "../components/UserView";
-import { AppDispatch } from "../redux/store";
+
 import { AppType } from "../types/types";
+import UserView from "../components/UserView";
+
 const MyAccount = () => {
   const client = useSelector((state: AppType) => state.client);
-  const amInotAdmin =
-    client.valid && client.data !== null && !client.data.isAdmin;
 
   return (
     <>
-      {amInotAdmin ? (
+      {client.valid ? (
         <>
           <UserView client={client} />
         </>

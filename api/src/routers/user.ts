@@ -12,9 +12,9 @@ import {
 
 const router = express.Router()
 
-router.get('/', viewUsers)
+router.get('/', verifyAuth, viewUsers)
 router.post('/', verifyAuth, createUser)
-router.get('/:userId', viewUser)
+router.get('/:userId', verifyAuth, viewUser)
 router.patch('/:userId', verifyAuth, updateUser)
 router.delete('/:userId', verifyAuth, deleteUser)
 

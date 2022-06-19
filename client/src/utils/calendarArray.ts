@@ -1,6 +1,6 @@
 import moment from "moment";
 
-function calendarArray(theMoment: moment.Moment) {
+const calendarArray = (theMoment: moment.Moment) => {
   const first = theMoment.clone().startOf("month").startOf("week");
   const last = theMoment.clone().endOf("month").endOf("week");
   const dateDiff = last.diff(first, "days");
@@ -12,6 +12,6 @@ function calendarArray(theMoment: moment.Moment) {
   }
 
   return calendar;
-}
+};
 
 export default calendarArray;

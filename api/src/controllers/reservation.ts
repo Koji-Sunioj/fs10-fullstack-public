@@ -11,7 +11,6 @@ export const createReservation = async (
 ) => {
   try {
     const newUser = req.body
-    console.log(newUser)
     const newData = new Reservation(newUser)
     const created = await ReservationService.create(newData)
     res.json({ status: 200, data: created })
@@ -76,7 +75,6 @@ export const deleteReservation = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body)
   try {
     const { reservationId } = req.params
     const deleted = await ReservationService.deleteById(reservationId)

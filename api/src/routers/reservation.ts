@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.get('/', findReservations)
 router.post('/', verifyAuth, createReservation)
-router.get('/:reservationId', findReservation)
+router.get('/:reservationId', verifyAuth, findReservation)
 router.delete('/:reservationId', verifyAuth, deleteReservation)
 router.patch('/:reservationId', verifyAuth, updateReservation)
 

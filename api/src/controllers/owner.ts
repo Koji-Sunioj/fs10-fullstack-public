@@ -112,7 +112,11 @@ export const updateOwner = async (
       })
     }
     const updated = await OwnerService.updateById(ownerId, newData)
-    res.json({ status: 200, message: 'owner successfully updated' })
+    res.json({
+      status: 200,
+      message: 'owner successfully updated',
+      data: updated,
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

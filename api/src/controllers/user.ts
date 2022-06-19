@@ -94,7 +94,6 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body)
     const { userId } = req.params
     const newData = {
       firstName: req.body.firstName,

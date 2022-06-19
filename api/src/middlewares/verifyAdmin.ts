@@ -14,7 +14,6 @@ export default async function (
       token!,
       process.env.JWT_SECRET as string
     ) as DecodedType
-    console.log(decoded)
     const user = await UserService.findByEmail(decoded.email)
     if (!user!.isAdmin) {
       res.json({

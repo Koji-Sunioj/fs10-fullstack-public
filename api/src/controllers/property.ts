@@ -139,7 +139,11 @@ export const updateProperty = async (
       })
     }
     const updated = await PropertyService.updateById(propertyId, newData)
-    res.json({ status: 200, message: 'property successfully updated' })
+    res.json({
+      status: 200,
+      message: 'property successfully updated',
+      data: updated,
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

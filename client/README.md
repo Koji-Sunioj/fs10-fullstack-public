@@ -1,3 +1,8 @@
+- notes from Koji:
+
+Hello. I've focused most of my energy for this project handling the state, api end points and logic so the css is a little muted. The project was morphed to be a reservation booking system with many to many relationship between owners and properties, similar to authors vs books. I realized afterwards that book borrowing logic is a lot more simple than what I created, but it works if one would imagine that a user could borrow a book on certain dates.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

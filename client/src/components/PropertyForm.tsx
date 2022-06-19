@@ -1,17 +1,22 @@
+import moment from "moment";
 import { Row, Form, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
-import moment from "moment";
 import { PropertyType, PropertyFormType } from "../types/types";
 
-const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
+const PropertyForm = ({
+  owners,
+  sendProperty,
+  property,
+  status,
+}: PropertyFormType) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<string>("cottage");
-  const [price, setPrice] = useState<number | string>("");
-  const [rooms, setRooms] = useState<number | string>("");
   const [location, setLocation] = useState("");
   const [buildDate, setBuildDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState<number | string>("");
+  const [rooms, setRooms] = useState<number | string>("");
   const [theOwners, setTheOwners] = useState<string[]>([]);
+  const [category, setCategory] = useState<string>("cottage");
 
   const setProperty = useCallback(() => {
     setTitle(property!.title);
@@ -30,7 +35,7 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
     }
   }, [property, setProperty]);
 
-  function parsePropertyForm(event: React.FormEvent<HTMLFormElement>) {
+  const parsePropertyForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget as HTMLFormElement;
     const property: Omit<PropertyType, "_id"> = {
@@ -48,7 +53,7 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
       buildDate: form.buildDate.value,
     };
     sendProperty(property);
-  }
+  };
 
   const submittable =
     title.length < 5 ||
@@ -172,7 +177,11 @@ const PropertyForm = ({ owners, sendProperty, property }: PropertyFormType) => {
                 ))}
             </Form.Select>
           </Form.Group>
-          <Button variant="primary" type="submit" disabled={submittable}>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={submittable || status.success}
+          >
             Submit
           </Button>
         </Form>

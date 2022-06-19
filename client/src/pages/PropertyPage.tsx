@@ -1,9 +1,13 @@
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { AppType } from "../types/types";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../redux/store";
+import { useParams } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { crudRefresh } from "../redux/reducers/filterby";
 import { getProperty } from "../redux/reducers/property";
-import { ReservationType } from "../types/types";
+import { reservationView } from "../redux/reducers/resesrvationview";
+import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
 import {
   Button,
   Row,
@@ -11,10 +15,8 @@ import {
   FormControl,
   Col,
   Form,
-  Alert,
   Stack,
 } from "react-bootstrap";
-import checkBooked from "../utils/checkBooked";
 import moment from "moment";
 import {
   createReservation,
@@ -24,39 +26,37 @@ import {
   deleteReservation,
   resetDeleteReservation,
 } from "../redux/reducers/deletereservation";
+import {
+  resetDeleteProperty,
+  deleteProperty,
+} from "../redux/reducers/deleteproperty";
+
+import checkBooked from "../utils/checkBooked";
+import { ReservationType } from "../types/types";
 import CalendarView from "../components/CalendarView";
-import { resetDeleteProperty } from "../redux/reducers/deleteproperty";
-import { reservationView } from "../redux/reducers/resesrvationview";
-import { deleteProperty } from "../redux/reducers/deleteproperty";
-import { Link } from "react-router-dom";
-import { crudRefresh } from "../redux/reducers/filterby";
-import { AppDispatch } from "../redux/store";
-import { AppType } from "../types/types";
-import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
+import CrudPageFeedBack from "../components/CrudPageFeedBack";
 
 const PropertyPage = () => {
-  let { propertyId } = useParams<string>();
-  const token = JSON.parse(localStorage.getItem("token") as string);
   const navigate = useNavigate();
+  const { propertyId } = useParams<string>();
   const dispatch = useDispatch<AppDispatch>();
-  const property = useSelector((state: AppType) => state.property);
-
+  const [checkIn, setCheckIn] = useState<string>("");
+  const [nights, setNumNights] = useState<string | number>("");
   const client = useSelector((state: AppType) => state.client);
+  const property = useSelector((state: AppType) => state.property);
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  const viewRes = useSelector((state: AppType) => state.reservationView);
+  const pullProperty = useSelector((state: AppType) => state.deleteProperty);
+  const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
   const pushReservation = useSelector(
     (state: AppType) => state.createReservation
   );
   const pullReservation = useSelector(
     (state: AppType) => state.deleteReservation
   );
-  const pullProperty = useSelector((state: AppType) => state.deleteProperty);
-  const viewRes = useSelector((state: AppType) => state.reservationView);
   const [focusDay, setFocusDate] = useState<moment.Moment>(
     moment().startOf("month")
   );
-  const [checkIn, setCheckIn] = useState<string>("");
-  const [nights, setNumNights] = useState<string | number>("");
-
-  const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
 
   useEffect(() => {
     if (
@@ -66,7 +66,6 @@ const PropertyPage = () => {
       dispatch(getProperty(propertyId!));
     } else if (pullProperty.success) {
       dispatch(crudRefresh());
-      dispatch(resetDeleteProperty());
       setTimeout(() => {
         navigate("/");
       }, 1500);
@@ -75,20 +74,24 @@ const PropertyPage = () => {
       dispatch(resetDeleteReservation());
       dispatch(resetCreateReservation());
       dispatch(toggleModifiedFalse());
+      dispatch(resetDeleteProperty());
       dispatch(reservationView(propertyId!));
     }
   }, [propertyId, dispatch, property.data, pullProperty.success, navigate]);
 
-  function decrementFocus() {
+  const decrementCalendar = () => {
     const date = focusDay.clone();
     setFocusDate(date.subtract(1, "month"));
-  }
+  };
 
-  function incrementFocus() {
+  const incrementCalendar = () => {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
-  }
-  async function update(event: React.FormEvent<HTMLFormElement>, id: string) {
+  };
+  const update = async (
+    event: React.FormEvent<HTMLFormElement>,
+    id: string
+  ) => {
     event.preventDefault();
     dispatch(resetDeleteReservation());
     setCheckIn("");
@@ -100,7 +103,7 @@ const PropertyPage = () => {
     };
     await dispatch(createReservation({ token: token, data: formData }));
     dispatch(reservationView(propertyId!));
-  }
+  };
 
   let requestedNights: string[] = [];
   if (moment(checkIn, "YYYY-MM-DD", true).isValid()) {
@@ -115,22 +118,22 @@ const PropertyPage = () => {
     }
   }
 
-  async function removeReservation(reservationId: string) {
+  const removeReservation = async (reservationId: string) => {
     dispatch(resetCreateReservation());
     await dispatch(
       deleteReservation({ token: token, reservationId: reservationId })
     );
     dispatch(reservationView(propertyId!));
-  }
+  };
 
   const shouldRenderRows =
     client.valid === true &&
     viewRes.data !== null &&
     viewRes.data.some((r) => r.userId === client.data!._id);
 
-  function adminDelete(propertyId: string) {
+  const adminDelete = (propertyId: string) => {
     dispatch(deleteProperty({ token: token, propertyId: propertyId }));
-  }
+  };
 
   return (
     <>
@@ -203,8 +206,8 @@ const PropertyPage = () => {
           <Row style={{ backgroundColor: "white" }}>
             <CalendarView
               bookedDates={bookedDates}
-              decrementFocus={decrementFocus}
-              incrementFocus={incrementFocus}
+              decrementFocus={decrementCalendar}
+              incrementFocus={incrementCalendar}
               setCheckIn={setCheckIn}
               focusDay={focusDay}
               disabled={client.valid === false || client.valid === null}
@@ -300,40 +303,9 @@ const PropertyPage = () => {
               })}
             </>
           )}
-
-          <Row style={{ textAlign: "center" }}>
-            {pushReservation.success && (
-              <Alert variant="success">
-                <h3>{pushReservation.message}</h3>
-              </Alert>
-            )}
-            {pushReservation.error && (
-              <Alert variant="danger">
-                <h3>{pushReservation.message}</h3>
-              </Alert>
-            )}
-            {pullReservation.success && (
-              <Alert variant="success">
-                <h3>{pullReservation.message}</h3>
-              </Alert>
-            )}
-            {pullReservation.error && (
-              <Alert variant="danger">
-                <h3>{pullReservation.message}</h3>
-              </Alert>
-            )}
-
-            {pullProperty.success && (
-              <Alert variant="success">
-                <h3>{pullProperty.message}</h3>
-              </Alert>
-            )}
-            {pullProperty.error && (
-              <Alert variant="danger">
-                <h3>{pullProperty.message}</h3>
-              </Alert>
-            )}
-          </Row>
+          <CrudPageFeedBack status={pushReservation} />
+          <CrudPageFeedBack status={pullReservation} />
+          <CrudPageFeedBack status={pullProperty} />
         </>
       )}
     </>

@@ -1,13 +1,13 @@
-import { Row, Form, Button, Stack } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
 import { OwnerType, OwnerFormType } from "../types/types";
+import { Row, Form, Button, Stack } from "react-bootstrap";
 
-const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
-  const [firstName, setFirstName] = useState("");
+const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
   const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [inputLang, setInputLang] = useState("");
   const [biography, setBiography] = useState("");
   const [languages, setLanguages] = useState<string[]>([]);
-  const [inputLang, setInputLang] = useState("");
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
   const setOwner = useCallback(() => {
@@ -22,14 +22,14 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
     if (owner) {
       setOwner();
     }
-  }, [owner]);
+  }, [owner, setOwner]);
 
-  function removeLang(lang: string) {
+  const removeLang = (lang: string) => {
     const filtered = languages.filter((language: string) => language !== lang);
     setLanguages(filtered);
-  }
+  };
 
-  function parseOwnerForm(event: React.FormEvent<HTMLFormElement>) {
+  const parseOwnerForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const owner: Omit<OwnerType, "_id"> = {
@@ -48,7 +48,7 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
       biography: form.biography.value,
     };
     sendOwner(owner);
-  }
+  };
 
   const submittable =
     firstName.length < 3 ||
@@ -162,7 +162,11 @@ const OwnerForm = ({ properties, sendOwner, owner }: OwnerFormType) => {
                 ))}
             </Form.Select>
           </Form.Group>
-          <Button variant="primary" type="submit" disabled={submittable}>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={submittable || status?.success}
+          >
             Submit
           </Button>
         </Form>

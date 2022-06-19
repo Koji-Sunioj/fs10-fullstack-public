@@ -2,7 +2,7 @@
 import GoogleStrategy from 'passport-google-id-token'
 import UserService from '../services/user'
 import User from '../models/User'
-import { GoogleRespType, UserDocument } from 'types'
+import { GoogleRespType } from 'types'
 
 function isAdmin(email: string) {
   if (email === 'koji.gabriel218@gmail.com') {

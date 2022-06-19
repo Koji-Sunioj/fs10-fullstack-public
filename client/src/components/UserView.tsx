@@ -1,45 +1,45 @@
 import {
   Row,
-  Alert,
   Button,
   Col,
   Form,
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { AppDispatch } from "../redux/store";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { resetClient } from "../redux/reducers/client";
+import { AppType, UserViewType } from "../types/types";
+import { setFromUpdate } from "../redux/reducers/client";
 import { resetFilter } from "../redux/reducers/filterby";
 import { updateUser } from "../redux/reducers/updateuser";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetUpdateUser } from "../redux/reducers/updateuser";
-import { resetClient } from "../redux/reducers/client";
-import { AppDispatch } from "../redux/store";
-import { AppType, UserViewType } from "../types/types";
 import { getMyReservations } from "../redux/reducers/myreservations";
-import { setFromUpdate } from "../redux/reducers/client";
 import { resetCreateReservation } from "../redux/reducers/createreservation";
 import { resetDeleteReservation } from "../redux/reducers/deletereservation";
 
+import UserUpdateFeedback from "./UserUpdateFeedback";
+
 const UserView = ({ client, children }: UserViewType) => {
-  console.log("rendered");
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [isToggleForm, setToggleForm] = useState(false);
-  const token = JSON.parse(localStorage.getItem("token") as string);
-  const updateName = useSelector((state: AppType) => state.updateUser);
-  const reservations = useSelector((state: AppType) => state.myReservations);
   const pushReservation = useSelector(
     (state: AppType) => state.createReservation
   );
   const pullReservation = useSelector(
     (state: AppType) => state.deleteReservation
   );
+  const dispatch = useDispatch<AppDispatch>();
+  const [isToggleForm, setToggleForm] = useState(false);
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  const updateName = useSelector((state: AppType) => state.updateUser);
+  const reservations = useSelector((state: AppType) => state.myReservations);
 
   useEffect(() => {
     if (
-      (client.valid && reservations.data === null) ||
+      (client.valid && !reservations.data) ||
       pushReservation.success ||
       pullReservation.success
     ) {
@@ -48,20 +48,26 @@ const UserView = ({ client, children }: UserViewType) => {
       dispatch(resetDeleteReservation());
     }
     dispatch(resetUpdateUser());
-  }, [client, dispatch, reservations.data]);
+  }, [
+    client,
+    dispatch,
+    reservations.data,
+    pushReservation.success,
+    pullReservation.success,
+  ]);
 
-  function logout() {
+  const logout = () => {
     localStorage.removeItem("token");
     dispatch(resetClient());
     dispatch(resetAuth());
     dispatch(resetFilter());
     navigate("/");
-  }
+  };
 
-  async function editUser(
+  const editUser = (
     event: React.FormEvent<HTMLFormElement>,
     userId: string
-  ) {
+  ) => {
     event.preventDefault();
     const firstName = event.currentTarget.firstName.value;
     const lastName = event.currentTarget.lastName.value;
@@ -73,7 +79,7 @@ const UserView = ({ client, children }: UserViewType) => {
       })
     );
     dispatch(setFromUpdate({ firstName, lastName }));
-  }
+  };
 
   return (
     <>
@@ -119,24 +125,17 @@ const UserView = ({ client, children }: UserViewType) => {
               defaultValue={client.data!.lastName}
               name="lastName"
             />
-            <Button disabled={!isToggleForm} type="submit">
+            <Button
+              disabled={!isToggleForm || updateName.success}
+              type="submit"
+            >
               Go
             </Button>
           </InputGroup>
         </Form>
       </Row>
-      {updateName.success && (
-        <Row>
-          <Alert
-            variant="success"
-            onClose={() => dispatch(resetUpdateUser())}
-            dismissible
-          >
-            <h2>{updateName.message}</h2>
-          </Alert>
-        </Row>
-      )}
-      {reservations.data !== null && reservations.data.length > 0 && (
+      <UserUpdateFeedback patchUser={updateName} />
+      {reservations.data && reservations.data.length > 0 && (
         <>
           <h2>Your reservations</h2>
           {reservations.data.map((reservation) => (

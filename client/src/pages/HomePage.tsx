@@ -1,19 +1,18 @@
+import { AppDispatch } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, InputGroup, FormSelect } from "react-bootstrap";
-
-import { getProperties } from "../redux/reducers/properties";
-import PropertyView from "../components/PropertyView";
-import PropertyFilter from "../components/PropertyFilter";
 import {
   updatePage,
   updateDirection,
   updateSortCategory,
 } from "../redux/reducers/filterby";
+import PropertyView from "../components/PropertyView";
+import PropertyFilter from "../components/PropertyFilter";
+import { getProperties } from "../redux/reducers/properties";
+import { Row, InputGroup, FormSelect, Form } from "react-bootstrap";
 
-import mapCategory from "../utils/mapCategory";
-import { Form } from "react-bootstrap";
-import { AppDispatch } from "../redux/store";
 import { AppType } from "../types/types";
+import mapCamelCase from "../utils/mapCamelCase";
+import SearchFeedBack from "../components/SearchFeedBack";
 
 const HomePage = () => {
   const properties = useSelector((state: AppType) => state.properties);
@@ -76,7 +75,7 @@ const HomePage = () => {
               >
                 {["nightly rate", "rooms", "category", "location"].map(
                   (category: string) => {
-                    const optValue = mapCategory(category);
+                    const optValue = mapCamelCase(category);
                     return (
                       <option value={optValue} key={category}>
                         {category}
@@ -92,33 +91,7 @@ const HomePage = () => {
       {properties.data && properties.data.length > 0 && (
         <PropertyView properties={properties.data} />
       )}
-      {properties.data && properties.data.length === 0 && (
-        <Row>
-          <Col style={{ textAlign: "center" }}>
-            <div className="property">
-              <h3>No results found!</h3>
-            </div>
-          </Col>
-        </Row>
-      )}
-      {properties.loading && (
-        <Row>
-          <Col style={{ textAlign: "center" }}>
-            <div className="property">
-              <h2>Loading</h2>
-            </div>
-          </Col>
-        </Row>
-      )}
-      {properties.error && (
-        <Row>
-          <Col style={{ textAlign: "center" }}>
-            <div className="property">
-              <h3>Error fetching data</h3>{" "}
-            </div>
-          </Col>
-        </Row>
-      )}
+      <SearchFeedBack fetched={properties} />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { PropertyType, UpdateType } from "../../types/types";
+import { PropertyType, UpdatePropertyType } from "../../types/types";
 
 export const updateProperty = createAsyncThunk(
   "updateproperty",
@@ -21,10 +21,11 @@ export const updateProperty = createAsyncThunk(
   }
 );
 
-const initialState: UpdateType = {
+const initialState: UpdatePropertyType = {
   error: false,
   success: false,
   message: "",
+  data: null,
 };
 
 export const updateproperty = createSlice({
@@ -37,16 +38,19 @@ export const updateproperty = createSlice({
     builder
       .addCase(updateProperty.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
+          state.data = null;
           state.success = false;
           state.error = true;
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
+          state.data = action.payload.data;
           state.success = true;
           state.error = false;
           state.message = action.payload.message;
         }
       })
       .addCase(updateProperty.rejected, (state) => {
+        state.data = null;
         state.success = false;
         state.error = true;
         state.message = "there was a problem creating that property";

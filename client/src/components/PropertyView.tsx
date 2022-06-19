@@ -1,5 +1,5 @@
-import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 import { PropertyType } from "../types/types";
 
 const PropertyView = ({ properties }: { properties: PropertyType[] }) => {

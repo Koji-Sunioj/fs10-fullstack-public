@@ -7,9 +7,9 @@ export type AppType = {
   addOwner: CreateOwnerType;
   owner: FetchOwnerType;
   owners: FetchOwnersType;
-  createProperty: CreateOwnerType;
-  updateOwner: UpdateType;
-  updateProperty: UpdateType;
+  createProperty: CreatePropertyType;
+  updateOwner: UpdateOwnerType;
+  updateProperty: UpdatePropertyType;
   properties: FetchPropertiesQueryType;
   updateUser: UpdateType;
   deleteOwner: UpdateType;
@@ -28,6 +28,7 @@ export type UserViewType = {
 export type OwnerFormType = {
   properties: FetchPropertiesType;
   owner?: OwnerWithPropertiesType;
+  status: UpdateType;
   sendOwner: (owner: Omit<OwnerType, "_id">) => void;
 };
 
@@ -38,6 +39,16 @@ export type PropertyFormType = {
     owners: OwnerType[];
   };
   sendProperty: (property: Omit<PropertyType, "_id">) => void;
+  status: UpdateType;
+};
+
+export type CalendarType = {
+  decrementFocus: React.MouseEventHandler<HTMLButtonElement>;
+  incrementFocus: React.MouseEventHandler<HTMLButtonElement>;
+  bookedDates: string[];
+  disabled: boolean;
+  focusDay: moment.Moment;
+  setCheckIn: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type UpdateType = {
@@ -46,8 +57,29 @@ export type UpdateType = {
   error: boolean;
 };
 
+export type UpdateOwnerType = {
+  data: null | Partial<OwnerType>;
+  error: boolean;
+  success: boolean;
+  message: string;
+};
+
+export type UpdatePropertyType = {
+  data: null | Partial<PropertyType>;
+  error: boolean;
+  success: boolean;
+  message: string;
+};
+
+export type CreatePropertyType = {
+  data: null | Partial<PropertyType>;
+  error: boolean;
+  success: boolean;
+  message: string;
+};
+
 export type CreateOwnerType = {
-  data: null | OwnerType;
+  data: null | Partial<OwnerType>;
   error: boolean;
   success: boolean;
   message: string;

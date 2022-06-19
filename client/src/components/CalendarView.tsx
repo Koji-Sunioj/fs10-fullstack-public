@@ -1,16 +1,8 @@
-import { Button, Table } from "react-bootstrap";
 import moment from "moment";
-import calendarArray from "../utils/calendarArray";
-import useState from "react";
+import { Button, Table } from "react-bootstrap";
 
-type CalendarType = {
-  decrementFocus: React.MouseEventHandler<HTMLButtonElement>;
-  incrementFocus: React.MouseEventHandler<HTMLButtonElement>;
-  bookedDates: string[];
-  disabled: boolean;
-  focusDay: moment.Moment;
-  setCheckIn: React.Dispatch<React.SetStateAction<string>>;
-};
+import { CalendarType } from "../types/types";
+import calendarArray from "../utils/calendarArray";
 
 const CalendarView = ({
   decrementFocus,

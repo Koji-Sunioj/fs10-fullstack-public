@@ -38,7 +38,7 @@ export const properties = createSlice({
       })
       .addCase(getProperties.rejected, (state) => {
         state.loading = false;
-        state.data = null;
+        state.data = [];
         state.count = null;
         state.error = true;
       });

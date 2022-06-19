@@ -1,46 +1,43 @@
-import { Row, Alert, Col } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import OwnerForm from "../components/OwnerForm";
-import { getOwner } from "../redux/reducers/owner";
-import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { getAllProperties } from "../redux/reducers/allproperties";
-import { updateOwner } from "../redux/reducers/updateowner";
-import { Link } from "react-router-dom";
-import { resetUpdateOwner } from "../redux/reducers/updateowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { Row, Col } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
+import { useParams } from "react-router-dom";
+import { getOwner } from "../redux/reducers/owner";
+import { useSelector, useDispatch } from "react-redux";
+import { updateOwner } from "../redux/reducers/updateowner";
+import { resetUpdateOwner } from "../redux/reducers/updateowner";
+import { getAllProperties } from "../redux/reducers/allproperties";
+import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+
+import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
+import CrudOwnerFeedBack from "../components/CrudOwnerFeedback";
 
 const EditOwner = () => {
   const { ownerId } = useParams<string>();
   const dispatch = useDispatch<AppDispatch>();
-  const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: AppType) => state.client);
-  const properties = useSelector((state: AppType) => state.getAllProperties);
   const owner = useSelector((state: AppType) => state.owner);
+  const client = useSelector((state: AppType) => state.client);
+  const token = JSON.parse(localStorage.getItem("token") as string);
   const editOwner = useSelector((state: AppType) => state.updateOwner);
+  const properties = useSelector((state: AppType) => state.getAllProperties);
 
   useEffect(() => {
-    if (
-      client.valid === true &&
-      client.data !== null &&
-      client.data.isAdmin === true
-    ) {
+    if (client.valid && client.data && client.data.isAdmin) {
       dispatch(resetUpdateOwner());
       dispatch(getAllProperties());
       dispatch(getOwner(ownerId as string));
     }
-  }, [client]);
+  }, [client, ownerId, dispatch]);
 
-  async function sendOwner(owner: Omit<OwnerType, "_id">) {
+  const sendOwner = async (owner: Omit<OwnerType, "_id">) => {
     await dispatch(
       updateOwner({ token: token, ownerId: ownerId!, data: owner })
     );
     dispatch(toggleModifiedTrue());
-  }
+  };
 
-  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
+  const amIAdmin = client.valid && client.data && client.data.isAdmin;
 
   return (
     <>
@@ -51,21 +48,9 @@ const EditOwner = () => {
             sendOwner={sendOwner}
             properties={properties}
             owner={owner.data!}
+            status={editOwner}
           />
-          <Row style={{ textAlign: "center" }}>
-            {editOwner.success && (
-              <Alert variant="success">
-                <Link to={`/owner/${ownerId}`}>
-                  <h3>{editOwner.message}. click here to see the update.</h3>
-                </Link>
-              </Alert>
-            )}
-            {editOwner.error && (
-              <Alert variant="danger">
-                <h3>{editOwner.message}.</h3>
-              </Alert>
-            )}
-          </Row>
+          <CrudOwnerFeedBack status={editOwner} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

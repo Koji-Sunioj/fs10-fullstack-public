@@ -9,11 +9,9 @@ export const propertyrefresh = createSlice({
   initialState,
   reducers: {
     toggleModifiedTrue: (state) => {
-      console.log("modified true");
       state.modified = true;
     },
     toggleModifiedFalse: (state) => {
-      console.log("modified false");
       state.modified = false;
     },
   },
