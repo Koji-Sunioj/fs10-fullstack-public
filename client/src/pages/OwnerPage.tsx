@@ -5,8 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
-import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
+import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
 
 import { AppType } from "../types/types";
 
@@ -21,20 +22,17 @@ const OwnerPage = () => {
   const removeOwner = useSelector((state: AppType) => state.deleteOwner);
 
   useEffect(() => {
-    if (
-      owner.data === null ||
-      (owner.data && owner.data._id !== ownerId) ||
-      editOwner.success
-    ) {
+    if (owner.data === null || (owner.data && owner.data._id !== ownerId)) {
       dispatch(resetDeleteOwner());
       dispatch(resetUpdateOwner());
       dispatch(getOwner(ownerId as string));
     }
-  }, [ownerId, dispatch, editOwner.success, owner.data]);
+    dispatch(modifiedOwnerFalse());
+  }, [ownerId, dispatch, owner.data]);
 
   const kickOwner = async (ownerId: string) => {
     await dispatch(deleteOwner({ token: token, ownerId: ownerId }));
-    dispatch(toggleModifiedTrue());
+    dispatch(modifiedPropertyTrue({ from: "deleteOwner" }));
     setTimeout(() => {
       navigate("/");
     }, 1500);

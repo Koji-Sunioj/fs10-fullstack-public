@@ -15,7 +15,7 @@ import allproperties from "./reducers/allproperties";
 import createproperty from "./reducers/createproperty";
 import deleteproperty from "./reducers/deleteproperty";
 import updateproperty from "./reducers/updateproperty";
-import owner from "./reducers/owner";
+import owner, { getOwner } from "./reducers/owner";
 import createowner from "./reducers/createowner";
 import deleteowner from "./reducers/deleteowner";
 import updateowner from "./reducers/updateowner";
@@ -32,29 +32,41 @@ import {
 } from "./reducers/filterby";
 import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
-import { toggleModifiedTrue } from "./reducers/propertyrefresh";
+import { modifiedPropertyTrue } from "./reducers/propertyrefresh";
+import { modifiedOwnerTrue } from "./reducers/ownerrefresh";
 import { getProperty } from "./reducers/property";
-import { AppType } from "../types/types";
+import { AppType, UpdateType } from "../types/types";
 
-const propertyCrudMiddleWare = createListenerMiddleware();
-const propertiesCrudMiddlware = createListenerMiddleware();
+const propertiesModifiedMiddlware = createListenerMiddleware();
+const modifiedViewMiddleWare = createListenerMiddleware();
 
-propertyCrudMiddleWare.startListening({
-  matcher: isAnyOf(toggleModifiedTrue),
+modifiedViewMiddleWare.startListening({
+  matcher: isAnyOf(modifiedOwnerTrue, modifiedPropertyTrue),
   effect: (action, state) => {
     const afterState = state.getState() as AppType;
-    const property = afterState.property;
-    if (
-      property.data !== null &&
-      property.data !== undefined &&
-      "_id" in property.data
-    ) {
-      state.dispatch(getProperty(property.data._id!));
+    const target = action.payload.from as keyof AppType;
+    const updated = afterState[target] as UpdateType;
+    switch (action.type) {
+      case "propertyrefresh/modifiedPropertyTrue":
+        const property = afterState.property;
+        if (property.data && updated.success) {
+          state.dispatch(getProperty(property.data._id!));
+        }
+        if (target === "updateProperty") {
+          state.dispatch(crudRefresh());
+        }
+        break;
+      case "ownerrefresh/modifiedOwnerTrue":
+        const owner = afterState.owner;
+        if (owner.data && updated.success) {
+          state.dispatch(getOwner(owner.data._id!));
+        }
+        break;
     }
   },
 });
 
-propertiesCrudMiddlware.startListening({
+propertiesModifiedMiddlware.startListening({
   matcher: isAnyOf(
     updateSearch,
     updatePage,
@@ -97,8 +109,8 @@ export const store = configureStore({
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(
-      propertiesCrudMiddlware.middleware,
-      propertyCrudMiddleWare.middleware
+      propertiesModifiedMiddlware.middleware,
+      modifiedViewMiddleWare.middleware
     ),
 });
 

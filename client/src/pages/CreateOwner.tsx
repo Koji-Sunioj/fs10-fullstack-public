@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
 import { resetCreateOwner } from "../redux/reducers/createowner";
-import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 
 import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
@@ -27,7 +27,7 @@ const CreateOwner = () => {
 
   async function sendOwner(owner: Omit<OwnerType, "_id">) {
     await dispatch(createOwner({ token: token, data: owner }));
-    dispatch(toggleModifiedTrue());
+    dispatch(modifiedPropertyTrue({ from: "addOwner" }));
   }
 
   const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;

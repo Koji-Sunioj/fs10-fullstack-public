@@ -2,21 +2,24 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   modified: false,
+  from: null,
 };
 
 export const propertyrefresh = createSlice({
   name: "propertyrefresh",
   initialState,
   reducers: {
-    toggleModifiedTrue: (state) => {
+    modifiedPropertyTrue: (state, action) => {
       state.modified = true;
+      state.from = action.payload.from;
     },
-    toggleModifiedFalse: (state) => {
+    modifiedPropertyFalse: (state) => {
       state.modified = false;
+      state.from = null;
     },
   },
 });
 
-export const { toggleModifiedTrue, toggleModifiedFalse } =
+export const { modifiedPropertyTrue, modifiedPropertyFalse } =
   propertyrefresh.actions;
 export default propertyrefresh.reducer;

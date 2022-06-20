@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateOwner } from "../redux/reducers/updateowner";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { getAllProperties } from "../redux/reducers/allproperties";
+import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
+import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 
 import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
@@ -33,6 +35,8 @@ const EditOwner = () => {
     await dispatch(
       updateOwner({ token: token, ownerId: ownerId!, data: owner })
     );
+    dispatch(modifiedPropertyTrue({ from: "updateOwner" }));
+    dispatch(modifiedOwnerTrue({ from: "updateOwner" }));
   };
 
   const amIAdmin = client.valid && client.data && client.data.isAdmin;

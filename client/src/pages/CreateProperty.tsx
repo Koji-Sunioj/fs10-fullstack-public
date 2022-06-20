@@ -7,6 +7,7 @@ import { getOwners } from "../redux/reducers/getowners";
 import { crudRefresh } from "../redux/reducers/filterby";
 import { createProperty } from "../redux/reducers/createproperty";
 import { resetCreateProp } from "../redux/reducers/createproperty";
+import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 
 import PropertyForm from "../components/PropertyForm";
 import AdminActionFeedback from "../components/AdminActionFeedback";
@@ -27,6 +28,7 @@ const CreateProperty = () => {
 
   const sendProperty = async (property: Omit<PropertyType, "_id">) => {
     await dispatch(createProperty({ token: token, data: property }));
+    dispatch(modifiedOwnerTrue({ from: "createProperty" }));
     dispatch(crudRefresh());
   };
 

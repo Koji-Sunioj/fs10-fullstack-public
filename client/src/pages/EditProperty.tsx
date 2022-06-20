@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 import { AppDispatch } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
-import { crudRefresh } from "../redux/reducers/filterby";
 import { getProperty } from "../redux/reducers/property";
 import { updateProperty } from "../redux/reducers/updateproperty";
 import { resetUpdateProp } from "../redux/reducers/updateproperty";
-import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
+import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
+import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 
 import PropertyForm from "../components/PropertyForm";
 import { PropertyType, AppType } from "../types/types";
@@ -24,7 +24,7 @@ const EditProperty = () => {
   const token = JSON.parse(localStorage.getItem("token") as string);
 
   useEffect(() => {
-    if (client.valid && client.data !== null && client.data.isAdmin) {
+    if (client.valid && client.data && client.data.isAdmin) {
       dispatch(getOwners());
       dispatch(getProperty(String(propertyId)));
       dispatch(resetUpdateProp());
@@ -35,8 +35,8 @@ const EditProperty = () => {
     await dispatch(
       updateProperty({ token: token, data: property, propertyId: propertyId! })
     );
-    dispatch(toggleModifiedTrue());
-    dispatch(crudRefresh());
+    dispatch(modifiedPropertyTrue({ from: "updateProperty" }));
+    dispatch(modifiedOwnerTrue({ from: "updateProperty" }));
   }
 
   const amIAdmin = client.valid && client.data && client.data.isAdmin;

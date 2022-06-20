@@ -6,8 +6,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { crudRefresh } from "../redux/reducers/filterby";
 import { getProperty } from "../redux/reducers/property";
+import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 import { reservationView } from "../redux/reducers/resesrvationview";
-import { toggleModifiedFalse } from "../redux/reducers/propertyrefresh";
+import { modifiedPropertyFalse } from "../redux/reducers/propertyrefresh";
 import {
   Button,
   Row,
@@ -68,7 +69,7 @@ const PropertyPage = () => {
       window.scrollTo(0, 0);
       dispatch(resetDeleteReservation());
       dispatch(resetCreateReservation());
-      dispatch(toggleModifiedFalse());
+      dispatch(modifiedPropertyFalse());
       dispatch(resetDeleteProperty());
       dispatch(reservationView(propertyId!));
     }
@@ -129,6 +130,7 @@ const PropertyPage = () => {
   const adminDelete = async (propertyId: string) => {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
     dispatch(crudRefresh());
+    dispatch(modifiedOwnerTrue({ from: "deleteProperty" }));
     setTimeout(() => {
       navigate("/");
     }, 1500);
