@@ -12,7 +12,7 @@ import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 import PropertyForm from "../components/PropertyForm";
 import { PropertyType, AppType } from "../types/types";
-import CrudPropertyFeedback from "../components/CrudPropertyFeedback";
+import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,7 +52,7 @@ const EditProperty = () => {
             property={property.data!}
             status={patchProperty}
           />
-          <CrudPropertyFeedback status={patchProperty} />
+          <AdminActionFeedback status={patchProperty} uri={"property"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

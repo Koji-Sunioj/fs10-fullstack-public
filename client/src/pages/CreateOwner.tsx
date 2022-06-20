@@ -9,7 +9,7 @@ import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
-import CrudOwnerFeedBack from "../components/CrudOwnerFeedback";
+import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const CreateOwner = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,7 +42,7 @@ const CreateOwner = () => {
             properties={properties}
             status={addOwner}
           />
-          <CrudOwnerFeedBack status={addOwner} />
+          <AdminActionFeedback status={addOwner} uri={"owner"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

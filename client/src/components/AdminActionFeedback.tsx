@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { Row, Alert } from "react-bootstrap";
-import { CreatePropertyType } from "../types/types";
+import { CreatePropertyType, CreateOwnerType } from "../types/types";
 
-const CrudPropertyFeedback = ({ status }: { status: CreatePropertyType }) => {
+const AdminActionFeedback = ({
+  status,
+  uri,
+}: {
+  status: CreatePropertyType | CreateOwnerType;
+  uri: string;
+}) => {
   const shouldFeedback = status.success || status.error;
   return (
     <>
@@ -10,8 +16,8 @@ const CrudPropertyFeedback = ({ status }: { status: CreatePropertyType }) => {
         <Row style={{ textAlign: "center", padding: "0px" }}>
           <Alert variant={status.success ? "success" : "danger"}>
             {status.success ? (
-              <Link to={`/property/${status.data!._id}`}>
-                <h3>{status.message}. click here to see the listing.</h3>
+              <Link to={`/${uri}/${status.data!._id}`}>
+                <h3>{status.message}. click here to see the update.</h3>
               </Link>
             ) : (
               <h3>{status.message}.</h3>
@@ -23,4 +29,4 @@ const CrudPropertyFeedback = ({ status }: { status: CreatePropertyType }) => {
   );
 };
 
-export default CrudPropertyFeedback;
+export default AdminActionFeedback;

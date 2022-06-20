@@ -11,7 +11,7 @@ import { toggleModifiedTrue } from "../redux/reducers/propertyrefresh";
 
 import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
-import CrudOwnerFeedBack from "../components/CrudOwnerFeedback";
+import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const EditOwner = () => {
   const { ownerId } = useParams<string>();
@@ -50,7 +50,7 @@ const EditOwner = () => {
             owner={owner.data!}
             status={editOwner}
           />
-          <CrudOwnerFeedBack status={editOwner} />
+          <AdminActionFeedback status={editOwner} uri={"owner"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>

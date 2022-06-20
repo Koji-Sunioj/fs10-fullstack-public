@@ -9,7 +9,7 @@ import { createProperty } from "../redux/reducers/createproperty";
 import { resetCreateProp } from "../redux/reducers/createproperty";
 
 import PropertyForm from "../components/PropertyForm";
-import CrudPropertyFeedback from "../components/CrudPropertyFeedback";
+import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const CreateProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,7 +42,7 @@ const CreateProperty = () => {
             owners={owners}
             status={addProperty}
           />
-          <CrudPropertyFeedback status={addProperty} />
+          <AdminActionFeedback status={addProperty} uri={"property"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>
