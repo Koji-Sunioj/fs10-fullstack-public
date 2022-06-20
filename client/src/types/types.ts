@@ -18,6 +18,7 @@ export type AppType = {
   deleteProperty: UpdateType;
   reservationView: FetchReservationsType;
   myReservations: FetchReservationsType;
+  ownerModified: { modified: boolean };
 };
 
 export type UserViewType = {

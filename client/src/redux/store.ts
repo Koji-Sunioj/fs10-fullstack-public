@@ -20,6 +20,7 @@ import createowner from "./reducers/createowner";
 import deleteowner from "./reducers/deleteowner";
 import updateowner from "./reducers/updateowner";
 import propertyrefresh from "./reducers/propertyrefresh";
+import ownerrefresh from "./reducers/ownerrefresh";
 
 import {
   updateSearch,
@@ -33,7 +34,6 @@ import { isAnyOf } from "@reduxjs/toolkit";
 import { getProperties } from "./reducers/properties";
 import { toggleModifiedTrue } from "./reducers/propertyrefresh";
 import { getProperty } from "./reducers/property";
-
 import { AppType } from "../types/types";
 
 const propertyCrudMiddleWare = createListenerMiddleware();
@@ -92,6 +92,7 @@ export const store = configureStore({
     deleteOwner: deleteowner,
     updateOwner: updateowner,
     propertyModified: propertyrefresh,
+    ownerModified: ownerrefresh,
   },
 
   middleware: (getDefaultMiddleware) =>

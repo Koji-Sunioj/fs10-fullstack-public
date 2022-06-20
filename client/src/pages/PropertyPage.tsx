@@ -64,11 +64,6 @@ const PropertyPage = () => {
       (property.data && property.data._id !== propertyId)
     ) {
       dispatch(getProperty(propertyId!));
-    } else if (pullProperty.success) {
-      dispatch(crudRefresh());
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
     } else {
       window.scrollTo(0, 0);
       dispatch(resetDeleteReservation());
@@ -77,7 +72,7 @@ const PropertyPage = () => {
       dispatch(resetDeleteProperty());
       dispatch(reservationView(propertyId!));
     }
-  }, [propertyId, dispatch, property.data, pullProperty.success, navigate]);
+  }, [propertyId, dispatch, property.data, navigate]);
 
   const decrementCalendar = () => {
     const date = focusDay.clone();
@@ -131,8 +126,12 @@ const PropertyPage = () => {
     viewRes.data !== null &&
     viewRes.data.some((r) => r.userId === client.data!._id);
 
-  const adminDelete = (propertyId: string) => {
-    dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+  const adminDelete = async (propertyId: string) => {
+    await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+    dispatch(crudRefresh());
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
   };
 
   return (
