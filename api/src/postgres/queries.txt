@@ -1,0 +1,16 @@
+select property.title,location,first_name as host from property 
+join property_owner_bridge on
+property.property_id  = property_owner_bridge.property_id 
+join owner on
+owner.owner_id = property_owner_bridge.owner_id;
+
+select users.first_name,reservation_id,title,category,start_date,nights * nightly_rate as bill,owner.first_name as host from users
+join reservation on 
+reservation.user_id = users.user_id
+join property on
+reservation.property_id = property.property_id
+join property_owner_bridge on
+property.property_id  = property_owner_bridge.property_id
+join owner on
+property_owner_bridge.owner_id = owner.owner_id;
+
