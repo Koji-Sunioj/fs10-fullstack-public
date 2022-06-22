@@ -33,7 +33,6 @@ import { modifiedPropertyTrue } from "./reducers/propertyrefresh";
 import { modifiedOwnerTrue } from "./reducers/ownerrefresh";
 import { getProperty } from "./reducers/property";
 import { AppType, UpdateType } from "../types/types";
-import deleteproperty from "./reducers/deleteproperty";
 
 const propertiesModifiedMiddlware = createListenerMiddleware();
 const modifiedViewMiddleWare = createListenerMiddleware();
@@ -82,25 +81,24 @@ propertiesModifiedMiddlware.startListening({
 
 export const store = configureStore({
   reducer: {
+    client: createclient,
+    googleAuth: verifygoogle,
+    property: property,
+    owners: viewowners,
+    owner: owner,
     properties: properties,
     filterBy: filterby,
-    client: createclient,
-    createReservation: createreservation,
-    deleteReservation: deletereservation,
     reservationView: propertyreservations,
     myReservations: viewmyreservations,
-    googleAuth: verifygoogle,
-    updateUser: updateuser,
-    owners: viewowners,
-    deleteProperty: deleteproperty,
     getAllProperties: allproperties,
+    createReservation: createreservation,
+    deleteReservation: deletereservation,
+    updateUser: updateuser,
     addOwner: createowner,
-    owner: owner,
     deleteOwner: deleteowner,
     updateOwner: updateowner,
     propertyModified: propertyrefresh,
     ownerModified: ownerrefresh,
-    property: property,
   },
 
   middleware: (getDefaultMiddleware) =>

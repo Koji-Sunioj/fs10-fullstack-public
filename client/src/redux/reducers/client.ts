@@ -1,5 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ClientType } from "../../types/types";
+import { OwnerType } from "../../types/types";
+
+export const updateOwner = createAsyncThunk(
+  "updateowner2",
+  async (data: {
+    ownerId: string;
+    token: string;
+    data: Omit<OwnerType, "_id">;
+  }) => {
+    const url = "http://localhost:5000/api/v1/owners/" + data.ownerId;
+    return await await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data.data),
+      method: "PATCH",
+      mode: "cors",
+    }).then((resp) => resp.json());
+  }
+);
 
 export const verifyToken = createAsyncThunk("client", async (token: string) => {
   const url = "http://localhost:5000/api/v1/verifytoken/?retrieve=true";
