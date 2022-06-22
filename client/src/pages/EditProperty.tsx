@@ -4,21 +4,20 @@ import { useParams } from "react-router-dom";
 import { AppDispatch } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
-import { getProperty } from "../redux/reducers/property";
-import { updateProperty } from "../redux/reducers/updateproperty";
-import { resetUpdateProp } from "../redux/reducers/updateproperty";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
-import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
-
 import PropertyForm from "../components/PropertyForm";
 import { PropertyType, AppType } from "../types/types";
 import AdminActionFeedback from "../components/AdminActionFeedback";
+import {
+  getProperty,
+  updateProperty,
+  resetEdit,
+} from "../redux/reducers/property";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { propertyId } = useParams<string>();
   const client = useSelector((state: AppType) => state.client);
-  const patchProperty = useSelector((state: AppType) => state.updateProperty);
   const owners = useSelector((state: AppType) => state.owners);
   const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
@@ -27,7 +26,7 @@ const EditProperty = () => {
     if (client.valid && client.data && client.data.isAdmin) {
       dispatch(getOwners());
       dispatch(getProperty(String(propertyId)));
-      dispatch(resetUpdateProp());
+      dispatch(resetEdit());
     }
   }, [client, dispatch, propertyId]);
 
@@ -35,8 +34,7 @@ const EditProperty = () => {
     await dispatch(
       updateProperty({ token: token, data: property, propertyId: propertyId! })
     );
-    dispatch(modifiedPropertyTrue({ from: "updateProperty" }));
-    dispatch(modifiedOwnerTrue({ from: "updateProperty" }));
+    dispatch(modifiedOwnerTrue({ from: "property" }));
   }
 
   const amIAdmin = client.valid && client.data && client.data.isAdmin;
@@ -45,14 +43,13 @@ const EditProperty = () => {
       {amIAdmin ? (
         <>
           <h1>Edit property</h1>
-
           <PropertyForm
             sendProperty={sendProperty}
             owners={owners}
             property={property.data!}
-            status={patchProperty}
+            status={property.success}
           />
-          <AdminActionFeedback status={patchProperty} uri={"property"} />
+          <AdminActionFeedback status={property} uri={"property"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>
@@ -65,4 +62,5 @@ const EditProperty = () => {
   );
 };
 
+//<AdminActionFeedback status={patchProperty} uri={"property"} />
 export default EditProperty;

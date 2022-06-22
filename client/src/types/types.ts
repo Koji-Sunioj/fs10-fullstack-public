@@ -1,21 +1,18 @@
 export type AppType = {
   googleAuth: GoogleType;
   client: ClientType;
-  property: FetchPropertyType;
+  property: PropertyStateType;
   filterBy: FilterType;
   getAllProperties: FetchPropertiesType;
   addOwner: CreateOwnerType;
   owner: FetchOwnerType;
   owners: FetchOwnersType;
-  createProperty: CreatePropertyType;
   updateOwner: UpdateOwnerType;
-  updateProperty: UpdatePropertyType;
   properties: FetchPropertiesQueryType;
   updateUser: UpdateType;
   deleteOwner: UpdateType;
   createReservation: UpdateType & { loading: boolean };
   deleteReservation: UpdateType;
-  deleteProperty: UpdateType;
   reservationView: FetchReservationsType;
   myReservations: FetchReservationsType;
   ownerModified: { modified: boolean };
@@ -40,7 +37,7 @@ export type PropertyFormType = {
     owners: OwnerType[];
   };
   sendProperty: (property: Omit<PropertyType, "_id">) => void;
-  status: UpdateType;
+  status: boolean;
 };
 
 export type CalendarType = {
@@ -98,6 +95,20 @@ export type FetchReservationViewType = {
   error: boolean;
 };
 
+export type PropertyStateType = {
+  data:
+    | null
+    | (Omit<PropertyType, "owners"> & {
+        properties: PropertyType[];
+        owners: OwnerType[];
+      });
+  purged: boolean;
+  message: string;
+  success: boolean;
+  loading: boolean;
+  error: boolean;
+};
+
 export type FetchPropertyType = {
   data:
     | null
@@ -108,8 +119,6 @@ export type FetchPropertyType = {
   loading: boolean;
   error: boolean;
 };
-
-export type JoinFetchPropertyType = {};
 
 export type FetchPropertiesQueryType = {
   data: null | PropertyType[];

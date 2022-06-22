@@ -26,7 +26,7 @@ const PropertyForm = ({
     setRooms(Number(property!.rooms));
     setLocation(property!.location);
     setBuildDate(property!.buildDate.split("T")[0]);
-    setTheOwners(property!.owners.map((owner) => owner._id));
+    setTheOwners(property!.owners.map((owner: any) => owner._id));
   }, [property]);
 
   useEffect(() => {
@@ -170,7 +170,7 @@ const PropertyForm = ({
               disabled={owners.loading || owners.error}
             >
               {owners.data !== null &&
-                owners.data.map((owner) => (
+                owners.data.map((owner: any) => (
                   <option value={owner._id} key={owner._id}>
                     {owner.firstName} {owner.lastName}
                   </option>
@@ -180,7 +180,7 @@ const PropertyForm = ({
           <Button
             variant="primary"
             type="submit"
-            disabled={submittable || status.success}
+            disabled={submittable || status}
           >
             Submit
           </Button>

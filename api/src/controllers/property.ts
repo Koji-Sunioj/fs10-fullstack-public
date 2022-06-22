@@ -31,10 +31,12 @@ export const createProperty = async (
       })
     }
 
+    const property = await PropertyService.findProperty(created._id)
+
     res.json({
       status: 200,
       message: 'property successfully created',
-      data: created,
+      data: property[0],
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -87,6 +89,7 @@ export const deleteProperty = async (
     res.json({
       status: 200,
       message: `${toDelete!.title} was successfully deleted`,
+      data: toDelete,
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -105,7 +108,7 @@ export const findProperty = async (
   try {
     const { propertyId } = req.params
     const property = await PropertyService.findProperty(propertyId)
-    res.json({ status: 200, data: property })
+    res.json({ status: 200, data: property[0] })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -138,11 +141,12 @@ export const updateProperty = async (
         await OwnerService.addProperty(propertyId, owner)
       })
     }
-    const updated = await PropertyService.updateById(propertyId, newData)
+    await PropertyService.updateById(propertyId, newData)
+    const property = await PropertyService.findProperty(propertyId)
     res.json({
       status: 200,
       message: 'property successfully updated',
-      data: updated,
+      data: property[0],
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

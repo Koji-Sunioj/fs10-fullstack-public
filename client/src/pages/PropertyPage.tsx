@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { crudRefresh } from "../redux/reducers/filterby";
-import { getProperty } from "../redux/reducers/property";
+
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 import { reservationView } from "../redux/reducers/resesrvationview";
 import { modifiedPropertyFalse } from "../redux/reducers/propertyrefresh";
@@ -27,15 +27,17 @@ import {
   deleteReservation,
   resetDeleteReservation,
 } from "../redux/reducers/deletereservation";
-import {
-  resetDeleteProperty,
-  deleteProperty,
-} from "../redux/reducers/deleteproperty";
 
 import checkBooked from "../utils/checkBooked";
 import { ReservationType } from "../types/types";
 import CalendarView from "../components/CalendarView";
 import CrudPageFeedBack from "../components/CrudPageFeedBack";
+import {
+  getProperty,
+  deleteProperty,
+  flushProperty,
+  resetEdit,
+} from "../redux/reducers/property";
 
 const PropertyPage = () => {
   const navigate = useNavigate();
@@ -47,7 +49,6 @@ const PropertyPage = () => {
   const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
   const viewRes = useSelector((state: AppType) => state.reservationView);
-  const pullProperty = useSelector((state: AppType) => state.deleteProperty);
   const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
   const pushReservation = useSelector(
     (state: AppType) => state.createReservation
@@ -67,13 +68,13 @@ const PropertyPage = () => {
       dispatch(getProperty(propertyId!));
     } else {
       window.scrollTo(0, 0);
+      dispatch(resetEdit());
       dispatch(resetDeleteReservation());
       dispatch(resetCreateReservation());
       dispatch(modifiedPropertyFalse());
-      dispatch(resetDeleteProperty());
       dispatch(reservationView(propertyId!));
     }
-  }, [propertyId, dispatch, property.data, navigate]);
+  }, [propertyId, property.data, dispatch, navigate]);
 
   const decrementCalendar = () => {
     const date = focusDay.clone();
@@ -130,9 +131,10 @@ const PropertyPage = () => {
   const adminDelete = async (propertyId: string) => {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
     dispatch(crudRefresh());
-    dispatch(modifiedOwnerTrue({ from: "deleteProperty" }));
+    dispatch(modifiedOwnerTrue({ from: "property" }));
     setTimeout(() => {
       navigate("/");
+      dispatch(flushProperty());
     }, 1500);
   };
 
@@ -187,7 +189,7 @@ const PropertyPage = () => {
               <Row style={{ backgroundColor: "white" }}>
                 <h3>Your host(s)</h3>
                 <Stack direction="horizontal" gap={3}>
-                  {property.data.owners.map((owner) => (
+                  {property.data.owners.map((owner: any) => (
                     <div key={owner._id}>
                       <Link to={`/owner/${owner._id}`}>
                         <p>
@@ -304,9 +306,8 @@ const PropertyPage = () => {
               })}
             </>
           )}
-          <CrudPageFeedBack status={pushReservation} />
-          <CrudPageFeedBack status={pullReservation} />
-          <CrudPageFeedBack status={pullProperty} />
+
+          <CrudPageFeedBack status={property} />
         </>
       )}
     </>
@@ -314,3 +315,6 @@ const PropertyPage = () => {
 };
 
 export default PropertyPage;
+
+// <CrudPageFeedBack status={pushReservation} />
+// <CrudPageFeedBack status={pullReservation} />

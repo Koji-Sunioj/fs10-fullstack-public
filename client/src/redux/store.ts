@@ -5,22 +5,19 @@ import verifygoogle from "./reducers/verifygoogle";
 import updateuser from "./reducers/updateuser";
 import filterby from "./reducers/filterby";
 import properties from "./reducers/properties";
-import property from "./reducers/property";
 import createreservation from "./reducers/createreservation";
 import deletereservation from "./reducers/deletereservation";
 import propertyreservations from "./reducers/resesrvationview";
 import viewmyreservations from "./reducers/myreservations";
 import viewowners from "./reducers/getowners";
 import allproperties from "./reducers/allproperties";
-import createproperty from "./reducers/createproperty";
-import deleteproperty from "./reducers/deleteproperty";
-import updateproperty from "./reducers/updateproperty";
 import owner, { getOwner } from "./reducers/owner";
 import createowner from "./reducers/createowner";
 import deleteowner from "./reducers/deleteowner";
 import updateowner from "./reducers/updateowner";
 import propertyrefresh from "./reducers/propertyrefresh";
 import ownerrefresh from "./reducers/ownerrefresh";
+import property from "./reducers/property";
 
 import {
   updateSearch,
@@ -36,6 +33,7 @@ import { modifiedPropertyTrue } from "./reducers/propertyrefresh";
 import { modifiedOwnerTrue } from "./reducers/ownerrefresh";
 import { getProperty } from "./reducers/property";
 import { AppType, UpdateType } from "../types/types";
+import deleteproperty from "./reducers/deleteproperty";
 
 const propertiesModifiedMiddlware = createListenerMiddleware();
 const modifiedViewMiddleWare = createListenerMiddleware();
@@ -52,7 +50,7 @@ modifiedViewMiddleWare.startListening({
         if (property.data && updated.success) {
           state.dispatch(getProperty(property.data._id!));
         }
-        if (target === "updateProperty") {
+        if (target === "property") {
           state.dispatch(crudRefresh());
         }
         break;
@@ -86,7 +84,6 @@ export const store = configureStore({
   reducer: {
     properties: properties,
     filterBy: filterby,
-    property: property,
     client: createclient,
     createReservation: createreservation,
     deleteReservation: deletereservation,
@@ -95,9 +92,7 @@ export const store = configureStore({
     googleAuth: verifygoogle,
     updateUser: updateuser,
     owners: viewowners,
-    createProperty: createproperty,
     deleteProperty: deleteproperty,
-    updateProperty: updateproperty,
     getAllProperties: allproperties,
     addOwner: createowner,
     owner: owner,
@@ -105,6 +100,7 @@ export const store = configureStore({
     updateOwner: updateowner,
     propertyModified: propertyrefresh,
     ownerModified: ownerrefresh,
+    property: property,
   },
 
   middleware: (getDefaultMiddleware) =>

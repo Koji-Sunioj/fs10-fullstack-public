@@ -5,7 +5,11 @@ import { PropertyType, AppType } from "../types/types";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
 import { crudRefresh } from "../redux/reducers/filterby";
-import { createProperty } from "../redux/reducers/createproperty";
+import {
+  createProperty,
+  resetEdit,
+  flushProperty,
+} from "../redux/reducers/property";
 import { resetCreateProp } from "../redux/reducers/createproperty";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 
@@ -16,10 +20,12 @@ const CreateProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
   const client = useSelector((state: AppType) => state.client);
   const owners = useSelector((state: AppType) => state.owners);
+  const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const addProperty = useSelector((state: AppType) => state.createProperty);
 
   useEffect(() => {
+    dispatch(resetEdit());
+    dispatch(flushProperty());
     if (client.valid && client.data && client.data.isAdmin) {
       dispatch(getOwners());
     }
@@ -28,7 +34,7 @@ const CreateProperty = () => {
 
   const sendProperty = async (property: Omit<PropertyType, "_id">) => {
     await dispatch(createProperty({ token: token, data: property }));
-    dispatch(modifiedOwnerTrue({ from: "createProperty" }));
+    dispatch(modifiedOwnerTrue({ from: "property" }));
     dispatch(crudRefresh());
   };
 
@@ -42,9 +48,9 @@ const CreateProperty = () => {
           <PropertyForm
             sendProperty={sendProperty}
             owners={owners}
-            status={addProperty}
+            status={property.success}
           />
-          <AdminActionFeedback status={addProperty} uri={"property"} />
+          <AdminActionFeedback status={property} uri={"property"} />
         </>
       ) : (
         <Row style={{ textAlign: "center" }}>
