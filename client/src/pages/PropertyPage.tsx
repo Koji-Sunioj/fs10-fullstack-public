@@ -20,12 +20,9 @@ import {
 import moment from "moment";
 import {
   addReservation,
-  resetCreateReservation,
-} from "../redux/reducers/createreservation";
-import {
   removeReservation,
-  resetDeleteReservation,
-} from "../redux/reducers/deletereservation";
+} from "../redux/reducers/resesrvationview";
+
 import {
   getProperty,
   deleteProperty,
@@ -44,23 +41,13 @@ const PropertyPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
-
-  const {
-    client,
-    property,
-    reservationView,
-    createReservation,
-    deleteReservation,
-  } = useSelector((state: AppType) => state);
-
-  const token = JSON.parse(localStorage.getItem("token") as string);
-
-  const bookedDates =
-    reservationView.data === null ? [] : checkBooked(reservationView.data);
-
   const [focusDay, setFocusDate] = useState<moment.Moment>(
     moment().startOf("month")
   );
+  const { client, property, reservationView } = useSelector(
+    (state: AppType) => state
+  );
+  const token = JSON.parse(localStorage.getItem("token") as string);
 
   useEffect(() => {
     if (!property.data || (property.data && property.data._id !== propertyId)) {
@@ -68,8 +55,6 @@ const PropertyPage = () => {
     } else {
       window.scrollTo(0, 0);
       dispatch(resetEdit());
-      dispatch(resetDeleteReservation());
-      dispatch(resetCreateReservation());
       dispatch(modifiedPropertyFalse());
       dispatch(propertyReservations(propertyId!));
     }
@@ -84,21 +69,30 @@ const PropertyPage = () => {
     const date = focusDay.clone();
     setFocusDate(date.add(1, "month"));
   };
-  const update = async (
+
+  const appendReservation = async (
     event: React.FormEvent<HTMLFormElement>,
     id: string
   ) => {
     event.preventDefault();
-    dispatch(resetDeleteReservation());
     setCheckIn("");
     setNumNights("");
-    const formData: ReservationType = {
+    const formData: Partial<ReservationType> = {
       startDate: checkIn,
       nights: Number(nights),
       propertyId: id,
     };
-    await dispatch(addReservation({ token: token, data: formData }));
-    dispatch(propertyReservations(propertyId!));
+    dispatch(addReservation({ token: token, data: formData }));
+  };
+
+  const adminDelete = async (propertyId: string) => {
+    await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
+    dispatch(crudRefresh());
+    dispatch(modifiedOwnerTrue({ from: "property" }));
+    setTimeout(() => {
+      navigate("/");
+      dispatch(flushProperty());
+    }, 1500);
   };
 
   let requestedNights: string[] = [];
@@ -114,28 +108,14 @@ const PropertyPage = () => {
     }
   }
 
-  const delReservation = async (reservationId: string) => {
-    dispatch(resetCreateReservation());
-    await dispatch(
-      removeReservation({ token: token, reservationId: reservationId })
-    );
-    dispatch(propertyReservations(propertyId!));
-  };
+  const bookedDates = !reservationView.data
+    ? []
+    : checkBooked(reservationView.data);
 
   const shouldRenderRows =
-    client.valid === true &&
-    reservationView.data !== null &&
+    client.valid &&
+    reservationView.data &&
     reservationView.data.some((r) => r.userId === client.data!._id);
-
-  const adminDelete = async (propertyId: string) => {
-    await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
-    dispatch(crudRefresh());
-    dispatch(modifiedOwnerTrue({ from: "property" }));
-    setTimeout(() => {
-      navigate("/");
-      dispatch(flushProperty());
-    }, 1500);
-  };
 
   return (
     <>
@@ -217,7 +197,7 @@ const PropertyPage = () => {
             <Form
               style={{ padding: "0px" }}
               onSubmit={(e) => {
-                update(e, property.data!._id);
+                appendReservation(e, property.data!._id);
               }}
             >
               <fieldset
@@ -249,7 +229,9 @@ const PropertyPage = () => {
                       !/^\d{4}-\d{2}-\d{2}$/g.test(checkIn) ||
                       nights < 1 ||
                       nights > 7 ||
-                      requestedNights.some((r) => bookedDates.includes(r))
+                      requestedNights.some((night) =>
+                        bookedDates.includes(night)
+                      )
                     }
                     type="submit"
                   >
@@ -271,7 +253,7 @@ const PropertyPage = () => {
                     >
                       <Col>
                         <h3>id: {reservation._id}</h3>
-                        <p>check in: {reservation.startDate.split("T")[0]}</p>
+                        <p>check in: {reservation.startDate!.split("T")[0]}</p>
                         <p>
                           check out:{" "}
                           {moment(reservation.startDate)
@@ -293,7 +275,12 @@ const PropertyPage = () => {
                             moment().startOf("day")
                           }
                           onClick={() => {
-                            delReservation(reservation._id);
+                            dispatch(
+                              removeReservation({
+                                token: token,
+                                reservationId: reservation._id!,
+                              })
+                            );
                           }}
                         >
                           delete
@@ -305,9 +292,8 @@ const PropertyPage = () => {
               })}
             </>
           )}
-          <CrudPageFeedBack status={deleteReservation} />
-          <CrudPageFeedBack status={createReservation} />
           <CrudPageFeedBack status={property} />
+          <CrudPageFeedBack status={reservationView} />
         </>
       )}
     </>

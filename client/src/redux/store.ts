@@ -1,20 +1,17 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import client from "./reducers/client";
-import verifygoogle from "./reducers/verifygoogle";
 import filterby from "./reducers/filterby";
-import properties from "./reducers/properties";
-import createreservation from "./reducers/createreservation";
-import deletereservation from "./reducers/deletereservation";
-import propertyreservations from "./reducers/resesrvationview";
-import viewmyreservations from "./reducers/myreservations";
-import viewowners from "./reducers/getowners";
-import allproperties from "./reducers/allproperties";
-import owner, { getOwner } from "./reducers/owner";
-import propertyrefresh from "./reducers/propertyrefresh";
-import ownerrefresh from "./reducers/ownerrefresh";
 import property from "./reducers/property";
-
+import viewowners from "./reducers/getowners";
+import properties from "./reducers/properties";
+import owner, { getOwner } from "./reducers/owner";
+import verifygoogle from "./reducers/verifygoogle";
+import ownerrefresh from "./reducers/ownerrefresh";
+import allproperties from "./reducers/allproperties";
+import propertyrefresh from "./reducers/propertyrefresh";
+import viewmyreservations from "./reducers/myreservations";
+import propertyreservations from "./reducers/resesrvationview";
 import {
   updateSearch,
   updatePage,
@@ -41,7 +38,7 @@ modifiedViewMiddleWare.startListening({
     const updated = afterState[target] as UpdateType;
     switch (action.type) {
       case "propertyrefresh/modifiedPropertyTrue":
-        const property = afterState.property;
+        const { property } = afterState;
         if (property.data && updated.success) {
           state.dispatch(getProperty(property.data._id!));
         }
@@ -50,7 +47,7 @@ modifiedViewMiddleWare.startListening({
         }
         break;
       case "ownerrefresh/modifiedOwnerTrue":
-        const owner = afterState.owner;
+        const { owner } = afterState;
         if (owner.data && updated.success) {
           state.dispatch(getOwner(owner.data._id!));
         }
@@ -87,8 +84,6 @@ export const store = configureStore({
     reservationView: propertyreservations,
     myReservations: viewmyreservations,
     getAllProperties: allproperties,
-    createReservation: createreservation,
-    deleteReservation: deletereservation,
     propertyModified: propertyrefresh,
     ownerModified: ownerrefresh,
   },

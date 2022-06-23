@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
-import { resetEdit, removeOwner, flushOwner } from "../redux/reducers/owner";
+import { removeOwner, flushOwner } from "../redux/reducers/owner";
 import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
 
 import { AppType } from "../types/types";
@@ -15,7 +15,7 @@ const OwnerPage = () => {
   const { ownerId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const { client, owner, deleteOwner } = useSelector((state: AppType) => state);
+  const { client, owner } = useSelector((state: AppType) => state);
 
   useEffect(() => {
     if (owner.data === null || (owner.data && owner.data._id !== ownerId)) {

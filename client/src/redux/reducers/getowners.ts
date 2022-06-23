@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { FetchOwnersType } from "../../types/types";
+import { AllOwnersStateType } from "../../types/types";
 
 export const getOwners = createAsyncThunk("owners", async () => {
   const url = "http://localhost:5000/api/v1/owners/";
   return await fetch(url).then((resp) => resp.json());
 });
 
-const initialState: FetchOwnersType = {
+const initialState: AllOwnersStateType = {
   data: null,
   loading: false,
   error: false,

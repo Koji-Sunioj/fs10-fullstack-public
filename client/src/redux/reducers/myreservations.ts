@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { FetchReservationsType } from "../../types/types";
+import { MyReservationsStateType } from "../../types/types";
 
 export const getMyReservations = createAsyncThunk(
   "viewmyreservations",
@@ -9,7 +9,7 @@ export const getMyReservations = createAsyncThunk(
   }
 );
 
-export const initialState: FetchReservationsType = {
+export const initialState: MyReservationsStateType = {
   data: null,
   loading: false,
   error: false,
@@ -24,7 +24,6 @@ export const viewmyreservations = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getMyReservations.pending, (state) => {
-        state.data = [];
         state.loading = true;
         state.error = false;
       })

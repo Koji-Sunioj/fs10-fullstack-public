@@ -1,35 +1,33 @@
 export type AppType = {
-  googleAuth: GoogleType;
-  client: ClientType;
+  googleAuth: GoogleStateType;
+  client: ClientStateType;
   property: PropertyStateType;
-  filterBy: FilterType;
-  getAllProperties: FetchPropertiesType;
-  addOwner: CreateOwnerType;
+  filterBy: FilterStateType;
+  getAllProperties: AllPropertiesType;
   owner: OwnerStateTpe;
-  owners: FetchOwnersType;
-  properties: FetchPropertiesQueryType;
-  deleteOwner: UpdateType;
-  createReservation: UpdateType & { loading: boolean };
-  deleteReservation: UpdateType;
-  reservationView: FetchReservationsType;
-  myReservations: FetchReservationsType;
+  owners: AllOwnersStateType;
+  properties: PropertiesQueryStateType;
+  reservationView: ReservationViewStateType;
+  myReservations: MyReservationsStateType;
   ownerModified: { modified: boolean };
 };
 
+//types for functional components
+
 export type UserViewType = {
-  client: ClientType;
+  client: ClientStateType;
   children?: JSX.Element[];
 };
 
 export type OwnerFormType = {
-  properties: FetchPropertiesType;
+  properties: AllPropertiesType;
   owner?: OwnerWithPropertiesType;
   status: UpdateType;
   sendOwner: (owner: Omit<OwnerType, "_id">) => void;
 };
 
 export type PropertyFormType = {
-  owners: FetchOwnersType;
+  owners: AllOwnersStateType;
   property?: Omit<PropertyType, "owners"> & {
     properties: PropertyType[];
     owners: OwnerType[];
@@ -53,42 +51,23 @@ export type UpdateType = {
   error: boolean;
 };
 
-export type UpdateOwnerType = {
-  data: null | Partial<OwnerType>;
-  error: boolean;
-  success: boolean;
-  message: string;
+// state types
+
+export type GoogleStateType = {
+  jwt: null | string;
+  user: null | string;
 };
 
-export type UpdatePropertyType = {
-  data: null | Partial<PropertyType>;
-  error: boolean;
-  success: boolean;
-  message: string;
-};
-
-export type CreatePropertyType = {
-  data: null | Partial<PropertyType>;
-  error: boolean;
-  success: boolean;
-  message: string;
-};
-
-export type CreateOwnerType = {
-  data: null | Partial<OwnerType>;
-  error: boolean;
-  success: boolean;
-  message: string;
-};
-
-export type FetchPropertiesType = {
+export type AllPropertiesType = {
   data: null | PropertyType[];
   loading: boolean;
   error: boolean;
 };
 
-export type FetchReservationViewType = {
-  data: null | ReservationType[];
+export type ReservationViewStateType = {
+  data: null | Partial<ReservationType>[];
+  message: string;
+  success: boolean;
   loading: boolean;
   error: boolean;
 };
@@ -107,45 +86,23 @@ export type PropertyStateType = {
   error: boolean;
 };
 
-export type FetchPropertyType = {
-  data:
-    | null
-    | (Omit<PropertyType, "owners"> & {
-        properties: PropertyType[];
-        owners: OwnerType[];
-      });
-  loading: boolean;
-  error: boolean;
-};
-
-export type FetchPropertiesQueryType = {
+export type PropertiesQueryStateType = {
   data: null | PropertyType[];
   loading: boolean;
   error: boolean;
   count: null | number;
 };
 
-export type FetchReservationsType = {
+export type MyReservationsStateType = {
   data: null | MyReservationViewType[];
   loading: boolean;
   error: boolean;
 };
 
-export type FetchOwnerType = {
-  data: null | OwnerWithPropertiesType;
-  loading: boolean;
-  error: boolean;
-};
-
-export type FetchOwnersType = {
+export type AllOwnersStateType = {
   data: null | OwnerType[];
   loading: boolean;
   error: boolean;
-};
-
-export type GoogleType = {
-  jwt: null | string;
-  user: null | string;
 };
 
 export type OwnerStateTpe = {
@@ -157,7 +114,7 @@ export type OwnerStateTpe = {
   purged: boolean;
 };
 
-export type ClientType = {
+export type ClientStateType = {
   valid: null | boolean;
   data: null | UserType;
   message: string;
@@ -165,32 +122,28 @@ export type ClientType = {
   error: boolean;
 };
 
-export type FilterType = {
+export type FilterStateType = {
   searchBy: string;
   sortBy: string;
   direction: number;
   page: number;
 };
 
-export type ReservationType = {
-  startDate: string;
-  nights: number;
-  propertyId: string;
-};
+//types which have added or computed fields i.e. joins from other collections
 
-export type MyReservationViewType = {
-  _id: string;
-  startDate: string;
-  nights: number;
-  propertyId: string;
-  userId: string;
-  createdDate: string;
+export type MyReservationViewType = ReservationType & {
   property: PropertyType;
   checkOut: string;
   bill: number;
 };
 
-export type PropertyReservationView = {
+export type OwnerWithPropertiesType = Omit<OwnerType, "properties"> & {
+  properties: PropertyType[];
+};
+
+//types which exactly as they appear in mongodb
+
+export type ReservationType = {
   _id: string;
   startDate: string;
   nights: number;
@@ -203,15 +156,6 @@ export type OwnerType = {
   _id: string;
   languages: string[];
   properties: string[];
-  firstName: string;
-  lastName: string;
-  biography: string;
-};
-
-export type OwnerWithPropertiesType = {
-  _id: string;
-  languages: string[];
-  properties: PropertyType[];
   firstName: string;
   lastName: string;
   biography: string;

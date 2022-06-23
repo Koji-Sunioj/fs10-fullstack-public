@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ClientType } from "../../types/types";
+import { ClientStateType } from "../../types/types";
 import { UserType } from "../../types/types";
 
 export const patchUser = createAsyncThunk(
@@ -29,7 +29,7 @@ export const verifyToken = createAsyncThunk("client", async (token: string) => {
   }).then((resp) => resp.json());
 });
 
-const initialState: ClientType = {
+const initialState: ClientStateType = {
   valid: false,
   data: null,
   message: "",

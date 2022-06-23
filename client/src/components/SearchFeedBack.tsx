@@ -1,8 +1,8 @@
 import { Row, Col } from "react-bootstrap";
 
-import { FetchPropertiesQueryType } from "../types/types";
+import { PropertiesQueryStateType } from "../types/types";
 
-const SearchFeedBack = ({ fetched }: { fetched: FetchPropertiesQueryType }) => {
+const SearchFeedBack = ({ fetched }: { fetched: PropertiesQueryStateType }) => {
   const shouldRender =
     (fetched.data && fetched.data!.length === 0) ||
     fetched.loading ||

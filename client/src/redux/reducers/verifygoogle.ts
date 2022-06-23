@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { GoogleType } from "../../types/types";
+import { GoogleStateType } from "../../types/types";
 
 export const verifyGoogle = createAsyncThunk(
   "googleauth",
@@ -15,7 +15,7 @@ export const verifyGoogle = createAsyncThunk(
   }
 );
 
-const initialState: GoogleType = {
+const initialState: GoogleStateType = {
   jwt: null,
   user: null,
 };

@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ReservationType } from "../types/types";
 
-const checkBooked = (reservations: ReservationType[]) => {
+const checkBooked = (reservations: Partial<ReservationType>[]) => {
   let booked: string[] = [];
   reservations.forEach((res) => {
     const start = moment(res.startDate);

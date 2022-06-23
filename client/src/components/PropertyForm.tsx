@@ -166,7 +166,7 @@ const PropertyForm = ({
               disabled={owners.loading || owners.error}
             >
               {owners.data !== null &&
-                owners.data.map((owner: any) => (
+                owners.data.map((owner) => (
                   <option value={owner._id} key={owner._id}>
                     {owner.firstName} {owner.lastName}
                   </option>

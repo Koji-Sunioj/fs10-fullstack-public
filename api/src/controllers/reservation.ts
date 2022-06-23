@@ -35,14 +35,12 @@ export const findReservations = async (
         String(req.query.propertyId)
       )
       res.json({ status: 200, data: propertyReservations })
-      res.end()
     }
     if (userId) {
       const userReservations = await ReservationService.findbyUserID(
         String(req.query.userId)
       )
       res.json({ status: 200, data: userReservations })
-      res.end()
     }
     if (!req.query) {
       const reservations = await ReservationService.findAll()
@@ -83,7 +81,11 @@ export const deleteReservation = async (
   try {
     const { reservationId } = req.params
     const deleted = await ReservationService.deleteById(reservationId)
-    res.json({ status: 200, message: 'reservation deleted' })
+    res.json({
+      status: 200,
+      message: 'reservation deleted',
+      _id: reservationId,
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
