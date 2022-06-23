@@ -11,9 +11,9 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { AppType } from "../types/types";
 
 const NavBar = () => {
-  const googleAuth = useSelector((state: AppType) => state.googleAuth);
+  const { googleAuth, client } = useSelector((state: AppType) => state);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const client = useSelector((state: AppType) => state.client);
+
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

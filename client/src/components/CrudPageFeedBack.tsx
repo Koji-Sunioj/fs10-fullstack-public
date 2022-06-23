@@ -1,10 +1,11 @@
 import { Row, Alert } from "react-bootstrap";
+
 import { UpdateType } from "../types/types";
 
 const CrudPageFeedBack = ({
   status,
 }: {
-  status: UpdateType & { purged: boolean };
+  status: UpdateType & { purged?: boolean };
 }) => {
   const purgedOrUpdate = status.success || status.purged;
   return (

@@ -17,10 +17,8 @@ import {
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { propertyId } = useParams<string>();
-  const client = useSelector((state: AppType) => state.client);
-  const owners = useSelector((state: AppType) => state.owners);
-  const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
+  const { client, owners, property } = useSelector((state: AppType) => state);
 
   useEffect(() => {
     if (client.valid && client.data && client.data.isAdmin) {

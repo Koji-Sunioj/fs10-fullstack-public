@@ -6,7 +6,7 @@ import { AppType } from "../types/types";
 import UserView from "../components/UserView";
 
 const AdminPage = () => {
-  const client = useSelector((state: AppType) => state.client);
+  const { client } = useSelector((state: AppType) => state);
 
   return (
     <>

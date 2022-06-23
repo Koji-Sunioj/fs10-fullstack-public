@@ -6,7 +6,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
-import { deleteOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
+import { removeOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
 import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
 
 import { AppType } from "../types/types";
@@ -15,11 +15,8 @@ const OwnerPage = () => {
   const navigate = useNavigate();
   const { ownerId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const owner = useSelector((state: AppType) => state.owner);
-  const client = useSelector((state: AppType) => state.client);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const editOwner = useSelector((state: AppType) => state.updateOwner);
-  const removeOwner = useSelector((state: AppType) => state.deleteOwner);
+  const { client, owner, deleteOwner } = useSelector((state: AppType) => state);
 
   useEffect(() => {
     if (owner.data === null || (owner.data && owner.data._id !== ownerId)) {
@@ -31,7 +28,7 @@ const OwnerPage = () => {
   }, [ownerId, dispatch, owner.data]);
 
   const kickOwner = async (ownerId: string) => {
-    await dispatch(deleteOwner({ token: token, ownerId: ownerId }));
+    await dispatch(removeOwner({ token: token, ownerId: ownerId }));
     dispatch(modifiedPropertyTrue({ from: "deleteOwner" }));
     setTimeout(() => {
       navigate("/");
@@ -39,7 +36,7 @@ const OwnerPage = () => {
   };
 
   const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
-  const isRemoved = removeOwner.success || removeOwner.error;
+  const isRemoved = deleteOwner.success || deleteOwner.error;
   return (
     <>
       {owner.data !== null && (
@@ -71,8 +68,8 @@ const OwnerPage = () => {
           </Row>
           {isRemoved && (
             <Row style={{ textAlign: "center", padding: "0px" }}>
-              <Alert variant={removeOwner.success ? "success" : "danger"}>
-                <h3>{removeOwner.message}</h3>
+              <Alert variant={deleteOwner.success ? "success" : "danger"}>
+                <h3>{deleteOwner.message}</h3>
               </Alert>
             </Row>
           )}

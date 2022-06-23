@@ -15,9 +15,8 @@ import mapCamelCase from "../utils/mapCamelCase";
 import SearchFeedBack from "../components/SearchFeedBack";
 
 const HomePage = () => {
-  const properties = useSelector((state: AppType) => state.properties);
-  const filterBy = useSelector((state: AppType) => state.filterBy);
   const dispatch = useDispatch<AppDispatch>();
+  const { properties, filterBy } = useSelector((state: AppType) => state);
   const pages = [];
   for (let page = Math.ceil(properties.count! / 6); page !== 0; page--) {
     pages.push(page);

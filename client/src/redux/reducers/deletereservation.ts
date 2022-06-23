@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { UpdateType } from "../../types/types";
 
-export const deleteReservation = createAsyncThunk(
-  "deletereservation",
+export const removeReservation = createAsyncThunk(
+  "removereservation",
   async (data: { token: string; reservationId: string }) => {
     const url =
       "http://localhost:5000/api/v1/reservations/" + data.reservationId;
@@ -30,7 +30,7 @@ export const deletereservation = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(deleteReservation.fulfilled, (state, action) => {
+      .addCase(removeReservation.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.error = true;
           state.success = false;
@@ -41,7 +41,7 @@ export const deletereservation = createSlice({
           state.message = action.payload.message;
         }
       })
-      .addCase(deleteReservation.rejected, (state, action) => {
+      .addCase(removeReservation.rejected, (state, action) => {
         state.error = true;
         state.success = false;
         state.message = "error processing request";

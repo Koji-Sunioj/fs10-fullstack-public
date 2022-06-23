@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllProperties } from "../redux/reducers/allproperties";
+import { allProperties } from "../redux/reducers/allproperties";
 import { createOwner } from "../redux/reducers/createowner";
 import { resetCreateOwner } from "../redux/reducers/createowner";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
@@ -13,14 +13,14 @@ import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const CreateOwner = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const client = useSelector((state: AppType) => state.client);
-  const addOwner = useSelector((state: AppType) => state.addOwner);
+  const { client, addOwner, getAllProperties } = useSelector(
+    (state: AppType) => state
+  );
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const properties = useSelector((state: AppType) => state.getAllProperties);
 
   useEffect(() => {
     if (client.valid && client.data !== null && client.data.isAdmin) {
-      dispatch(getAllProperties());
+      dispatch(allProperties());
     }
     dispatch(resetCreateOwner());
   }, [client, dispatch]);
@@ -39,7 +39,7 @@ const CreateOwner = () => {
           <h1>Create owner</h1>
           <OwnerForm
             sendOwner={sendOwner}
-            properties={properties}
+            properties={getAllProperties}
             status={addOwner}
           />
           <AdminActionFeedback status={addOwner} uri={"owner"} />

@@ -5,9 +5,8 @@ import { useParams } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { crudRefresh } from "../redux/reducers/filterby";
-
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
-import { reservationView } from "../redux/reducers/resesrvationview";
+import { propertyReservations } from "../redux/reducers/resesrvationview";
 import { modifiedPropertyFalse } from "../redux/reducers/propertyrefresh";
 import {
   Button,
@@ -20,18 +19,13 @@ import {
 } from "react-bootstrap";
 import moment from "moment";
 import {
-  createReservation,
+  addReservation,
   resetCreateReservation,
 } from "../redux/reducers/createreservation";
 import {
-  deleteReservation,
+  removeReservation,
   resetDeleteReservation,
 } from "../redux/reducers/deletereservation";
-
-import checkBooked from "../utils/checkBooked";
-import { ReservationType } from "../types/types";
-import CalendarView from "../components/CalendarView";
-import CrudPageFeedBack from "../components/CrudPageFeedBack";
 import {
   getProperty,
   deleteProperty,
@@ -39,23 +33,31 @@ import {
   resetEdit,
 } from "../redux/reducers/property";
 
+import checkBooked from "../utils/checkBooked";
+import { ReservationType } from "../types/types";
+import CalendarView from "../components/CalendarView";
+import CrudPageFeedBack from "../components/CrudPageFeedBack";
+
 const PropertyPage = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams<string>();
   const dispatch = useDispatch<AppDispatch>();
   const [checkIn, setCheckIn] = useState<string>("");
   const [nights, setNumNights] = useState<string | number>("");
-  const client = useSelector((state: AppType) => state.client);
-  const property = useSelector((state: AppType) => state.property);
+
+  const {
+    client,
+    property,
+    reservationView,
+    createReservation,
+    deleteReservation,
+  } = useSelector((state: AppType) => state);
+
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const viewRes = useSelector((state: AppType) => state.reservationView);
-  const bookedDates = viewRes.data === null ? [] : checkBooked(viewRes.data);
-  const pushReservation = useSelector(
-    (state: AppType) => state.createReservation
-  );
-  const pullReservation = useSelector(
-    (state: AppType) => state.deleteReservation
-  );
+
+  const bookedDates =
+    reservationView.data === null ? [] : checkBooked(reservationView.data);
+
   const [focusDay, setFocusDate] = useState<moment.Moment>(
     moment().startOf("month")
   );
@@ -72,7 +74,7 @@ const PropertyPage = () => {
       dispatch(resetDeleteReservation());
       dispatch(resetCreateReservation());
       dispatch(modifiedPropertyFalse());
-      dispatch(reservationView(propertyId!));
+      dispatch(propertyReservations(propertyId!));
     }
   }, [propertyId, property.data, dispatch, navigate]);
 
@@ -98,8 +100,8 @@ const PropertyPage = () => {
       nights: Number(nights),
       propertyId: id,
     };
-    await dispatch(createReservation({ token: token, data: formData }));
-    dispatch(reservationView(propertyId!));
+    await dispatch(addReservation({ token: token, data: formData }));
+    dispatch(propertyReservations(propertyId!));
   };
 
   let requestedNights: string[] = [];
@@ -115,18 +117,18 @@ const PropertyPage = () => {
     }
   }
 
-  const removeReservation = async (reservationId: string) => {
+  const delReservation = async (reservationId: string) => {
     dispatch(resetCreateReservation());
     await dispatch(
-      deleteReservation({ token: token, reservationId: reservationId })
+      removeReservation({ token: token, reservationId: reservationId })
     );
-    dispatch(reservationView(propertyId!));
+    dispatch(propertyReservations(propertyId!));
   };
 
   const shouldRenderRows =
     client.valid === true &&
-    viewRes.data !== null &&
-    viewRes.data.some((r) => r.userId === client.data!._id);
+    reservationView.data !== null &&
+    reservationView.data.some((r) => r.userId === client.data!._id);
 
   const adminDelete = async (propertyId: string) => {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
@@ -263,7 +265,7 @@ const PropertyPage = () => {
           {shouldRenderRows && (
             <>
               <h2>Your reservations</h2>
-              {viewRes.data!.map((reservation) => {
+              {reservationView.data!.map((reservation) => {
                 return (
                   reservation.userId === client.data!._id && (
                     <Row
@@ -294,7 +296,7 @@ const PropertyPage = () => {
                             moment().startOf("day")
                           }
                           onClick={() => {
-                            removeReservation(reservation._id);
+                            delReservation(reservation._id);
                           }}
                         >
                           delete
@@ -306,7 +308,8 @@ const PropertyPage = () => {
               })}
             </>
           )}
-
+          <CrudPageFeedBack status={deleteReservation} />
+          <CrudPageFeedBack status={createReservation} />
           <CrudPageFeedBack status={property} />
         </>
       )}
@@ -315,6 +318,3 @@ const PropertyPage = () => {
 };
 
 export default PropertyPage;
-
-// <CrudPageFeedBack status={pushReservation} />
-// <CrudPageFeedBack status={pullReservation} />

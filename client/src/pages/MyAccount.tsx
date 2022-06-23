@@ -5,7 +5,7 @@ import { AppType } from "../types/types";
 import UserView from "../components/UserView";
 
 const MyAccount = () => {
-  const client = useSelector((state: AppType) => state.client);
+  const { client } = useSelector((state: AppType) => state);
 
   return (
     <>

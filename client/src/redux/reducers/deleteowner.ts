@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { UpdateType } from "../../types/types";
 
-export const deleteOwner = createAsyncThunk(
-  "deleteowner",
+export const removeOwner = createAsyncThunk(
+  "removeowner",
   async (data: { token: string; ownerId: string }) => {
     const url = "http://localhost:5000/api/v1/owners/" + data.ownerId;
     return await await fetch(url, {
@@ -29,7 +29,7 @@ export const deleteowner = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(deleteOwner.fulfilled, (state, action) => {
+      .addCase(removeOwner.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.error = true;
           state.success = false;
@@ -40,7 +40,7 @@ export const deleteowner = createSlice({
           state.message = action.payload.message;
         }
       })
-      .addCase(deleteOwner.rejected, (state) => {
+      .addCase(removeOwner.rejected, (state) => {
         state.error = true;
         state.success = false;
         state.message = "there was a problem deleting that owner";

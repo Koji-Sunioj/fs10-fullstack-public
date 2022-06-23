@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { OwnerType, OwnerFormType } from "../types/types";
 import { Row, Form, Button, Stack } from "react-bootstrap";
 
+import mapOptions from "../utils/mapOptions";
+
 const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -96,7 +98,6 @@ const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Languages</Form.Label>
-
             <Form.Control
               placeholder="English... Swahili... "
               type="search"
@@ -143,15 +144,7 @@ const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
               name="properties"
               value={theProperties}
               onChange={(event) => {
-                setTheProperties(
-                  Array.from(
-                    event.currentTarget as HTMLSelectElement["options"]
-                  )
-                    .filter((option) => {
-                      return option.selected === true;
-                    })
-                    .map((owner) => owner.value)
-                );
+                mapOptions(event.currentTarget, setTheProperties);
               }}
             >
               {properties.data !== null &&

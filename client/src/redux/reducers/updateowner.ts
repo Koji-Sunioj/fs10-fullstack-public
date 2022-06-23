@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { OwnerType, UpdateOwnerType } from "../../types/types";
 
-export const updateOwner = createAsyncThunk(
+export const patchOwner = createAsyncThunk(
   "updateowner",
   async (data: {
     ownerId: string;
@@ -36,7 +36,7 @@ export const updateproperty = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(updateOwner.fulfilled, (state, action) => {
+      .addCase(patchOwner.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.success = false;
           state.error = true;
@@ -49,7 +49,7 @@ export const updateproperty = createSlice({
           state.data = action.payload.data;
         }
       })
-      .addCase(updateOwner.rejected, (state) => {
+      .addCase(patchOwner.rejected, (state) => {
         state.success = false;
         state.error = true;
         state.message = "there was a problem updating that owner";

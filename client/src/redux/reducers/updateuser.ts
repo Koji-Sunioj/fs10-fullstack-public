@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { UpdateType, UserType } from "../../types/types";
 
-export const updateUser = createAsyncThunk(
+export const patchUser = createAsyncThunk(
   "updateuser",
   async (data: { token: string; userId: string; data: Partial<UserType> }) => {
     const url = "http://localhost:5000/api/v1/users/" + data.userId;
@@ -31,7 +31,7 @@ export const updateuser = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(patchUser.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.error = true;
           state.success = false;
@@ -42,10 +42,10 @@ export const updateuser = createSlice({
           state.message = action.payload.message;
         }
       })
-      .addCase(updateUser.pending, (state) => {
+      .addCase(patchUser.pending, (state) => {
         return { ...state };
       })
-      .addCase(updateUser.rejected, (state) => {
+      .addCase(patchUser.rejected, (state) => {
         state.error = true;
         state.success = false;
         state.message = "there was a problem updating your details";

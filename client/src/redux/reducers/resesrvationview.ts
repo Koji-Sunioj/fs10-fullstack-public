@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { FetchReservationViewType } from "../../types/types";
 
-export const reservationView = createAsyncThunk(
-  "reservationview",
+export const propertyReservations = createAsyncThunk(
+  "propertyreservations",
   async (propertyId: string) => {
     const url =
       "http://localhost:5000/api/v1/reservations/?propertyId=" + propertyId;
@@ -17,18 +17,18 @@ const initialState: FetchReservationViewType = {
 };
 
 export const propertyreservations = createSlice({
-  name: "viewreservations",
+  name: "propertyreservations",
   initialState,
   reducers: {
     resetResView: () => initialState,
   },
   extraReducers(builder) {
     builder
-      .addCase(reservationView.pending, (state) => {
+      .addCase(propertyReservations.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(reservationView.fulfilled, (state, action) => {
+      .addCase(propertyReservations.fulfilled, (state, action) => {
         if (action.payload.status === 403) {
           state.loading = false;
           state.error = true;
@@ -38,7 +38,7 @@ export const propertyreservations = createSlice({
           state.error = false;
         }
       })
-      .addCase(reservationView.rejected, (state) => {
+      .addCase(propertyReservations.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });

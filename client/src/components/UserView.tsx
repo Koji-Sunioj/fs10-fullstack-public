@@ -14,7 +14,7 @@ import { resetClient } from "../redux/reducers/client";
 import { AppType, UserViewType } from "../types/types";
 import { setFromUpdate } from "../redux/reducers/client";
 import { resetFilter } from "../redux/reducers/filterby";
-import { updateUser } from "../redux/reducers/updateuser";
+import { patchUser } from "../redux/reducers/updateuser";
 import { resetAuth } from "../redux/reducers/verifygoogle";
 import { resetUpdateUser } from "../redux/reducers/updateuser";
 import { getMyReservations } from "../redux/reducers/myreservations";
@@ -25,23 +25,18 @@ import UserUpdateFeedback from "./UserUpdateFeedback";
 
 const UserView = ({ client, children }: UserViewType) => {
   const navigate = useNavigate();
-  const pushReservation = useSelector(
-    (state: AppType) => state.createReservation
-  );
-  const pullReservation = useSelector(
-    (state: AppType) => state.deleteReservation
-  );
+  const { deleteReservation, createReservation, updateUser, myReservations } =
+    useSelector((state: AppType) => state);
+
   const dispatch = useDispatch<AppDispatch>();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
-  const updateName = useSelector((state: AppType) => state.updateUser);
-  const reservations = useSelector((state: AppType) => state.myReservations);
 
   useEffect(() => {
     if (
-      (client.valid && !reservations.data) ||
-      pushReservation.success ||
-      pullReservation.success
+      (client.valid && !myReservations.data) ||
+      createReservation.success ||
+      deleteReservation.success
     ) {
       dispatch(getMyReservations(client.data!._id));
       dispatch(resetCreateReservation());
@@ -51,9 +46,9 @@ const UserView = ({ client, children }: UserViewType) => {
   }, [
     client,
     dispatch,
-    reservations.data,
-    pushReservation.success,
-    pullReservation.success,
+    myReservations.data,
+    createReservation.success,
+    deleteReservation.success,
   ]);
 
   const logout = () => {
@@ -72,7 +67,7 @@ const UserView = ({ client, children }: UserViewType) => {
     const firstName = event.currentTarget.firstName.value;
     const lastName = event.currentTarget.lastName.value;
     dispatch(
-      updateUser({
+      patchUser({
         token: token,
         userId: userId,
         data: { firstName: firstName, lastName: lastName },
@@ -126,7 +121,7 @@ const UserView = ({ client, children }: UserViewType) => {
               name="lastName"
             />
             <Button
-              disabled={!isToggleForm || updateName.success}
+              disabled={!isToggleForm || updateUser.success}
               type="submit"
             >
               Go
@@ -134,11 +129,11 @@ const UserView = ({ client, children }: UserViewType) => {
           </InputGroup>
         </Form>
       </Row>
-      <UserUpdateFeedback patchUser={updateName} />
-      {reservations.data && reservations.data.length > 0 && (
+      <UserUpdateFeedback patchUser={updateUser} />
+      {myReservations.data && myReservations.data.length > 0 && (
         <>
           <h2>Your reservations</h2>
-          {reservations.data.map((reservation) => (
+          {myReservations.data.map((reservation) => (
             <Row style={{ backgroundColor: "white" }} key={reservation._id}>
               <Link to={`/property/${reservation.property._id}`}>
                 <h3>

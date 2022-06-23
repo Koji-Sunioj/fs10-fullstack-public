@@ -30,9 +30,7 @@ export const createProperty = async (
         await OwnerService.addProperty(newData._id, owner)
       })
     }
-
     const property = await PropertyService.findProperty(created._id)
-
     res.json({
       status: 200,
       message: 'property successfully created',

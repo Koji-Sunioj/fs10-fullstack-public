@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ReservationType, UpdateType } from "../../types/types";
 
-export const createReservation = createAsyncThunk(
-  "reservation",
+export const addReservation = createAsyncThunk(
+  "addreservation",
   async (data: { token: string; data: ReservationType }) => {
     const url = "http://localhost:5000/api/v1/reservations/";
     return await await fetch(url, {
@@ -31,12 +31,12 @@ export const createreservation = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(createReservation.pending, (state, action) => {
+      .addCase(addReservation.pending, (state, action) => {
         state.success = false;
         state.loading = true;
         state.error = false;
       })
-      .addCase(createReservation.fulfilled, (state, action) => {
+      .addCase(addReservation.fulfilled, (state, action) => {
         if (action.payload.status !== 200) {
           state.success = false;
           state.loading = false;
@@ -52,7 +52,7 @@ export const createreservation = createSlice({
           } on for ${data.nights} nights`;
         }
       })
-      .addCase(createReservation.rejected, (state) => {
+      .addCase(addReservation.rejected, (state) => {
         state.success = false;
         state.loading = false;
         state.error = true;

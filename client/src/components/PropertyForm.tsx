@@ -1,6 +1,8 @@
 import moment from "moment";
 import { Row, Form, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
+
+import mapOptions from "../utils/mapOptions";
 import { PropertyType, PropertyFormType } from "../types/types";
 
 const PropertyForm = ({
@@ -157,13 +159,7 @@ const PropertyForm = ({
             <Form.Select
               value={theOwners}
               onChange={(event) => {
-                setTheOwners(
-                  Array.from(event.target as HTMLSelectElement["options"])
-                    .filter((option) => {
-                      return option.selected === true;
-                    })
-                    .map((owner) => owner.value)
-                );
+                mapOptions(event.currentTarget, setTheOwners);
               }}
               name="owners"
               multiple

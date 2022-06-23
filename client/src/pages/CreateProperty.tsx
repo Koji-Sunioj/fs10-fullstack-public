@@ -10,7 +10,6 @@ import {
   resetEdit,
   flushProperty,
 } from "../redux/reducers/property";
-import { resetCreateProp } from "../redux/reducers/createproperty";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 
 import PropertyForm from "../components/PropertyForm";
@@ -18,10 +17,8 @@ import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const CreateProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const client = useSelector((state: AppType) => state.client);
-  const owners = useSelector((state: AppType) => state.owners);
-  const property = useSelector((state: AppType) => state.property);
   const token = JSON.parse(localStorage.getItem("token") as string);
+  const { client, owners, property } = useSelector((state: AppType) => state);
 
   useEffect(() => {
     dispatch(resetEdit());
@@ -29,7 +26,6 @@ const CreateProperty = () => {
     if (client.valid && client.data && client.data.isAdmin) {
       dispatch(getOwners());
     }
-    dispatch(resetCreateProp());
   }, [client, dispatch]);
 
   const sendProperty = async (property: Omit<PropertyType, "_id">) => {

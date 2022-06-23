@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Row, Alert } from "react-bootstrap";
+
 import { PropertyStateType, CreateOwnerType } from "../types/types";
 
 const AdminActionFeedback = ({
