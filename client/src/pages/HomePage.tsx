@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { AppDispatch } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,9 +24,11 @@ const HomePage = () => {
   }
   const pointer = { ascending: -1, descending: 1 };
 
-  if (properties.data === null) {
-    dispatch(getProperties(filterBy));
-  }
+  useEffect(() => {
+    if (properties.data === null) {
+      dispatch(getProperties(filterBy));
+    }
+  }, [properties]);
 
   return (
     <>

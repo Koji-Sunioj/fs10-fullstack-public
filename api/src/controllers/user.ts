@@ -100,7 +100,11 @@ export const updateUser = async (
       lastName: req.body.lastName,
     }
     const updated = await UserService.updateById(userId, newData)
-    res.json({ status: 200, message: 'user successfully updated' })
+    res.json({
+      status: 200,
+      message: 'user successfully updated',
+      data: updated,
+    })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

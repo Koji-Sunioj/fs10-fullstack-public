@@ -28,7 +28,7 @@ const PropertyForm = ({
     setRooms(Number(property!.rooms));
     setLocation(property!.location);
     setBuildDate(property!.buildDate.split("T")[0]);
-    setTheOwners(property!.owners.map((owner: any) => owner._id));
+    setTheOwners(property!.owners.map((owner) => owner._id));
   }, [property]);
 
   useEffect(() => {

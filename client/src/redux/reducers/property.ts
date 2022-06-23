@@ -83,6 +83,8 @@ export const property = createSlice({
         state.loading = true;
         state.error = false;
         state.message = "";
+        state.purged = false;
+        state.success = false;
       })
       .addCase(getProperty.fulfilled, (state, action) => {
         if (action.payload.data.length === 0) {

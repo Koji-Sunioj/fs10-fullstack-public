@@ -44,6 +44,7 @@ export const createreservation = createSlice({
           state.message = action.payload.message;
         } else if (action.payload.status === 200) {
           const { data } = action.payload;
+          console.log(data);
           state.success = true;
           state.loading = false;
           state.error = false;

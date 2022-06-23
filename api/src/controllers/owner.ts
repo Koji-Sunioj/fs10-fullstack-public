@@ -6,6 +6,11 @@ import OwnerService from '../services/owner'
 import { BadRequestError } from '../helpers/apiError'
 import PropertyService from '../services/property'
 
+/*mongdodb returns an aggregate (array) in order to join data 
+from other collections for viewing on the owner page. hence, 
+create, update, and find all index the first value in the array returned
+from mongodb when focusing on one owner object*/
+
 export const createOwner = async (
   req: Request,
   res: Response,
@@ -20,9 +25,10 @@ export const createOwner = async (
         await PropertyService.addOwner(property, newData._id)
       })
     }
+    const owner = await OwnerService.findById(created._id)
     res.json({
       status: 200,
-      data: created,
+      data: owner[0],
       message: 'owner successfully created',
     })
   } catch (error) {
@@ -59,7 +65,8 @@ export const findOwner = async (
   try {
     const { ownerId } = req.params
     const owner = await OwnerService.findById(ownerId)
-    res.json({ status: 200, data: owner })
+    console.log(owner)
+    res.json({ status: 200, data: owner[0] })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -111,11 +118,12 @@ export const updateOwner = async (
         await PropertyService.addOwner(property, ownerId)
       })
     }
-    const updated = await OwnerService.updateById(ownerId, newData)
+    await OwnerService.updateById(ownerId, newData)
+    const owner = await OwnerService.findById(ownerId)
     res.json({
       status: 200,
       message: 'owner successfully updated',
-      data: updated,
+      data: owner[0],
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

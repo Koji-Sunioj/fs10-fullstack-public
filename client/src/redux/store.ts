@@ -1,8 +1,7 @@
 import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import createclient from "./reducers/client";
+import client from "./reducers/client";
 import verifygoogle from "./reducers/verifygoogle";
-import updateuser from "./reducers/updateuser";
 import filterby from "./reducers/filterby";
 import properties from "./reducers/properties";
 import createreservation from "./reducers/createreservation";
@@ -12,9 +11,6 @@ import viewmyreservations from "./reducers/myreservations";
 import viewowners from "./reducers/getowners";
 import allproperties from "./reducers/allproperties";
 import owner, { getOwner } from "./reducers/owner";
-import createowner from "./reducers/createowner";
-import deleteowner from "./reducers/deleteowner";
-import updateowner from "./reducers/updateowner";
 import propertyrefresh from "./reducers/propertyrefresh";
 import ownerrefresh from "./reducers/ownerrefresh";
 import property from "./reducers/property";
@@ -81,7 +77,7 @@ propertiesModifiedMiddlware.startListening({
 
 export const store = configureStore({
   reducer: {
-    client: createclient,
+    client: client,
     googleAuth: verifygoogle,
     property: property,
     owners: viewowners,
@@ -93,10 +89,6 @@ export const store = configureStore({
     getAllProperties: allproperties,
     createReservation: createreservation,
     deleteReservation: deletereservation,
-    updateUser: updateuser,
-    addOwner: createowner,
-    deleteOwner: deleteowner,
-    updateOwner: updateowner,
     propertyModified: propertyrefresh,
     ownerModified: ownerrefresh,
   },

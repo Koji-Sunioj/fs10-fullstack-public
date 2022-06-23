@@ -3,10 +3,9 @@ import { AppDispatch } from "../redux/store";
 import { getOwner } from "../redux/reducers/owner";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { resetUpdateOwner } from "../redux/reducers/updateowner";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
-import { removeOwner, resetDeleteOwner } from "../redux/reducers/deleteowner";
+import { resetEdit, removeOwner, flushOwner } from "../redux/reducers/owner";
 import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
 
 import { AppType } from "../types/types";
@@ -20,8 +19,6 @@ const OwnerPage = () => {
 
   useEffect(() => {
     if (owner.data === null || (owner.data && owner.data._id !== ownerId)) {
-      dispatch(resetDeleteOwner());
-      dispatch(resetUpdateOwner());
       dispatch(getOwner(ownerId as string));
     }
     dispatch(modifiedOwnerFalse());
@@ -29,14 +26,15 @@ const OwnerPage = () => {
 
   const kickOwner = async (ownerId: string) => {
     await dispatch(removeOwner({ token: token, ownerId: ownerId }));
-    dispatch(modifiedPropertyTrue({ from: "deleteOwner" }));
+    dispatch(modifiedPropertyTrue({ from: "owner" }));
     setTimeout(() => {
       navigate("/");
+      dispatch(flushOwner());
     }, 1500);
   };
 
   const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
-  const isRemoved = deleteOwner.success || deleteOwner.error;
+
   return (
     <>
       {owner.data !== null && (
@@ -66,10 +64,10 @@ const OwnerPage = () => {
               )}
             </Col>
           </Row>
-          {isRemoved && (
+          {owner.purged && (
             <Row style={{ textAlign: "center", padding: "0px" }}>
-              <Alert variant={deleteOwner.success ? "success" : "danger"}>
-                <h3>{deleteOwner.message}</h3>
+              <Alert variant={owner.purged ? "success" : "danger"}>
+                <h3>{owner.message}</h3>
               </Alert>
             </Row>
           )}

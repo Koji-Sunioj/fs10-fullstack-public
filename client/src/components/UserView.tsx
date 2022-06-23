@@ -10,44 +10,50 @@ import { useState, useEffect } from "react";
 import { AppDispatch } from "../redux/store";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetClient } from "../redux/reducers/client";
-import { AppType, UserViewType } from "../types/types";
-import { setFromUpdate } from "../redux/reducers/client";
 import { resetFilter } from "../redux/reducers/filterby";
-import { patchUser } from "../redux/reducers/updateuser";
 import { resetAuth } from "../redux/reducers/verifygoogle";
-import { resetUpdateUser } from "../redux/reducers/updateuser";
 import { getMyReservations } from "../redux/reducers/myreservations";
 import { resetCreateReservation } from "../redux/reducers/createreservation";
 import { resetDeleteReservation } from "../redux/reducers/deletereservation";
+import { resetClient, resetPatch, patchUser } from "../redux/reducers/client";
 
 import UserUpdateFeedback from "./UserUpdateFeedback";
+import { AppType, UserViewType } from "../types/types";
 
 const UserView = ({ client, children }: UserViewType) => {
   const navigate = useNavigate();
-  const { deleteReservation, createReservation, updateUser, myReservations } =
-    useSelector((state: AppType) => state);
-
+  const { deleteReservation, createReservation, myReservations } = useSelector(
+    (state: AppType) => state
+  );
   const dispatch = useDispatch<AppDispatch>();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
 
+  const onLeave = () => {
+    dispatch(resetPatch());
+  };
+
   useEffect(() => {
     if (
-      (client.valid && !myReservations.data) ||
+      client.valid ||
       createReservation.success ||
       deleteReservation.success
     ) {
-      dispatch(getMyReservations(client.data!._id));
+      !myReservations.data && dispatch(getMyReservations(client.data!._id));
       dispatch(resetCreateReservation());
       dispatch(resetDeleteReservation());
     }
-    dispatch(resetUpdateUser());
+
+    window.addEventListener("beforeunload", onLeave);
+    return () => {
+      onLeave();
+      window.removeEventListener("beforeunload", onLeave);
+    };
   }, [
-    client,
+    client.valid,
     dispatch,
-    myReservations.data,
     createReservation.success,
+    myReservations.data,
     deleteReservation.success,
   ]);
 
@@ -73,7 +79,6 @@ const UserView = ({ client, children }: UserViewType) => {
         data: { firstName: firstName, lastName: lastName },
       })
     );
-    dispatch(setFromUpdate({ firstName, lastName }));
   };
 
   return (
@@ -120,16 +125,13 @@ const UserView = ({ client, children }: UserViewType) => {
               defaultValue={client.data!.lastName}
               name="lastName"
             />
-            <Button
-              disabled={!isToggleForm || updateUser.success}
-              type="submit"
-            >
+            <Button disabled={!isToggleForm || client.success} type="submit">
               Go
             </Button>
           </InputGroup>
         </Form>
       </Row>
-      <UserUpdateFeedback patchUser={updateUser} />
+      <UserUpdateFeedback patchUser={client} />
       {myReservations.data && myReservations.data.length > 0 && (
         <>
           <h2>Your reservations</h2>

@@ -35,12 +35,14 @@ export const findReservations = async (
         String(req.query.propertyId)
       )
       res.json({ status: 200, data: propertyReservations })
+      res.end()
     }
     if (userId) {
       const userReservations = await ReservationService.findbyUserID(
         String(req.query.userId)
       )
       res.json({ status: 200, data: userReservations })
+      res.end()
     }
     if (!req.query) {
       const reservations = await ReservationService.findAll()

@@ -5,11 +5,9 @@ export type AppType = {
   filterBy: FilterType;
   getAllProperties: FetchPropertiesType;
   addOwner: CreateOwnerType;
-  owner: FetchOwnerType;
+  owner: OwnerStateTpe;
   owners: FetchOwnersType;
-  updateOwner: UpdateOwnerType;
   properties: FetchPropertiesQueryType;
-  updateUser: UpdateType;
   deleteOwner: UpdateType;
   createReservation: UpdateType & { loading: boolean };
   deleteReservation: UpdateType;
@@ -150,9 +148,21 @@ export type GoogleType = {
   user: null | string;
 };
 
+export type OwnerStateTpe = {
+  data: null | OwnerWithPropertiesType;
+  message: string;
+  success: boolean;
+  error: boolean;
+  loading: boolean;
+  purged: boolean;
+};
+
 export type ClientType = {
   valid: null | boolean;
   data: null | UserType;
+  message: string;
+  success: boolean;
+  error: boolean;
 };
 
 export type FilterType = {

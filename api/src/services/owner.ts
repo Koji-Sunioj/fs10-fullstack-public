@@ -71,17 +71,3 @@ export default {
   addProperty,
   removeProperty,
 }
-
-/*[
-    {
-      $match: { _id: new mongoose.Types.ObjectId(ownerId) },
-    },
-    {
-      $lookup: {
-        localField: 'properties',
-        from: 'properties',
-        foreignField: '_id',
-        as: 'properties',
-      },
-    }
-  ]*/

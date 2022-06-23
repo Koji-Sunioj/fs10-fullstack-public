@@ -6,6 +6,11 @@ import { BadRequestError } from '../helpers/apiError'
 import ReservationService from '../services/reservation'
 import OwnerService from '../services/owner'
 
+/*mongdodb returns an aggregate (array) in order to join data 
+from other collections for viewing on the property page. hence, 
+create, update, and find all index the first value in the array returned
+from mongodb when focusing on one property object*/
+
 export const createProperty = async (
   req: Request,
   res: Response,

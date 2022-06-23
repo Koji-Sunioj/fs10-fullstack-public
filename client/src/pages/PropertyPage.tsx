@@ -63,10 +63,7 @@ const PropertyPage = () => {
   );
 
   useEffect(() => {
-    if (
-      property.data === null ||
-      (property.data && property.data._id !== propertyId)
-    ) {
+    if (!property.data || (property.data && property.data._id !== propertyId)) {
       dispatch(getProperty(propertyId!));
     } else {
       window.scrollTo(0, 0);
@@ -191,7 +188,7 @@ const PropertyPage = () => {
               <Row style={{ backgroundColor: "white" }}>
                 <h3>Your host(s)</h3>
                 <Stack direction="horizontal" gap={3}>
-                  {property.data.owners.map((owner: any) => (
+                  {property.data.owners.map((owner) => (
                     <div key={owner._id}>
                       <Link to={`/owner/${owner._id}`}>
                         <p>
