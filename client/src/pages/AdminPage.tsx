@@ -7,10 +7,11 @@ import UserView from "../components/UserView";
 
 const AdminPage = () => {
   const { client } = useSelector((state: AppType) => state);
+  const amIAdmin = client.valid && client.data!.isAdmin;
 
   return (
     <>
-      {client.valid && client.data!.isAdmin ? (
+      {amIAdmin ? (
         <>
           <UserView client={client}>
             <h2>Actions</h2>

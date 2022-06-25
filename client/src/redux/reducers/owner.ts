@@ -7,7 +7,7 @@ export const getOwner = createAsyncThunk("owner", async (ownerId: string) => {
 });
 
 export const createOwner = createAsyncThunk(
-  "createowner2",
+  "createowner",
   async (data: { data: Omit<OwnerType, "_id">; token: string }) => {
     const url = "http://localhost:5000/api/v1/owners/";
     return await await fetch(url, {
@@ -22,7 +22,7 @@ export const createOwner = createAsyncThunk(
 );
 
 export const patchOwner = createAsyncThunk(
-  "updateowner2",
+  "updateowner",
   async (data: {
     ownerId: string;
     token: string;
@@ -42,7 +42,7 @@ export const patchOwner = createAsyncThunk(
 );
 
 export const removeOwner = createAsyncThunk(
-  "removeowner2",
+  "removeowner",
   async (data: { token: string; ownerId: string }) => {
     const url = "http://localhost:5000/api/v1/owners/" + data.ownerId;
     return await await fetch(url, {
@@ -68,7 +68,7 @@ export const owner = createSlice({
   name: "owner",
   initialState,
   reducers: {
-    resetEdit: (state) => {
+    resetOwnerEdit: (state) => {
       state.success = false;
       state.purged = false;
     },
@@ -153,5 +153,5 @@ export const owner = createSlice({
       });
   },
 });
-export const { resetEdit, flushOwner } = owner.actions;
+export const { resetOwnerEdit, flushOwner } = owner.actions;
 export default owner.reducer;

@@ -4,7 +4,12 @@ import { Row, Form, Button, Stack } from "react-bootstrap";
 
 import mapOptions from "../utils/mapOptions";
 
-const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
+const OwnerForm = ({
+  properties,
+  sendOwner,
+  owner,
+  submitted,
+}: OwnerFormType) => {
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [inputLang, setInputLang] = useState("");
@@ -146,6 +151,7 @@ const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
               onChange={(event) => {
                 mapOptions(event.currentTarget, setTheProperties);
               }}
+              disabled={properties.loading}
             >
               {properties.data !== null &&
                 properties.data.map((property) => (
@@ -158,7 +164,7 @@ const OwnerForm = ({ properties, sendOwner, owner, status }: OwnerFormType) => {
           <Button
             variant="primary"
             type="submit"
-            disabled={submittable || status?.success}
+            disabled={submittable || submitted}
           >
             Submit
           </Button>

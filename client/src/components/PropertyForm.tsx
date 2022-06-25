@@ -9,7 +9,7 @@ const PropertyForm = ({
   owners,
   sendProperty,
   property,
-  status,
+  submitted,
 }: PropertyFormType) => {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
@@ -176,7 +176,7 @@ const PropertyForm = ({
           <Button
             variant="primary"
             type="submit"
-            disabled={submittable || status}
+            disabled={submittable || submitted}
           >
             Submit
           </Button>

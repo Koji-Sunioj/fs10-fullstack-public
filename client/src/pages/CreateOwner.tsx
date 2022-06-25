@@ -3,8 +3,9 @@ import { Col, Row } from "react-bootstrap";
 import { AppDispatch } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { allProperties } from "../redux/reducers/allproperties";
-import { createOwner, resetEdit } from "../redux/reducers/owner";
+import { createOwner, resetOwnerEdit } from "../redux/reducers/owner";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
+
 import OwnerForm from "../components/OwnerForm";
 import { OwnerType, AppType } from "../types/types";
 import AdminActionFeedback from "../components/AdminActionFeedback";
@@ -15,20 +16,19 @@ const CreateOwner = () => {
     (state: AppType) => state
   );
   const token = JSON.parse(localStorage.getItem("token") as string);
+  const amIAdmin = client.valid && client.data!.isAdmin;
 
   useEffect(() => {
-    if (client.valid && client.data !== null && client.data.isAdmin) {
-      dispatch(resetEdit());
+    if (amIAdmin) {
+      dispatch(resetOwnerEdit());
       dispatch(allProperties());
     }
-  }, [client, dispatch]);
+  }, [amIAdmin, dispatch]);
 
   async function sendOwner(owner: Omit<OwnerType, "_id">) {
     await dispatch(createOwner({ token: token, data: owner }));
     dispatch(modifiedPropertyTrue({ from: "owner" }));
   }
-
-  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
 
   return (
     <>
@@ -38,7 +38,7 @@ const CreateOwner = () => {
           <OwnerForm
             sendOwner={sendOwner}
             properties={getAllProperties}
-            status={owner}
+            submitted={owner.success}
           />
           <AdminActionFeedback status={owner} uri={"owner"} />
         </>

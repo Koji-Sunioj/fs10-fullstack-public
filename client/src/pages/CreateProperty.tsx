@@ -4,12 +4,7 @@ import { AppDispatch } from "../redux/store";
 import { PropertyType, AppType } from "../types/types";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
-import { crudRefresh } from "../redux/reducers/filterby";
-import {
-  createProperty,
-  resetEdit,
-  flushProperty,
-} from "../redux/reducers/property";
+import { createProperty, resetPropertyEdit } from "../redux/reducers/property";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 
 import PropertyForm from "../components/PropertyForm";
@@ -17,24 +12,21 @@ import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const CreateProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const token = JSON.parse(localStorage.getItem("token") as string);
   const { client, owners, property } = useSelector((state: AppType) => state);
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  const amIAdmin = client.valid && client.data!.isAdmin;
 
   useEffect(() => {
-    dispatch(resetEdit());
-    dispatch(flushProperty());
-    if (client.valid && client.data && client.data.isAdmin) {
+    dispatch(resetPropertyEdit());
+    if (amIAdmin) {
       dispatch(getOwners());
     }
-  }, [client, dispatch]);
+  }, [amIAdmin, dispatch]);
 
   const sendProperty = async (property: Omit<PropertyType, "_id">) => {
     await dispatch(createProperty({ token: token, data: property }));
     dispatch(modifiedOwnerTrue({ from: "property" }));
-    dispatch(crudRefresh());
   };
-
-  const amIAdmin = client.valid && client.data && client.data.isAdmin;
 
   return (
     <>
@@ -44,7 +36,7 @@ const CreateProperty = () => {
           <PropertyForm
             sendProperty={sendProperty}
             owners={owners}
-            status={property.success}
+            submitted={property.success}
           />
           <AdminActionFeedback status={property} uri={"property"} />
         </>

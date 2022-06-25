@@ -25,7 +25,7 @@ const HomePage = () => {
   const pointer = { ascending: -1, descending: 1 };
 
   useEffect(() => {
-    if (properties.data === null) {
+    if (!properties.data) {
       dispatch(getProperties(filterBy));
     }
   }, [properties]);

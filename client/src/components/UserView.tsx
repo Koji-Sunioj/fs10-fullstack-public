@@ -24,21 +24,21 @@ const UserView = ({ client, children }: UserViewType) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isToggleForm, setToggleForm] = useState(false);
   const token = JSON.parse(localStorage.getItem("token") as string);
-
-  const onLeave = () => {
-    dispatch(resetPatch());
-  };
+  const userId = client.valid ? client.data!._id : null;
 
   useEffect(() => {
     if (client.valid) {
-      dispatch(getMyReservations(client.data!._id));
+      dispatch(getMyReservations(userId!));
     }
+    const onLeave = () => {
+      dispatch(resetPatch());
+    };
     window.addEventListener("beforeunload", onLeave);
     return () => {
       onLeave();
       window.removeEventListener("beforeunload", onLeave);
     };
-  }, [client.valid, dispatch, myReservations.data]);
+  }, [client.valid, dispatch, userId]);
 
   const logout = () => {
     localStorage.removeItem("token");

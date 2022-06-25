@@ -42,9 +42,6 @@ modifiedViewMiddleWare.startListening({
         if (property.data && updated.success) {
           state.dispatch(getProperty(property.data._id!));
         }
-        if (target === "property") {
-          state.dispatch(crudRefresh());
-        }
         break;
       case "ownerrefresh/modifiedOwnerTrue":
         const { owner } = afterState;
@@ -53,6 +50,7 @@ modifiedViewMiddleWare.startListening({
         }
         break;
     }
+    target === "property" && state.dispatch(crudRefresh());
   },
 });
 

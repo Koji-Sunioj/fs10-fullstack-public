@@ -71,10 +71,11 @@ export const property = createSlice({
   name: "property",
   initialState,
   reducers: {
-    flushProperty: () => initialState,
-    resetEdit: (state) => {
+    resetPropertyEdit: (state) => {
       state.success = false;
+      state.purged = false;
     },
+    flushProperty: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -148,5 +149,5 @@ export const property = createSlice({
   },
 });
 
-export const { flushProperty, resetEdit } = property.actions;
+export const { flushProperty, resetPropertyEdit } = property.actions;
 export default property.reducer;

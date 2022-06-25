@@ -13,7 +13,6 @@ import { AppType } from "../types/types";
 const NavBar = () => {
   const { googleAuth, client } = useSelector((state: AppType) => state);
   const token = JSON.parse(localStorage.getItem("token") as string);
-
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

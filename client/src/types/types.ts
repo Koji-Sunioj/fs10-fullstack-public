@@ -22,7 +22,7 @@ export type UserViewType = {
 export type OwnerFormType = {
   properties: AllPropertiesType;
   owner?: OwnerWithPropertiesType;
-  status: UpdateType;
+  submitted: boolean;
   sendOwner: (owner: Omit<OwnerType, "_id">) => void;
 };
 
@@ -32,8 +32,8 @@ export type PropertyFormType = {
     properties: PropertyType[];
     owners: OwnerType[];
   };
+  submitted: boolean;
   sendProperty: (property: Omit<PropertyType, "_id">) => void;
-  status: boolean;
 };
 
 export type CalendarType = {

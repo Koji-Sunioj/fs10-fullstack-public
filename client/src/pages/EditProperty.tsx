@@ -5,28 +5,30 @@ import { AppDispatch } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { getOwners } from "../redux/reducers/getowners";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
-import PropertyForm from "../components/PropertyForm";
-import { PropertyType, AppType } from "../types/types";
-import AdminActionFeedback from "../components/AdminActionFeedback";
 import {
   getProperty,
   updateProperty,
-  resetEdit,
+  resetPropertyEdit,
 } from "../redux/reducers/property";
+
+import PropertyForm from "../components/PropertyForm";
+import { PropertyType, AppType } from "../types/types";
+import AdminActionFeedback from "../components/AdminActionFeedback";
 
 const EditProperty = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { propertyId } = useParams<string>();
-  const token = JSON.parse(localStorage.getItem("token") as string);
   const { client, owners, property } = useSelector((state: AppType) => state);
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  const amIAdmin = client.valid && client.data!.isAdmin;
 
   useEffect(() => {
-    if (client.valid && client.data && client.data.isAdmin) {
+    if (amIAdmin) {
       dispatch(getOwners());
       dispatch(getProperty(String(propertyId)));
-      dispatch(resetEdit());
+      dispatch(resetPropertyEdit());
     }
-  }, [client, dispatch, propertyId]);
+  }, [amIAdmin, dispatch, propertyId]);
 
   async function sendProperty(property: Omit<PropertyType, "_id">) {
     await dispatch(
@@ -35,7 +37,6 @@ const EditProperty = () => {
     dispatch(modifiedOwnerTrue({ from: "property" }));
   }
 
-  const amIAdmin = client.valid && client.data && client.data.isAdmin;
   return (
     <>
       {amIAdmin ? (
@@ -45,7 +46,7 @@ const EditProperty = () => {
             sendProperty={sendProperty}
             owners={owners}
             property={property.data!}
-            status={property.success}
+            submitted={property.success}
           />
           <AdminActionFeedback status={property} uri={"property"} />
         </>

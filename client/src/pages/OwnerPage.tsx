@@ -4,9 +4,9 @@ import { getOwner } from "../redux/reducers/owner";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Row, Col, Button, Stack, Alert } from "react-bootstrap";
-import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 import { removeOwner, flushOwner } from "../redux/reducers/owner";
 import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
+import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 
 import { AppType } from "../types/types";
 
@@ -14,30 +14,33 @@ const OwnerPage = () => {
   const navigate = useNavigate();
   const { ownerId } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const token = JSON.parse(localStorage.getItem("token") as string);
   const { client, owner } = useSelector((state: AppType) => state);
+  const token = JSON.parse(localStorage.getItem("token") as string);
+  const amIAdmin = client.valid && client.data!.isAdmin;
+  const otherOwnerOrNull =
+    (owner.data && owner.data._id !== ownerId) || !owner.data;
 
   useEffect(() => {
-    if (owner.data === null || (owner.data && owner.data._id !== ownerId)) {
+    if (otherOwnerOrNull) {
       dispatch(getOwner(ownerId as string));
+    } else if (owner.purged) {
+      setTimeout(() => {
+        navigate("/");
+        dispatch(flushOwner());
+      }, 1500);
     }
     dispatch(modifiedOwnerFalse());
-  }, [ownerId, dispatch, owner.data]);
+  }, [ownerId, dispatch, otherOwnerOrNull, owner.purged, navigate]);
 
   const kickOwner = async (ownerId: string) => {
     await dispatch(removeOwner({ token: token, ownerId: ownerId }));
     dispatch(modifiedPropertyTrue({ from: "owner" }));
-    setTimeout(() => {
-      navigate("/");
-      dispatch(flushOwner());
-    }, 1500);
   };
-
-  const amIAdmin = client.valid && client.data !== null && client.data.isAdmin;
 
   return (
     <>
-      {owner.data !== null && (
+      {owner.loading && <h2>loading...</h2>}
+      {owner.data && (
         <>
           <h2>Owner overview</h2>
           <Row style={{ backgroundColor: "white" }}>

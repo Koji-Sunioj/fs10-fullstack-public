@@ -4,7 +4,6 @@ import { AppDispatch } from "../redux/store";
 import { useParams } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { crudRefresh } from "../redux/reducers/filterby";
 import { modifiedOwnerTrue } from "../redux/reducers/ownerrefresh";
 import { propertyReservations } from "../redux/reducers/resesrvationview";
 import { modifiedPropertyFalse } from "../redux/reducers/propertyrefresh";
@@ -27,7 +26,7 @@ import {
   getProperty,
   deleteProperty,
   flushProperty,
-  resetEdit,
+  resetPropertyEdit,
 } from "../redux/reducers/property";
 
 import checkBooked from "../utils/checkBooked";
@@ -48,17 +47,25 @@ const PropertyPage = () => {
     (state: AppType) => state
   );
   const token = JSON.parse(localStorage.getItem("token") as string);
+  const amIAdmin = client.valid && client.data!.isAdmin;
+  const freshPropertyOrNull =
+    !property.data || (property.data && property.data._id !== propertyId);
 
   useEffect(() => {
-    if (!property.data || (property.data && property.data._id !== propertyId)) {
+    if (freshPropertyOrNull) {
       dispatch(getProperty(propertyId!));
+    } else if (property.purged) {
+      setTimeout(() => {
+        navigate("/");
+        dispatch(flushProperty());
+      }, 1500);
     } else {
       window.scrollTo(0, 0);
-      dispatch(resetEdit());
+      dispatch(resetPropertyEdit());
       dispatch(modifiedPropertyFalse());
       dispatch(propertyReservations(propertyId!));
     }
-  }, [propertyId, property.data, dispatch, navigate]);
+  }, [propertyId, freshPropertyOrNull, dispatch, navigate, property.purged]);
 
   const decrementCalendar = () => {
     const date = focusDay.clone();
@@ -87,12 +94,7 @@ const PropertyPage = () => {
 
   const adminDelete = async (propertyId: string) => {
     await dispatch(deleteProperty({ token: token, propertyId: propertyId }));
-    dispatch(crudRefresh());
     dispatch(modifiedOwnerTrue({ from: "property" }));
-    setTimeout(() => {
-      navigate("/");
-      dispatch(flushProperty());
-    }, 1500);
   };
 
   let requestedNights: string[] = [];
@@ -112,10 +114,12 @@ const PropertyPage = () => {
     ? []
     : checkBooked(reservationView.data);
 
-  const shouldRenderRows =
+  const shouldRenderReservations =
     client.valid &&
     reservationView.data &&
-    reservationView.data.some((r) => r.userId === client.data!._id);
+    reservationView.data.some(
+      (reservation) => reservation.userId === client.data!._id
+    );
 
   return (
     <>
@@ -148,7 +152,7 @@ const PropertyPage = () => {
                   {new Date(property.data.buildDate).getUTCFullYear()}
                 </strong>
               </p>
-              {client.data !== null && client.data.isAdmin && (
+              {amIAdmin && (
                 <Stack direction="horizontal" gap={3}>
                   <Button
                     variant="danger"
@@ -241,7 +245,7 @@ const PropertyPage = () => {
               </fieldset>
             </Form>
           </Row>
-          {shouldRenderRows && (
+          {shouldRenderReservations && (
             <>
               <h2>Your reservations</h2>
               {reservationView.data!.map((reservation) => {
