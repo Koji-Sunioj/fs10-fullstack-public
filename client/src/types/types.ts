@@ -19,6 +19,19 @@ export type UserViewType = {
   children?: JSX.Element[];
 };
 
+export type PropertyOverViewType = {
+  amIAdmin: boolean;
+  property: PropertyStateType;
+  adminDelete: (propertyId: string) => void;
+};
+
+export type ReservationViewType = {
+  reservations: ReservationViewStateType;
+  userId: string;
+  property: PropertyStateType;
+  pullReservation: (reservationId: string) => void;
+};
+
 export type OwnerFormType = {
   properties: AllPropertiesType;
   owner?: OwnerWithPropertiesType;

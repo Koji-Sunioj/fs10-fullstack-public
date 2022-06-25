@@ -40,7 +40,7 @@ const OwnerPage = () => {
   return (
     <>
       {owner.loading && <h2>loading...</h2>}
-      {owner.data && (
+      {owner.data && owner.data._id === ownerId && (
         <>
           <h2>Owner overview</h2>
           <Row style={{ backgroundColor: "white" }}>

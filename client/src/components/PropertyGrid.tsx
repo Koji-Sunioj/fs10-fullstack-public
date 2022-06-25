@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 
 import { PropertyType } from "../types/types";
 
-const PropertyView = ({ properties }: { properties: PropertyType[] }) => {
+const PropertyGrid = ({ properties }: { properties: PropertyType[] }) => {
   return (
     <>
       {[0, 3].map((value) => (
@@ -35,4 +35,4 @@ const PropertyView = ({ properties }: { properties: PropertyType[] }) => {
   );
 };
 
-export default PropertyView;
+export default PropertyGrid;
