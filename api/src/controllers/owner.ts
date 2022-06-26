@@ -65,7 +65,6 @@ export const findOwner = async (
   try {
     const { ownerId } = req.params
     const owner = await OwnerService.findById(ownerId)
-    console.log(owner)
     res.json({ status: 200, data: owner[0] })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

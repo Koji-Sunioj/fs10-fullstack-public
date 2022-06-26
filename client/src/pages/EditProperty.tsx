@@ -44,7 +44,7 @@ const EditProperty = () => {
           <h1>Edit property</h1>
           <PropertyForm
             sendProperty={sendProperty}
-            owners={owners}
+            allOwners={owners}
             property={property.data!}
             submitted={property.success}
           />
@@ -61,5 +61,4 @@ const EditProperty = () => {
   );
 };
 
-//<AdminActionFeedback status={patchProperty} uri={"property"} />
 export default EditProperty;

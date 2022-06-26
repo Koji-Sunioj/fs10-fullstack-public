@@ -23,6 +23,7 @@ import {
 import checkBooked from "../utils/checkBooked";
 import OwnerView from "../components/OwnerView";
 import { ReservationType } from "../types/types";
+import LoadSpinner from "../components/LoadSpinner";
 import CalendarView from "../components/CalendarView";
 import ReservationView from "../components/ReservationView";
 import PropertyOverView from "../components/PropertyOverView";
@@ -126,7 +127,7 @@ const PropertyPage = () => {
 
   return (
     <>
-      {property.loading && <h2>loading...</h2>}
+      {property.loading && <LoadSpinner />}
       {property.data && property.data._id === propertyId && (
         <>
           <h2>Property Overview</h2>

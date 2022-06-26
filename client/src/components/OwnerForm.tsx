@@ -5,7 +5,7 @@ import { Row, Form, Button, Stack } from "react-bootstrap";
 import mapOptions from "../utils/mapOptions";
 
 const OwnerForm = ({
-  properties,
+  allProperties,
   sendOwner,
   owner,
   submitted,
@@ -18,11 +18,12 @@ const OwnerForm = ({
   const [theProperties, setTheProperties] = useState<string[]>([]);
 
   const setOwner = useCallback(() => {
-    setFirstName(owner!.firstName);
-    setLastName(owner!.lastName);
-    setBiography(owner!.biography);
-    setLanguages(owner!.languages);
-    setTheProperties(owner!.properties.map((owner) => owner._id));
+    const { firstName, lastName, biography, languages, properties } = owner!;
+    setFirstName(firstName);
+    setLastName(lastName);
+    setBiography(biography);
+    setLanguages(languages);
+    setTheProperties(properties.map((owner) => owner._id));
   }, [owner]);
 
   useEffect(() => {
@@ -38,21 +39,22 @@ const OwnerForm = ({
 
   const parseOwnerForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
+    const { firstName, lastName, biography, languages, properties } =
+      event.currentTarget;
     const owner: Omit<OwnerType, "_id"> = {
-      languages: form.languages.value.split(","),
-      properties: Array.from(form.properties as HTMLSelectElement["options"])
+      languages: languages.value.split(","),
+      properties: Array.from(properties as HTMLSelectElement["options"])
         .filter((option) => {
           return option.selected === true;
         })
         .map((property) => property.value),
       firstName:
-        form.firstName.value[0].toUpperCase() +
-        form.firstName.value.substring(1).toLowerCase(),
+        firstName.value[0].toUpperCase() +
+        firstName.value.substring(1).toLowerCase(),
       lastName:
-        form.lastName.value[0].toUpperCase() +
-        form.lastName.value.substring(1).toLowerCase(),
-      biography: form.biography.value,
+        lastName.value[0].toUpperCase() +
+        lastName.value.substring(1).toLowerCase(),
+      biography: biography.value,
     };
     sendOwner(owner);
   };
@@ -151,10 +153,10 @@ const OwnerForm = ({
               onChange={(event) => {
                 mapOptions(event.currentTarget, setTheProperties);
               }}
-              disabled={properties.loading}
+              disabled={allProperties.loading}
             >
-              {properties.data !== null &&
-                properties.data.map((property) => (
+              {allProperties.data &&
+                allProperties.data.map((property) => (
                   <option value={property._id} key={property._id}>
                     {property.title} - {property.location}
                   </option>

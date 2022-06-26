@@ -35,7 +35,7 @@ const CreateProperty = () => {
           <h1>Create property</h1>
           <PropertyForm
             sendProperty={sendProperty}
-            owners={owners}
+            allOwners={owners}
             submitted={property.success}
           />
           <AdminActionFeedback status={property} uri={"property"} />

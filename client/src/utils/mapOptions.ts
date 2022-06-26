@@ -6,7 +6,7 @@ const mapOptions = (
     .filter((option) => {
       return option.selected;
     })
-    .map((owner) => owner.value);
+    .map((option) => option.value);
 
   settter(selected);
 };

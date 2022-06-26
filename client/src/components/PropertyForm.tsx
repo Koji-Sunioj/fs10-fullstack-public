@@ -6,7 +6,7 @@ import mapOptions from "../utils/mapOptions";
 import { PropertyType, PropertyFormType } from "../types/types";
 
 const PropertyForm = ({
-  owners,
+  allOwners,
   sendProperty,
   property,
   submitted,
@@ -21,14 +21,25 @@ const PropertyForm = ({
   const [category, setCategory] = useState<string>("cottage");
 
   const setProperty = useCallback(() => {
-    setTitle(property!.title);
-    setDescription(property!.description);
-    setCategory(property!.category);
-    setPrice(Number(property!.nightlyRate));
-    setRooms(Number(property!.rooms));
-    setLocation(property!.location);
-    setBuildDate(property!.buildDate.split("T")[0]);
-    setTheOwners(property!.owners.map((owner) => owner._id));
+    const {
+      title,
+      description,
+      category,
+      nightlyRate,
+      rooms,
+      location,
+      buildDate,
+      owners,
+    } = property!;
+
+    setTitle(title);
+    setDescription(description);
+    setCategory(category);
+    setPrice(Number(nightlyRate));
+    setRooms(Number(rooms));
+    setLocation(location);
+    setBuildDate(buildDate.split("T")[0]);
+    setTheOwners(owners.map((owner) => owner._id));
   }, [property]);
 
   useEffect(() => {
@@ -39,20 +50,29 @@ const PropertyForm = ({
 
   const parsePropertyForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget as HTMLFormElement;
+    const {
+      propertyTitle,
+      description,
+      category,
+      nightlyRate,
+      rooms,
+      location,
+      buildDate,
+      owners,
+    } = event.currentTarget;
     const property: Omit<PropertyType, "_id"> = {
-      location: form.location.value,
-      title: form.propertyTitle.value,
-      description: form.description.value,
-      nightlyRate: Number(form.nightlyRate.value),
-      rooms: Number(form.rooms.value),
-      owners: Array.from(form.owners as HTMLSelectElement["options"])
+      location: location.value,
+      title: propertyTitle.value,
+      description: description.value,
+      nightlyRate: Number(nightlyRate.value),
+      rooms: Number(rooms.value),
+      owners: Array.from(owners as HTMLSelectElement["options"])
         .filter((option) => {
           return option.selected === true;
         })
         .map((owner) => owner.value),
-      category: form.type.value,
-      buildDate: form.buildDate.value,
+      category: category.value,
+      buildDate: buildDate.value,
     };
     sendProperty(property);
   };
@@ -94,7 +114,7 @@ const PropertyForm = ({
           <Form.Group className="mb-3">
             <Form.Label>Type</Form.Label>
             <Form.Select
-              name="type"
+              name="category"
               value={category}
               onChange={(event) => {
                 setCategory(event.target.value);
@@ -163,10 +183,10 @@ const PropertyForm = ({
               }}
               name="owners"
               multiple
-              disabled={owners.loading || owners.error}
+              disabled={allOwners.loading || allOwners.error}
             >
-              {owners.data !== null &&
-                owners.data.map((owner) => (
+              {allOwners.data &&
+                allOwners.data.map((owner) => (
                   <option value={owner._id} key={owner._id}>
                     {owner.firstName} {owner.lastName}
                   </option>

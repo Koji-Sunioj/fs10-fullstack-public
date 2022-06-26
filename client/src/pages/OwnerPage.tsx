@@ -9,6 +9,7 @@ import { modifiedOwnerFalse } from "../redux/reducers/ownerrefresh";
 import { modifiedPropertyTrue } from "../redux/reducers/propertyrefresh";
 
 import { AppType } from "../types/types";
+import LoadSpinner from "../components/LoadSpinner";
 
 const OwnerPage = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const OwnerPage = () => {
 
   return (
     <>
-      {owner.loading && <h2>loading...</h2>}
+      {owner.loading && <LoadSpinner />}
       {owner.data && owner.data._id === ownerId && (
         <>
           <h2>Owner overview</h2>

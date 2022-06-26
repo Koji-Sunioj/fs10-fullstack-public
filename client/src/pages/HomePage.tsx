@@ -11,8 +11,8 @@ import { Row, InputGroup, FormSelect, Form } from "react-bootstrap";
 
 import { AppType } from "../types/types";
 import mapCamelCase from "../utils/mapCamelCase";
-import SearchFeedBack from "../components/SearchFeedBack";
 import PropertyGrid from "../components/PropertyGrid";
+import SearchFeedBack from "../components/SearchFeedBack";
 import PropertyFilter from "../components/PropertyFilter";
 
 const HomePage = () => {
@@ -90,7 +90,7 @@ const HomePage = () => {
           </fieldset>
         </Form>
       </Row>
-      {properties.data && properties.data.length > 0 && (
+      {properties.data && properties.data.length > 0 && !properties.loading && (
         <PropertyGrid properties={properties.data} />
       )}
       <SearchFeedBack fetched={properties} />

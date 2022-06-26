@@ -33,14 +33,14 @@ export type ReservationViewType = {
 };
 
 export type OwnerFormType = {
-  properties: AllPropertiesType;
+  allProperties: AllPropertiesType;
   owner?: OwnerWithPropertiesType;
   submitted: boolean;
   sendOwner: (owner: Omit<OwnerType, "_id">) => void;
 };
 
 export type PropertyFormType = {
-  owners: AllOwnersStateType;
+  allOwners: AllOwnersStateType;
   property?: Omit<PropertyType, "owners"> & {
     properties: PropertyType[];
     owners: OwnerType[];

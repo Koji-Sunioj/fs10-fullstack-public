@@ -1,26 +1,25 @@
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 
+import LoadSpinner from "./LoadSpinner";
 import { PropertiesQueryStateType } from "../types/types";
 
 const SearchFeedBack = ({ fetched }: { fetched: PropertiesQueryStateType }) => {
-  const shouldRender =
-    (fetched.data && fetched.data!.length === 0) ||
-    fetched.loading ||
-    fetched.error;
+  const { loading, error, count } = fetched;
+
   return (
-    <Row>
-      <Col style={{ textAlign: "center" }}>
-        {shouldRender && (
-          <div className="property">
-            {!fetched.error && fetched.data?.length === 0 && (
-              <h3>No results found!</h3>
-            )}
-            {fetched.loading && <h3>Loading</h3>}
-            {fetched.error && <h3>Error fetching data</h3>}
-          </div>
-        )}
-      </Col>
-    </Row>
+    <>
+      <Row
+        style={{
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {count !== null && <h3>{count} properties found</h3>}
+        {loading && <LoadSpinner />}
+        {error && <h3>Error fetching data</h3>}
+      </Row>
+    </>
   );
 };
 

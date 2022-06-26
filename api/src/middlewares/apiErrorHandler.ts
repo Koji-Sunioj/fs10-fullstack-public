@@ -10,7 +10,6 @@ export default function (
   next: NextFunction
 ) {
   if (error.source) {
-    console.log('asdasd')
     logger.error(error.source)
   }
 

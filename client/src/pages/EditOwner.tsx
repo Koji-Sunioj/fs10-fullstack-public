@@ -42,7 +42,7 @@ const EditOwner = () => {
           <h1>Edit Owner</h1>
           <OwnerForm
             sendOwner={sendOwner}
-            properties={getAllProperties}
+            allProperties={getAllProperties}
             owner={owner.data!}
             submitted={owner.success}
           />

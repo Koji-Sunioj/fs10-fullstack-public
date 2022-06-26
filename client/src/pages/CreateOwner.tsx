@@ -37,7 +37,7 @@ const CreateOwner = () => {
           <h1>Create owner</h1>
           <OwnerForm
             sendOwner={sendOwner}
-            properties={getAllProperties}
+            allProperties={getAllProperties}
             submitted={owner.success}
           />
           <AdminActionFeedback status={owner} uri={"owner"} />

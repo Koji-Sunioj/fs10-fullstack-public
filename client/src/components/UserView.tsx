@@ -15,6 +15,7 @@ import { resetAuth } from "../redux/reducers/verifygoogle";
 import { getMyReservations } from "../redux/reducers/myreservations";
 import { resetClient, resetPatch, patchUser } from "../redux/reducers/client";
 
+import LoadSpinner from "./LoadSpinner";
 import UserUpdateFeedback from "./UserUpdateFeedback";
 import { AppType, UserViewType } from "../types/types";
 
@@ -134,6 +135,7 @@ const UserView = ({ client, children }: UserViewType) => {
           ))}
         </>
       )}
+      {myReservations.loading && <LoadSpinner />}
     </>
   );
 };

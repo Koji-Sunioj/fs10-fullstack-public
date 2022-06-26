@@ -5,7 +5,7 @@ import { PropertyType } from "../types/types";
 
 const PropertyGrid = ({ properties }: { properties: PropertyType[] }) => {
   return (
-    <>
+    <div id="property-grid">
       {[0, 3].map((value) => (
         <Row key={value}>
           {properties!.slice(value, value + 3).map((property) => (
@@ -31,7 +31,7 @@ const PropertyGrid = ({ properties }: { properties: PropertyType[] }) => {
           ))}
         </Row>
       ))}
-    </>
+    </div>
   );
 };
 
